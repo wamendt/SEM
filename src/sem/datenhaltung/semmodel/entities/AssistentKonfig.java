@@ -1,6 +1,6 @@
 package sem.datenhaltung.semmodel.entities;
 
-public class AssiKonfig {
+public class AssistentKonfig {
     private int aid;
     private int anzahlDurchlauf;
     private int anzahlTags;
