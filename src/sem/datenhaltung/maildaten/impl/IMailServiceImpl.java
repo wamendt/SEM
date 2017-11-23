@@ -1,7 +1,7 @@
 package sem.datenhaltung.maildaten.impl;
 
-import sem.datenhaltung.entities.Connection;
-import sem.datenhaltung.entities.EMail;
+import sem.datenhaltung.semmodel.entities.Connection;
+import sem.datenhaltung.semmodel.entities.EMail;
 import sem.datenhaltung.maildaten.services.IMailService;
 import sem.fachlogik.grenzklassen.EMailGrenz;
 import sem.fachlogik.grenzklassen.KontoGrenz;

@@ -5,14 +5,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import sem.datenhaltung.entities.EMail;
+import sem.datenhaltung.semmodel.entities.EMail;
 import sem.datenhaltung.maildaten.impl.IMailServiceImpl;
 import sem.datenhaltung.maildaten.services.IMailService;
-
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import java.util.Properties;
 
 public class Main extends Application {
 

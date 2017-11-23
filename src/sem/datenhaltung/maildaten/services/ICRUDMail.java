@@ -1,6 +1,6 @@
 package sem.datenhaltung.maildaten.services;
 
-import sem.datenhaltung.entities.EMail;
+import sem.datenhaltung.semmodel.entities.EMail;
 import sem.fachlogik.grenzklassen.EMailGrenz;
 
 import java.util.ArrayList;

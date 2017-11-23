@@ -1,6 +1,6 @@
 package sem.datenhaltung.maildaten.impl;
 
-import sem.datenhaltung.entities.EMail;
+import sem.datenhaltung.semmodel.entities.EMail;
 import sem.datenhaltung.maildaten.services.ICRUDMail;
 import sem.fachlogik.grenzklassen.EMailGrenz;
 

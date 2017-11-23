@@ -1,4 +1,4 @@
-package sem.datenhaltung.entities;
+package sem.datenhaltung.semmodel.entities;
 
 public class Konto {
     private String userName;
