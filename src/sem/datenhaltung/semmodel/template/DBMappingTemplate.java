@@ -1,4 +1,4 @@
-package sem.datenhaltung.semmodel.crud;
+package sem.datenhaltung.semmodel.template;
 
 import sem.datenhaltung.semmodel.databasemanager.SEMModelManager;
 

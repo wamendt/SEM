@@ -1,6 +1,8 @@
 package sem.datenhaltung.semmodel.crud;
 
 
+import sem.datenhaltung.semmodel.entities.EMail;
+
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -20,8 +22,8 @@ class EMailTestTest {
             stmt.close();
 */
 
-        EMailTest cuT = new EMailTest();
-        cuT.insertEMail(null);
+        EMail cuT = new EMail();
+        //cuT.insertEMail(null);
     }
 
 }
