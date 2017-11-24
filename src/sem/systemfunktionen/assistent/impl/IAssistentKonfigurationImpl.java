@@ -5,12 +5,12 @@ import sem.datenhaltung.semmodel.entities.*;
 
 public class IAssistentKonfigurationImpl implements IAssistentKonfiguration {
     @Override
-    public boolean setAssiKonfig(AssiKonfig konfig) {
+    public boolean setAssiKonfig(AssistentKonfig konfig) {
         return false;
     }
 
     @Override
-    public AssiKonfig getAssiKonfig() {
+    public AssistentKonfig getAssiKonfig() {
         return null;
     }
 

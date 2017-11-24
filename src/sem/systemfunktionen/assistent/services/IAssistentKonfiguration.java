@@ -3,7 +3,7 @@ package sem.systemfunktionen.assistent.services;
 import sem.datenhaltung.semmodel.entities.*;
 
 public interface IAssistentKonfiguration {
-    boolean setAssiKonfig(AssiKonfig konfig);
-    AssiKonfig getAssiKonfig();
+    boolean setAssiKonfig(AssistentKonfig konfig);
+    AssistentKonfig getAssiKonfig();
     boolean setModel(String pfad);
 }
