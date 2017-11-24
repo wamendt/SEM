@@ -6,6 +6,7 @@ public class AssistentKonfig {
     private int anzahlTags;
     private double alphaWert;
     private double betaWert;
+    private String stopwordPfad;
 
     public int getAid() {
         return aid;
@@ -45,5 +46,13 @@ public class AssistentKonfig {
 
     public void setBetaWert(double betaWert) {
         this.betaWert = betaWert;
+    }
+
+    public String getStopwordPfad() {
+        return stopwordPfad;
+    }
+
+    public void setStopwordPfad(String stopwordPfad) {
+        this.stopwordPfad = stopwordPfad;
     }
 }
