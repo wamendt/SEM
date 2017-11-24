@@ -1,6 +1,6 @@
 package sem.systemfunktionen.assistent.services;
 
-import sem.datenhaltung.semmodel.entities.*;
+import sem.datenhaltung.semmodel.entities.AssistentKonfig;
 
 public interface IAssistentKonfiguration {
     boolean setAssiKonfig(AssistentKonfig konfig);
