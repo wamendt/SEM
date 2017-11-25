@@ -1,18 +1,15 @@
 package sem.datenhaltung.semmodel.databasemanager;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
 
-public class SEMModelManager {
+public class ConnectionManager {
     private static final String URL = "jdbc:sqlite:SEMDB.sqlite";  //"jdbc:sqlite:SEMDB" + username + ".sqlite"
     private static Connection connection;
 
-    private SEMModelManager() {
+    private ConnectionManager() {
     }
 
     public static Connection getConnection() throws SQLException, IOException {
