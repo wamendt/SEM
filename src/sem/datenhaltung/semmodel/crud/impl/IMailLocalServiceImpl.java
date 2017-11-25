@@ -2,23 +2,23 @@ package sem.datenhaltung.semmodel.crud.impl;
 
 import sem.datenhaltung.semmodel.crud.services.IMailLocalService;
 import sem.datenhaltung.semmodel.entities.EMail;
-import sem.datenhaltung.semmodel.crud.services.ICRUDMail;
 import sem.datenhaltung.semmodel.entities.Konto;
 import sem.datenhaltung.semmodel.template.DBMappingTemplate;
-import sem.fachlogik.grenzklassen.EMailGrenz;
 
-import javax.mail.*;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Properties;
 
-public class CRUDEMailILocalService extends DBMappingTemplate<EMail> implements IMailLocalService{
+public class IMailLocalServiceImpl extends DBMappingTemplate<EMail> implements IMailLocalService{
 
-    public CRUDEMailILocalService(){
+    public IMailLocalServiceImpl(){
 
     }
 

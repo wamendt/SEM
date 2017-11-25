@@ -9,15 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class CRUDEMailVerwalter extends DBMappingTemplate<EMail> implements ICRUDMail{
-    private static ICRUDMail ourInstance = new CRUDEMailVerwalter();
+public class ICRUDMailImpl extends DBMappingTemplate<EMail> implements ICRUDMail {
 
-    public static ICRUDMail getInstance() {
-        return ourInstance;
-    }
-
-    private CRUDEMailVerwalter() {
-    }
 
     @Override
     protected EMail makeObject(ResultSet rs) {
