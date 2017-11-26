@@ -5,10 +5,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import sem.datenhaltung.semmodel.crud.impl.CRUDEMailILocalService;
+import sem.datenhaltung.semmodel.impl.IMailLocalServiceImpl;
 import sem.datenhaltung.semmodel.entities.EMail;
-import sem.datenhaltung.semmodel.crud.impl.CRUDEMailServerService;
-import sem.datenhaltung.semmodel.crud.services.IMailLocalService;
+import sem.datenhaltung.semmodel.IMailLocalService;
 
 public class Main extends Application {
 
@@ -19,7 +18,7 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root, 300, 275));
         primaryStage.show();
 
-        IMailLocalService mailService = new CRUDEMailILocalService();
+        IMailLocalService mailService = new IMailLocalServiceImpl();
         EMail email = new EMail();
         mailService.sendeEmail(null, email);
     }

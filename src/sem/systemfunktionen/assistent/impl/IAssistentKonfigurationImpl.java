@@ -1,7 +1,7 @@
 package sem.systemfunktionen.assistent.impl;
 
+import sem.datenhaltung.semmodel.entities.AssistentKonfig;
 import sem.systemfunktionen.assistent.services.IAssistentKonfiguration;
-import sem.datenhaltung.semmodel.entities.*;
 
 public class IAssistentKonfigurationImpl implements IAssistentKonfiguration {
     @Override
