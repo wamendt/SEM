@@ -1,22 +1,26 @@
 package sem.datenhaltung.semmodel.entities;
 
-import java.util.ArrayList;
-
 public class EMail {
     private int mid;
     private String absender;
-    private ArrayList<String> empfaenger;
-    private ArrayList<String> cc;
-    private ArrayList<String> bcc;
     private String betref;
     private String inhalt;
     private String zustand;
+    private int tid;
 
-    //Kontruktor
+    //Konstruktor
     public EMail(){}
 
     //Hier evtl weitere Kontruktoren, wenn nötig
 
+
+    public int getTid() {
+        return tid;
+    }
+
+    public void setTid(int tid) {
+        this.tid = tid;
+    }
 
     public int getMid() {
         return mid;
@@ -32,30 +36,6 @@ public class EMail {
 
     public void setAbsender(String absender) {
         this.absender = absender;
-    }
-
-    public ArrayList<String> getEmpfaenger() {
-        return empfaenger;
-    }
-
-    public void setEmpfaenger(ArrayList<String> empfaenger) {
-        this.empfaenger = empfaenger;
-    }
-
-    public ArrayList<String> getCc() {
-        return cc;
-    }
-
-    public void setCc(ArrayList<String> cc) {
-        this.cc = cc;
-    }
-
-    public ArrayList<String> getBcc() {
-        return bcc;
-    }
-
-    public void setBcc(ArrayList<String> bcc) {
-        this.bcc = bcc;
     }
 
     public String getBetref() {
