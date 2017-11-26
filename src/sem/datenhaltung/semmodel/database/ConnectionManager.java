@@ -1,4 +1,4 @@
-package sem.datenhaltung.semmodel.databasemanager;
+package sem.datenhaltung.semmodel.database;
 
 import java.io.IOException;
 import java.sql.Connection;
