@@ -1,9 +1,8 @@
-package sem.datenhaltung.semmodel.crud.impl;
+package sem.datenhaltung.semmodel;
 
-import sem.datenhaltung.semmodel.crud.services.IMailLocalService;
+import sem.datenhaltung.semmodel.IMailLocalService;
 import sem.datenhaltung.semmodel.entities.EMail;
 import sem.datenhaltung.semmodel.entities.Konto;
-import sem.datenhaltung.semmodel.template.DBMappingTemplate;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -16,7 +15,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Properties;
 
-public class IMailLocalServiceImpl extends DBMappingTemplate<EMail> implements IMailLocalService{
+public class IMailLocalServiceImpl extends DBCRUDTeamplate<EMail> implements IMailLocalService{
 
     public IMailLocalServiceImpl(){
 

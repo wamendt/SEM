@@ -1,10 +1,7 @@
-package sem.datenhaltung.semmodel.crud.services;
+package sem.datenhaltung.semmodel;
 
-import sem.datenhaltung.semmodel.entities.Connection;
 import sem.datenhaltung.semmodel.entities.EMail;
 import sem.datenhaltung.semmodel.entities.Konto;
-import sem.fachlogik.grenzklassen.EMailGrenz;
-import sem.fachlogik.grenzklassen.KontoGrenz;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -1,31 +1,15 @@
-package sem.datenhaltung.semmodel.crud.impl;
+package sem.datenhaltung.semmodel;
 
-import sem.datenhaltung.semmodel.crud.services.IMailServerService;
-import sem.datenhaltung.semmodel.entities.Connection;
 import sem.datenhaltung.semmodel.entities.EMail;
-import sem.datenhaltung.semmodel.crud.services.IMailLocalService;
 import sem.datenhaltung.semmodel.entities.Konto;
-import sem.datenhaltung.semmodel.template.DBMappingTemplate;
-import sem.fachlogik.grenzklassen.EMailGrenz;
-import sem.fachlogik.grenzklassen.KontoGrenz;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Properties;
 
-public class CRUDEMailServerService extends DBMappingTemplate<EMail> implements IMailServerService {
+public class CRUDEMailServerService implements IMailServerService {
 
 
     public CRUDEMailServerService(){
 
-    }
-
-    @Override
-    protected EMail makeObject(ResultSet rs) {
-        return null;
     }
 
 
