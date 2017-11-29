@@ -1,79 +1,78 @@
 package sem.fachlogik.grenzklassen;
 
-import java.util.Date;
+import java.util.ArrayList;
 
 public class EMailGrenz {
+    private int mid;
     private String absender;
-    private String empfaenger;
-    private String ccEmpfaenger;
+    private ArrayList<String> empfaenger;
+    private ArrayList<String> cc;
+    private ArrayList<String> bcc;
     private String betreff;
     private String inhalt;
-    private Date erstellungsDatum;
-    private boolean gelesen;
+    private ArrayList<FileGrenz> files;
 
+    public int getMid() {
+        return mid;
+    }
 
-    //Kontruktor
-    public EMailGrenz(){}
+    public void setMid(int mid) {
+        this.mid = mid;
+    }
 
-    //Hier evtl weitere Kontruktoren, wenn nötig
-
-
-    //Getter
     public String getAbsender() {
         return absender;
     }
 
-    public String getEmpfaenger() {
+    public void setAbsender(String absender) {
+        this.absender = absender;
+    }
+
+    public ArrayList<String> getEmpfaenger() {
         return empfaenger;
     }
 
-    public String getCcEmpfaenger() {
-        return ccEmpfaenger;
+    public void setEmpfaenger(ArrayList<String> empfaenger) {
+        this.empfaenger = empfaenger;
+    }
+
+    public ArrayList<String> getCc() {
+        return cc;
+    }
+
+    public void setCc(ArrayList<String> cc) {
+        this.cc = cc;
+    }
+
+    public ArrayList<String> getBcc() {
+        return bcc;
+    }
+
+    public void setBcc(ArrayList<String> bcc) {
+        this.bcc = bcc;
     }
 
     public String getBetreff() {
         return betreff;
     }
 
-    public String getInhalt() {
-        return inhalt;
-    }
-
-    public Date getErstellungsDatum() {
-        return erstellungsDatum;
-    }
-
-    public boolean getGelesen() {
-        return gelesen;
-    }
-
-
-    //Setter
-    public void setAbsender(String absender) {
-        this.absender = absender;
-    }
-
-    public void setEmpfaenger(String empfaenger) {
-        this.empfaenger = empfaenger;
-    }
-
-    public void setCcEmpfaenger(String ccEmpfaenger) {
-        this.ccEmpfaenger = ccEmpfaenger;
-    }
-
     public void setBetreff(String betreff) {
         this.betreff = betreff;
+    }
+
+    public String getInhalt() {
+        return inhalt;
     }
 
     public void setInhalt(String inhalt) {
         this.inhalt = inhalt;
     }
 
-    public void setErstellungsDatum(Date erstellungsDatum) {
-        this.erstellungsDatum = erstellungsDatum;
+    public ArrayList<FileGrenz> getFiles() {
+        return files;
     }
 
-    public void setGelesen(boolean gelesen) {
-        this.gelesen = gelesen;
+    public void setFiles(ArrayList<FileGrenz> files) {
+        this.files = files;
     }
 }
