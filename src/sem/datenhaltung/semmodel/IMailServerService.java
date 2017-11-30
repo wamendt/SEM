@@ -3,7 +3,7 @@ package sem.datenhaltung.semmodel;
 
 import sem.datenhaltung.semmodel.entities.EMail;
 import sem.datenhaltung.semmodel.entities.Konto;
-
+import javax.mail.MessagingException;
 import java.util.ArrayList;
 
 public interface IMailServerService {
@@ -16,7 +16,7 @@ public interface IMailServerService {
 
     //Aktionen mit Mails
     public boolean sendeEmail(Konto konto, EMail email);
-    public boolean importiereAllEMails(Konto konto);
+    public boolean importiereAllEMails(Konto konto) throws MessagingException;
     public boolean verschiebeEMail(Konto konto, String vonOrdner, String zuOrdner, EMail email);
     public boolean setzeTagsZurServerEMail(Konto konto, EMail email, String art);
     public boolean speichereEMailImOrdner(Konto konto, EMail eMail, String pfad);
