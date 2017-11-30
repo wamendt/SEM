@@ -1,6 +1,6 @@
 package sem.datenhaltung.semmodel.impl;
 
-import sem.datenhaltung.semmodel.database.ConnectionManager;
+import sem.datenhaltung.semmodel.database.DBConnectionManager;
 
 import java.io.IOException;
 import java.sql.*;
@@ -36,7 +36,7 @@ public abstract class DBCRUDTeamplate<T> {
      */
     protected ArrayList<T> query(String sql, Object... objects) throws SQLException, IOException {
         ArrayList<T> result = new ArrayList<>();
-        Connection connection = ConnectionManager.getConnection();
+        Connection connection = DBConnectionManager.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql);
         if(objects != null){
             for(int i = 1; i <= objects.length; i++) {
@@ -63,7 +63,7 @@ public abstract class DBCRUDTeamplate<T> {
      */
     protected int updateOrDelete(String sql, Object... objects)throws IOException, SQLException {
         Connection connection = null;
-        connection = ConnectionManager.getConnection();
+        connection = DBConnectionManager.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql);
         if(objects != null) {
             for (int i = 1; i <= objects.length; i++) {
@@ -86,7 +86,7 @@ public abstract class DBCRUDTeamplate<T> {
     protected int insertAndReturnKey(String sql, Object... objects) throws IOException, SQLException {
         int key = -1;
         Connection connection = null;
-        connection = ConnectionManager.getConnection();
+        connection = DBConnectionManager.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql);
         if(objects != null) {
             for (int i = 1; i <= objects.length; i++) {
@@ -113,7 +113,7 @@ public abstract class DBCRUDTeamplate<T> {
      */
     protected T find(String sql) throws IOException, SQLException {
         //TODO schauen ob diese Methode nicht besser geloest werden kann... muss doch gehen ohne eine ganze liste zu holen??
-        Connection connection = ConnectionManager.getConnection();
+        Connection connection = DBConnectionManager.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         ResultSet resultSet = preparedStatement.getResultSet();
         T object = null;
