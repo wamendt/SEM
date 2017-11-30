@@ -13,4 +13,5 @@ public interface ICRUDMail {
     ArrayList<EMail> getAlleEMailsMitTagId(int tid) throws IOException, SQLException ;
     boolean deleteEMail(int mid) throws IOException, SQLException ;
     boolean updateEMail(EMail email) throws IOException, SQLException;
+    public EMail getEMailByMessageID(String id) throws IOException, SQLException;
 }
