@@ -12,11 +12,11 @@ class EMailTestTest {
     void updateEMail() throws IOException, SQLException {
 
 /*
-            Connection con = SEMModelManager.getConnection();
+            Connection con = ConnectionManager.getConnection();
 
             Statement stmt = con.createStatement();
             String sql = "create table EMail " +
-                    "(id int," +
+                    "(did int," +
                     "fromaddr varchar not null," +
                     "content text not null)";
             stmt.executeUpdate(sql);
