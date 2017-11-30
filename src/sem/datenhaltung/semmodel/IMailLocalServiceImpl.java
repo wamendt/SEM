@@ -3,6 +3,7 @@ package sem.datenhaltung.semmodel;
 import sem.datenhaltung.semmodel.IMailLocalService;
 import sem.datenhaltung.semmodel.entities.EMail;
 import sem.datenhaltung.semmodel.entities.Konto;
+import sem.datenhaltung.semmodel.impl.DBCRUDTeamplate;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -19,6 +20,10 @@ public class IMailLocalServiceImpl extends DBCRUDTeamplate<EMail> implements IMa
 
     public IMailLocalServiceImpl(){
 
+    }
+
+    protected EMail makeObject(ResultSet rs) {
+        return null;
     }
 
     @Override
@@ -63,11 +68,6 @@ public class IMailLocalServiceImpl extends DBCRUDTeamplate<EMail> implements IMa
         }
         return ret;
 
-    }
-
-    @Override
-    protected EMail makeObject(ResultSet rs) {
-        return null;
     }
 
     @Override
