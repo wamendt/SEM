@@ -1,6 +1,5 @@
 package sem.systemfunktionen.assistent.impl;
 
-import sem.datenhaltung.semmodel.entities.EMail;
 import sem.datenhaltung.semmodel.entities.Tag;
 import sem.fachlogik.grenzklassen.EMailGrenz;
 import sem.fachlogik.grenzklassen.TagGrenz;
@@ -38,13 +37,13 @@ public class IAssistentMailServiceImpl implements IAssistentMailService {
 
         assistent.trainModel(data);
 
-        for(int i = 0; i < emails.size(); i++){
+        for(int i = 0; i < emails.size(); i++) {
             Data d = data.get(i);
             EMailGrenz e = emails.get(i);
             double max = d.topicDistribion[0];
             int position = 0;
-            for(int j = 1; j < d.topicDistribion.length; j++){
-                if(max < d.topicDistribion[j]){
+            for (int j = 1; j < d.topicDistribion.length; j++) {
+                if (max < d.topicDistribion[j]) {
                     max = d.topicDistribion[j];
                     position = j;
                 }
@@ -52,11 +51,11 @@ public class IAssistentMailServiceImpl implements IAssistentMailService {
             TagGrenz tag = new TagGrenz();
             tag.setNumIndex(position);
             e.setTag(tag);
-            try {
-                assistent.saveModel();
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
+        }
+        try {
+            assistent.saveModel();
+        } catch (IOException e1) {
+            e1.printStackTrace();
         }
     }
 }
