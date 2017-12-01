@@ -5,17 +5,26 @@ import sem.datenhaltung.semmodel.impl.CRUDEMail;
 import sem.datenhaltung.semmodel.mailConnection.MailStoreManager;
 import sem.datenhaltung.semmodel.entities.EMail;
 import sem.datenhaltung.semmodel.entities.Konto;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.search.FlagTerm;
 import javax.mail.*;
 import javax.mail.search.MessageIDTerm;
 import javax.mail.search.SearchTerm;
+import java.util.Enumeration;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
 import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.jsoup.Jsoup;
 import sem.datenhaltung.semmodel.services.ICRUDMail;
 import sem.datenhaltung.semmodel.services.ICRUDManagerSingleton;
@@ -191,6 +200,10 @@ public class CRUDEMailServerService implements IMailServerService {
 
     @Override
     public boolean importiereAllEMails(Konto konto){
+        /*
+        * Hier müssen noch die FLags der gelesenen bzw. ungelesenen Nachrichten abgefragt werden und diese dementsprechend
+        * in der DB einsetzen zu können!
+        * */
 
         //CRUDObjekt zur Überprüfung ob Mails bereits importiert wurden!
         CRUDEMail crudeMail = new CRUDEMail();
@@ -220,6 +233,7 @@ public class CRUDEMailServerService implements IMailServerService {
                         folder.open((Folder.READ_ONLY));
                     }
 
+                    //Nachrichten des Ordners holen
                     messages = folder.getMessages();
 
                     for(Message message : messages){
@@ -227,12 +241,9 @@ public class CRUDEMailServerService implements IMailServerService {
                         System.out.println("Ordner: " + folder.getFullName());
 
                         String content = "";
+                        String messageID;
                         int exist = 0;
                         try{
-                            //Zeiterfassung
-                            long currentMillis = System.currentTimeMillis();
-                            long currentSeconds = TimeUnit.MILLISECONDS.toSeconds(currentMillis);
-
                             //Beginn Zeitmessung für die aktuelle Nachricht
                             long startMillis = System.currentTimeMillis();
                             long startSeconds = TimeUnit.MILLISECONDS.toSeconds(startMillis);
@@ -242,7 +253,7 @@ public class CRUDEMailServerService implements IMailServerService {
 
                             //Existiert die E-Mail bereits in der DB?
 
-                            if(crudeMail.getEMailByMessageInhalt(mailContent) == null){
+                            if(crudeMail.getEMailByMessageID(mailContent) == null){
 
                                 eMail.setBetref(message.getSubject());
 
@@ -293,21 +304,40 @@ public class CRUDEMailServerService implements IMailServerService {
                                     System.out.println("ByteArrayOutputStream wirft Exception: " + e.getMessage());
                                 }
 
-                                crudeMail.createEMail(eMail);
+                                message.getHeader("Message-Id");
+                                Enumeration headers = message.getAllHeaders();
 
-                                long messageTime = currentSeconds - startSeconds;
+                                while (headers.hasMoreElements()) {
+                                    Header h = (Header) headers.nextElement();
+                                    String mID = h.getName();
+                                    if(mID.contains("Message-ID")){
+                                        System.out.println(h.getName() + ":" + h.getValue());
+                                        messageID = h.getValue();
+                                        eMail.setMessageID(messageID);
+                                    }
+                                }
+
+                                crudeMail.createEMail(eMail);
+                                //Zeiterfassung
+                                long currentMillis = System.currentTimeMillis();
+                                long currentSeconds = TimeUnit.MILLISECONDS.toSeconds(currentMillis);
+
+                                long messageTime = currentMillis - startMillis;
                                 long totalTime = currentSeconds - beginnSeconds;
 
                                 //Ausgabe zur Kontrolle
-                                System.out.println(messageCounter + ". Nachricht wurde importiert!\nbenötigte Zeit für diese Nachricht: " + messageTime + "s\nbenötigte Zeit Total:" + totalTime + "s\n\n");
+                                System.out.println(messageCounter + ". Nachricht wurde importiert!\nbenötigte Zeit für diese Nachricht: " + messageTime + "ms\nbenötigte Zeit Total:" + totalTime + "s\n\n");
                                 messageCounter++;
                             }
                             else {
+                                //Zeiterfassung
+                                long currentMillis = System.currentTimeMillis();
+                                long currentSeconds = TimeUnit.MILLISECONDS.toSeconds(currentMillis);
 
                                 System.out.println("\nE-Mail bereits in der DB!");
-                                long messageTime = currentSeconds - startSeconds;
+                                long messageTime = currentMillis - startMillis;
                                 long totalTime = currentSeconds - beginnSeconds;
-                                System.out.println("benötigte Zeit für diese Nachricht: " + messageTime + "s\nbenötigte Zeit Total:" + totalTime + "s\n\n");
+                                System.out.println("benötigte Zeit für diese Nachricht: " + messageTime + "ms\nbenötigte Zeit Total:" + totalTime + "s\n\n");
                             }
 
                         }catch (NullPointerException e){
@@ -427,11 +457,76 @@ public class CRUDEMailServerService implements IMailServerService {
 
     @Override
     public boolean setzeTagsZurServerEMail(Konto konto, EMail email, String art) {
+        //Hier werden sämtliche Flags zu einer Email gesetzt, bisher werden diese in den andern Methoden gesetzt,
+        //Dies wird ausgekappselt und hier umgesetzt!
+
         return false;
     }
 
     @Override
-    public boolean speichereEMailImOrdner(Konto konto, EMail eMail, String pfad) {
+    public boolean speichereEMailImOrdner(Konto konto, EMail eMail, String pfad) throws MessagingException {
+        //Alle Namen der verfügbaren Ordner holen
+        ArrayList<String> ordnerListe = getAlleOrdnerVonKonto(konto);
+
+        //Wenn mindestens zwei Ordner verfügbar sind, fortfahren
+        if(ordnerListe.size() > 1 && ordnerListe.contains(pfad)) {
+            System.out.println("Ordnergröße > 1");
+            //Store holen
+            MailStoreManager storeManager = new MailStoreManager();
+            Store store = storeManager.setImapConnection(konto.getIMAPhost(), konto.getEmailAddress(), konto.getPassWort());
+
+            Folder folder = store.getFolder(pfad);
+            System.out.println("Ordner gefunden!: " + folder.getFullName());
+
+            if(!folder.isOpen()){
+                folder.open(Folder.READ_WRITE);
+            }
+
+            try {
+                MimeMessage message = new MimeMessage(Session.getInstance(System.getProperties()));
+                message.setFrom(new InternetAddress(eMail.getAbsender()));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(eMail.getEmpfaenger()));
+                message.setSubject(eMail.getBetreff());
+                // create the message part
+                MimeBodyPart content = new MimeBodyPart();
+                // fill message
+                message.setText(eMail.getInhalt());
+                Multipart multipart = new MimeMultipart();
+                multipart.addBodyPart(content);
+
+                // add attachments
+                /*f(eMail.getAttachment() != null){
+                    for(File file : attachments) {
+                        MimeBodyPart attachment = new MimeBodyPart();
+                        DataSource source = new FileDataSource(file);
+                        attachment.setDataHandler(new DataHandler(source));
+                        attachment.setFileName(file.getName());
+                        multipart.addBodyPart(attachment);
+                    }
+                    // integration
+                    message.setContent(multipart);
+                    // store file
+                    message.writeTo(new FileOutputStream(new File("c:/mail.eml")));
+                }*/
+
+                message.setFlag(Flags.Flag.DRAFT, true);
+                MimeMessage draftMessages[] = {message};
+                folder.appendMessages(draftMessages);
+                /*
+                Message[] messages = new Message[1];
+                messages[0] = message;
+                defaultFolder.copyMessages(messages, folder);
+                */
+                return true;
+            }
+            catch (MessagingException ex) {
+                System.out.println("MessagingException wurde geworfen: " + ex.getMessage());
+            }
+        }
+        else {
+            System.out.println("Der angegebene Ordner existiert nicht auf dem E-Mail - Server!");
+            return false;
+        }
         return false;
     }
 }
