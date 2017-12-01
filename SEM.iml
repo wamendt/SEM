@@ -20,6 +20,5 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="mallet-2.0.8" level="project" />
-    <orderEntry type="library" name="sqlite-jdbc-3.21.0(1)" level="project" />
   </component>
 </module>

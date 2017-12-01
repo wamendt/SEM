@@ -5,7 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import sem.datenhaltung.semmodel.impl.IMailLocalServiceImpl;
+import sem.datenhaltung.semmodel.IMailLocalServiceImpl;
 import sem.datenhaltung.semmodel.entities.EMail;
 import sem.datenhaltung.semmodel.IMailLocalService;
 
