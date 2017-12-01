@@ -12,6 +12,16 @@ public class EMailGrenz {
     private String inhalt;
     private ArrayList<FileGrenz> files;
 
+    public TagGrenz getTag() {
+        return tag;
+    }
+
+    public void setTag(TagGrenz tag) {
+        this.tag = tag;
+    }
+
+    private TagGrenz tag;
+
     public int getMid() {
         return mid;
     }

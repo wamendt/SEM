@@ -2,7 +2,8 @@ package sem.datenhaltung.semmodel.database;
 
 import org.junit.jupiter.api.Test;
 import sem.datenhaltung.semmodel.entities.Adresse;
-import sem.datenhaltung.semmodel.impl.CRUDAdresse;
+import sem.datenhaltung.semmodel.services.ICRUDAdresse;
+import sem.datenhaltung.semmodel.services.ICRUDManagerSingleton;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -15,7 +16,7 @@ class CRUDAdresseTest {
 
     @Test
     void createAdresse() throws IOException, SQLException {
-        CRUDAdresse crudAdresse = CRUDAdresse.getInstance();
+        ICRUDAdresse crudAdresse = ICRUDManagerSingleton.getIcrudAdresseInstance();
         Adresse a = new Adresse();
         a.setAdresse("adresse");
         a.setName("name");
@@ -27,7 +28,8 @@ class CRUDAdresseTest {
 
     @Test
     void getAdresseById() throws IOException, SQLException {
-        CRUDAdresse crudAdresse = CRUDAdresse.getInstance();
+        ICRUDAdresse crudAdresse = ICRUDManagerSingleton.getIcrudAdresseInstance();
+
         Adresse a = crudAdresse.getAdresseById(1);
         System.out.println(a.getName());
     }
@@ -35,7 +37,10 @@ class CRUDAdresseTest {
 
     @Test
     void getAlleAdressen() throws IOException, SQLException {
-        ArrayList<Adresse> adresses = CRUDAdresse.getInstance().getAlleAdressen();
+        ArrayList<Adresse> adresses = ICRUDManagerSingleton
+                .getIcrudAdresseInstance()
+                .getAlleAdressen();
+
         for(Adresse a : adresses){
             System.out.println(a.getAid());
         }
@@ -43,7 +48,8 @@ class CRUDAdresseTest {
 
     @Test
     void deleteAdresse() throws IOException, SQLException {
-        CRUDAdresse crudAdresse = CRUDAdresse.getInstance();
+        ICRUDAdresse crudAdresse = ICRUDManagerSingleton.getIcrudAdresseInstance();
+
         crudAdresse.deleteAdresse(1);
     }
 
@@ -51,11 +57,12 @@ class CRUDAdresseTest {
 
     @Test
     void updateAdresse() throws IOException, SQLException {
-        Adresse a = CRUDAdresse.getInstance().getAdresseById(2);
+        Adresse a = ICRUDManagerSingleton.getIcrudAdresseInstance().getAdresseById(2);
+
         a.setName("geaenderter name");
         a.setAdresse("23");
 
-        System.out.println(CRUDAdresse.getInstance().updateAdresse(a));
+        System.out.println( ICRUDManagerSingleton.getIcrudAdresseInstance().updateAdresse(a));
     }
 
 }
