@@ -1,5 +1,6 @@
 package sem.datenhaltung.semmodel;
 
+import com.sun.xml.internal.org.jvnet.mimepull.MIMEMessage;
 import sem.datenhaltung.semmodel.impl.CRUDEMail;
 import sem.datenhaltung.semmodel.mailConnection.MailStoreManager;
 import sem.datenhaltung.semmodel.entities.EMail;
@@ -9,10 +10,15 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.search.FlagTerm;
 import javax.mail.*;
+import javax.mail.search.MessageIDTerm;
+import javax.mail.search.SearchTerm;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
 import java.io.*;
 import org.jsoup.Jsoup;
+import sem.datenhaltung.semmodel.services.ICRUDMail;
+import sem.datenhaltung.semmodel.services.ICRUDManagerSingleton;
 
 
 public class CRUDEMailServerService implements IMailServerService {
@@ -24,46 +30,178 @@ public class CRUDEMailServerService implements IMailServerService {
 
 
     @Override
-    public ArrayList<String> getAlleOrdnerVonKonto(Konto konto) {
-        return null;
+    public ArrayList<String> getAlleOrdnerVonKonto(Konto konto){
+        //Liste für die OrdnerNamen
+        ArrayList<String> ordnerListe = new ArrayList<>();
+
+        //Store - Objekt holen
+        try{
+            MailStoreManager storeManager = new MailStoreManager();
+            Store store = storeManager.setImapConnection(konto.getIMAPhost(), konto.getEmailAddress(), konto.getPassWort());
+
+            //Alle Ordner holen
+            Folder[] folders = store.getDefaultFolder().list("*");
+
+            //Ausgabe zur Kontrolle
+            for (Folder folder : folders) {
+                if ((folder.getType() & Folder.HOLDS_MESSAGES) != 0) {
+                    System.out.println("Gefundener Ordner: " + folder.getFullName());
+                    ordnerListe.add(folder.getFullName());
+                }
+            }
+        }
+        catch (NoSuchProviderException e){
+            System.out.println("StoreManager wirft Exception: " + e.getMessage());
+        } catch (MessagingException e) {
+            System.out.println("MessagingException wird geworfen: " + e.getMessage());
+        }
+        return ordnerListe;
     }
 
     @Override
     public boolean loeschEMailVomServer(Konto konto, EMail eMail) {
+        //Store - Objekt holen
+        try{
+            MailStoreManager storeManager = new MailStoreManager();
+            Store store = storeManager.setImapConnection(konto.getIMAPhost(), konto.getEmailAddress(), konto.getPassWort());
+
+            //Alle Ordner holen
+            Folder[] folders = store.getDefaultFolder().list("*");
+
+            //Suchkriterien erstellen
+            SearchTerm searchTerm = new MessageIDTerm(eMail.getMessageID());
+
+            //Ausgabe zur Kontrolle
+            for (Folder folder : folders) {
+                if ((folder.getType() & Folder.HOLDS_MESSAGES) != 0) {
+                    System.out.println("Gefundener Ordner: " + folder.getFullName());
+
+                    //Ordner öfnnen
+                    if(!folder.isOpen()){
+                        folder.open((Folder.READ_WRITE));
+                    }
+
+                    //Hole die Nachricht mit der MessageID
+                    MimeMessage[] messages = (MimeMessage[]) folder.search(searchTerm);
+
+                    for (MimeMessage message: messages){
+                        if(Objects.equals(eMail.getMessageID(), message.getMessageID())){
+                            System.out.println("Lösche EMAIL!");
+                            message.setFlag(Flags.Flag.DELETED, true);
+                            folder.expunge();
+                            System.out.println("EMAIL gelöscht!");
+                            return true;
+                        }
+                    }
+                }
+                folder.close(true);
+            }
+        }
+        catch (NullPointerException e){
+            System.out.println("NullPointerException wurde geworfen!" + e.getMessage());
+        }
+        catch (NoSuchProviderException e){
+            System.out.println("StoreManager wirft Exception: " + e.getMessage());
+        }
+        catch (MessagingException e) {
+            System.out.println("MessagingException wird geworfen: " + e.getMessage());
+        }
         return false;
     }
 
     @Override
-    public String erstelleEMailOrdner(Konto konto, String pfad) {
-        return null;
+    public boolean erstelleEMailOrdner(Konto konto, String pfad) {
+        boolean isCreated = false;
+        //Store - Objekt holen
+        try{
+            MailStoreManager storeManager = new MailStoreManager();
+            Store store = storeManager.setImapConnection(konto.getIMAPhost(), konto.getEmailAddress(), konto.getPassWort());
+
+            //Default Ordner holen
+            Folder folder = store.getDefaultFolder();
+
+            //Neuen Ordner erstellen
+            Folder newFolder = folder.getFolder(pfad);
+            isCreated = newFolder.create(Folder.HOLDS_MESSAGES);
+            System.out.println("created: " + isCreated);
+
+
+        }
+        catch (NoSuchProviderException e){
+            System.out.println("StoreManager wirft Exception: " + e.getMessage());
+        }
+        catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        catch (Exception e)
+        {
+            System.out.println("Error creating folder: " + e.getMessage());
+            e.printStackTrace();
+            isCreated = false;
+        }
+        return isCreated;
     }
 
     @Override
-    public String loescheEMailOrdner(Konto konto, String pfad) {
-        return null;
-    }
+    public boolean loescheEMailOrdner(Konto konto, String pfad) {
+        //Store - Objekt holen
+        try{
+            MailStoreManager storeManager = new MailStoreManager();
+            Store store = storeManager.setImapConnection(konto.getIMAPhost(), konto.getEmailAddress(), konto.getPassWort());
 
-    @Override
-    public boolean sendeEmail(Konto konto, EMail email) {
+            //Alle Ordner holen
+            Folder[] folders = store.getDefaultFolder().list("*");
+
+            //Ausgabe zur Kontrolle
+            for (Folder folder : folders) {
+                //Ordner öfnnen
+                if(!folder.isOpen()){
+                    folder.open((Folder.READ_WRITE));
+                }
+
+                if(Objects.equals(folder.getFullName(), pfad)){
+                    //Hole alle Nachrichten des Ordners
+                    Message[] messages = folder.getMessages();
+
+                    //Setze Flags auf gelöscht
+                    folder.setSubscribed(false);
+                    Flags deleted = new Flags(Flags.Flag.DELETED);
+                    folder.setFlags(messages, deleted, true);
+
+                    //Ordner schliessen und auslaufen lassen
+                    folder.expunge();
+                    folder.close(true);
+
+                    //Ordner letzendlich löschen
+                    folder.delete(true);
+                    System.out.println("Ordner gelöscht!");
+                    return true;
+                }
+                folder.close(true);
+            }
+        }
+        catch (NoSuchProviderException e){
+            System.out.println("StoreManager wirft Exception: " + e.getMessage());
+        } catch (MessagingException e) {
+            System.out.println("MessagingException wird geworfen: " + e.getMessage());
+        }
         return false;
     }
 
     @Override
-    public boolean importiereAllEMails(Konto konto) throws MessagingException {
+    public boolean importiereAllEMails(Konto konto){
 
         //CRUDObjekt zur Überprüfung ob Mails bereits importiert wurden!
         CRUDEMail crudeMail = new CRUDEMail();
         EMail eMail = new EMail();
 
         int durchlauf = 1;
-
-        //Store - Objekt holen
-        MailStoreManager storeManager = new MailStoreManager();
-        Store store = storeManager.setImapConnection(konto.getIMAPhost(), konto.getEmailAddress(), konto.getPassWort());
-
         long messageCounter = 1;
 
         try {
+            //Store - Objekt holen
+            MailStoreManager storeManager = new MailStoreManager();
+            Store store = storeManager.setImapConnection(konto.getIMAPhost(), konto.getEmailAddress(), konto.getPassWort());
             if (store != null) {
 
                 //Alle Ordner holen
@@ -253,10 +391,14 @@ public class CRUDEMailServerService implements IMailServerService {
                                 System.out.println("NullPointerException wurde geworfen: " + e.getMessage());
                             }
                         }
+                        folder.close(true);
                     }
                     durchlauf++;
                 }while (durchlauf < 9);
             }
+        }
+        catch (NoSuchProviderException e) {
+            System.out.println("StoreManager wirft Exception: " + e.getMessage());
         }
         catch (FolderNotFoundException fe){
             System.out.println("FolderNotFoundException wurde geworfen: " + fe.getMessage());
@@ -290,7 +432,7 @@ public class CRUDEMailServerService implements IMailServerService {
                 }
                 else if (bodyPart.isMimeType("text/html")) {
                     String html = (String) bodyPart.getContent();
-                    result = result + "\n" + Jsoup.parse(html).text();
+                    result = result.concat("\n" + Jsoup.parse(html).text());
                 }
             }
             return result;
@@ -300,7 +442,65 @@ public class CRUDEMailServerService implements IMailServerService {
 
 
     @Override
-    public boolean verschiebeEMail(Konto konto, String vonOrdner, String zuOrdner, EMail email) {
+    public boolean verschiebeEMail(Konto konto, String vonOrdner, String zuOrdner, EMail email) throws MessagingException {
+        //Alle Namen der verfügbaren Ordner holen
+        ArrayList<String> ordnerListe = getAlleOrdnerVonKonto(konto);
+
+        //Wenn mindestens zwei Ordner verfügbar sind, fortfahren
+        if(ordnerListe.size() > 1){
+            System.out.println("Ordnergröße > 1");
+            //Store holen
+            MailStoreManager storeManager = new MailStoreManager();
+            Store store = storeManager.setImapConnection(konto.getIMAPhost(), konto.getEmailAddress(), konto.getPassWort());
+
+            //Ordner-Objekte anlegen
+            Folder folder = store.getDefaultFolder();
+            Folder fromFolder = null;
+            Folder toFolder = null;
+
+            for(String ordnerName: ordnerListe){
+                if(Objects.equals(vonOrdner, ordnerName)){
+                    //vonOrdner - Ordner holen
+                    fromFolder = folder.getFolder(vonOrdner);
+                    System.out.println("FromOrdner geholt!");
+                }
+                if(Objects.equals(zuOrdner, ordnerName)){
+                    //vonOrdner - Ordner holen
+                    toFolder = folder.getFolder(zuOrdner);
+                    System.out.println("ToOrdner geholt!");
+
+                }
+                if (fromFolder != null && toFolder != null){
+                    //Ordner öfnnen
+                    if(!fromFolder.isOpen()){
+                        fromFolder.open((Folder.READ_WRITE));
+                        System.out.println("FromOrdner geöffnet!");
+
+                    }
+
+                    //Ordner öfnnen
+                    if(!toFolder.isOpen()){
+                        toFolder.open((Folder.READ_WRITE));
+                        System.out.println("ToOrdner geöffnet!");
+
+                    }
+
+                    //Suchkriterien erstellen
+                    SearchTerm searchTerm = new MessageIDTerm(email.getMessageID());
+
+                    //Hole die Nachricht mit der MessageID
+                    MimeMessage[] messages = (MimeMessage[]) fromFolder.search(searchTerm);
+
+                    //Nachrichten in den ZielOrdner kopieren
+                    fromFolder.copyMessages(messages, toFolder);
+                    System.out.println("Nachricht kopiert");
+
+                    if(loeschEMailVomServer(konto, email)){
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
     }
 
