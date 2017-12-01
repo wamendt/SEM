@@ -11,6 +11,8 @@ public class MailStoreManager {
 
     }
 
+    private Session session;
+
     //Erstellt eine Imap - Verbindung und liefert das Store - Objekt zurück
     public Store setImapConnection(String host, String username, String password) throws NoSuchProviderException {
         Properties props = System.getProperties();
@@ -29,7 +31,7 @@ public class MailStoreManager {
             }
         };
 
-        Session session = Session.getInstance(props, auth);
+        this.session = Session.getInstance(props, auth);
         Store store = session.getStore("imaps");
         try {
             System.out.println("Connecting to IMAP server: ");
@@ -40,5 +42,9 @@ public class MailStoreManager {
         }
 
         return store;
+    }
+
+    public Session getSession() {
+        return session;
     }
 }
