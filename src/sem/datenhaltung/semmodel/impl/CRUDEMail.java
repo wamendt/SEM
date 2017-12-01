@@ -30,12 +30,12 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
 
     @Override
     public int createEMail(EMail email) throws IOException, SQLException {
-        String sql = "INSERT INTO email (betreff ,inhalt , tid, absender, cc, bcc, empfaenger, contentOriginal, zustand, messageID)" +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO email (betreff ,inhalt , tid, absender, cc, bcc, empfaenger, contentOriginal, zustand, messageID, ordner)" +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         return insertAndReturnKey(sql, email.getBetreff(), email.getInhalt(), email.getTid(), email.getAbsender(),
                 email.getCc(), email.getBcc(), email.getEmpfaenger(), email.getContentOriginal(), email.getZustand(),
-                email.getMessageID());
+                email.getMessageID(), email.getOrdner());
     }
 
     @Override
@@ -44,8 +44,8 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
         return eMails.size() > 0 ? eMails.get(0) : null;
     }
 
-    public EMail getEMailByMessageID(String id) throws IOException, SQLException {
-        ArrayList<EMail> eMails = query("SELECT * FROM email WHERE messageID = ?", id);
+    public EMail getEMailByMessageInhalt(String inhalt) throws IOException, SQLException {
+        ArrayList<EMail> eMails = query("SELECT * FROM email WHERE inhalt = ?", inhalt);
         return eMails.size() > 0 ? eMails.get(0) : null;
     }
 
