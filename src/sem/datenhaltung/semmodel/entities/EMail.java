@@ -12,6 +12,7 @@ public class EMail {
     private String contentOriginal;
     private String zustand;
     private String messageID;
+    private String ordner;
 
     //Konstruktor
     public EMail(){}
@@ -106,5 +107,13 @@ public class EMail {
 
     public void setMessageID(String messageID) {
         this.messageID = messageID;
+    }
+
+    public String getOrdner() {
+        return ordner;
+    }
+
+    public void setOrdner(String ordner) {
+        this.ordner = ordner;
     }
 }
