@@ -89,6 +89,7 @@ public class CRUDEMailServerService implements IMailServerService {
                             System.out.println("Lösche EMAIL!");
                             message.setFlag(Flags.Flag.DELETED, true);
                             folder.expunge();
+                            folder.close(true);
                             System.out.println("EMAIL gelöscht!");
                             return true;
                         }
@@ -195,206 +196,126 @@ public class CRUDEMailServerService implements IMailServerService {
         CRUDEMail crudeMail = new CRUDEMail();
         EMail eMail = new EMail();
 
-        int durchlauf = 1;
         long messageCounter = 1;
 
         try {
             //Store - Objekt holen
             MailStoreManager storeManager = new MailStoreManager();
             Store store = storeManager.setImapConnection(konto.getIMAPhost(), konto.getEmailAddress(), konto.getPassWort());
+
             if (store != null) {
 
                 //Alle Ordner holen
                 Folder[] folders = store.getDefaultFolder().list("*");
 
-                //Ausgabe zur Kontrolle
-                for (Folder folder : folders) {
-                    if ((folder.getType() & Folder.HOLDS_MESSAGES) != 0) {
-                        System.out.println(folder.getFullName() + ": " + folder.getMessageCount());
-                    }
-                }
-
                 long beginnMillisTotal = System.currentTimeMillis();
                 long beginnSeconds = TimeUnit.MILLISECONDS.toSeconds(beginnMillisTotal);
-                MimeMessage[] messages = null;
 
-                do {
-                    for (Folder folder : folders) {
+                Message[] messages = null;
 
-                        //Ordner öfnnen
-                        if(!folder.isOpen()){
-                            folder.open((Folder.READ_ONLY));
-                        }
+                for (Folder folder : folders) {
 
-                        //Im ersten Durchlauf werden alle gelesene Nachrichten geholt
-                        if(durchlauf == 1) {
-                            System.out.println("\nHole alle gelesenen Nachrichten!");
-                            messages = (MimeMessage[]) folder.search(new FlagTerm(new Flags(Flags.Flag.SEEN), true));
-                            System.out.println("Nachrichtenanzahl: " + messages.length);
-                        }
-                        //Im zweiten Durchlauf werden alle ungelesene Nachrichten geholt
-                        else if (durchlauf == 2){
-                            System.out.println("\nHole alle ungelesenen Nachrichten!");
-                            messages = (MimeMessage[]) folder.search(new FlagTerm(new Flags(Flags.Flag.SEEN), false));
-                            System.out.println("Nachrichtenanzahl: " + messages.length);
-                        }
-                        else if (durchlauf == 3){
-                            System.out.println("\nHole alle gelöschte Nachrichten!");
-                            messages = (MimeMessage[]) folder.search(new FlagTerm(new Flags(Flags.Flag.DELETED), false));
-                            System.out.println("Nachrichtenanzahl: " + messages.length);
-                        }
-                        else if (durchlauf == 4){
-                            System.out.println("\nHole alle entworfenen Nachrichten!");
-                            messages = (MimeMessage[]) folder.search(new FlagTerm(new Flags(Flags.Flag.DRAFT), false));
-                            System.out.println("Nachrichtenanzahl: " + messages.length);
-                        }
-                        else if (durchlauf == 5){
-                            System.out.println("\nHole alle beantworteten Nachrichten!");
-                            messages = (MimeMessage[]) folder.search(new FlagTerm(new Flags(Flags.Flag.ANSWERED), false));
-                            System.out.println("Nachrichtenanzahl: " + messages.length);
-                        }
-                        else if (durchlauf == 6){
-                            System.out.println("\nHole alle markierte Nachrichten!");
-                            messages = (MimeMessage[]) folder.search(new FlagTerm(new Flags(Flags.Flag.FLAGGED), false));
-                            System.out.println("Nachrichtenanzahl: " + messages.length);
-                        }
-                        else if (durchlauf == 7){
-                            System.out.println("\nHole alle recent Nachrichten!");
-                            messages = (MimeMessage[]) folder.search(new FlagTerm(new Flags(Flags.Flag.RECENT), false));
-                            System.out.println("Nachrichtenanzahl: " + messages.length);
-                        }
-                        else if (durchlauf == 8){
-                            System.out.println("\nHole alle ungelesenen Nachrichten!");
-                            messages = (MimeMessage[]) folder.search(new FlagTerm(new Flags(Flags.Flag.USER), false));
-                            System.out.println("Nachrichtenanzahl: " + messages.length);
-                        }
-
-                        int i = 0;
-                        for(MimeMessage message : messages){
-
-                            //ID holen
-                            String id = message.getMessageID();
-                            String file = "";
-                            try{
-                                //Existiert die E-Mail bereits in der DB?
-                                if(crudeMail.getEMailByMessageID(id) == null) {
-
-                                    //Beginn Zeitmessung für die aktuelle Nachricht
-                                    long startMillis = System.currentTimeMillis();
-                                    long startSeconds = TimeUnit.MILLISECONDS.toSeconds(startMillis);
-
-                                    //NachrichtenContent in PlainText umwandeln und HTML - Content entfernen
-                                    String mailContent = getTextFromMessage(message);
-
-                                    //Zeiterfassung
-                                    long currentMillis = System.currentTimeMillis();
-                                    long currentSeconds = TimeUnit.MILLISECONDS.toSeconds(currentMillis);
-                                    long messageTime = currentSeconds - startSeconds;
-                                    long totalTime = currentSeconds - beginnSeconds;
-
-                                    eMail.setBetref(message.getSubject());
-                                    System.out.println("Betreff gesetzt!");
-
-                                    eMail.setInhalt(mailContent);
-                                    System.out.println("Inhalt gesetzt!");
-
-                                    //Anfangs wird noch kein Tag gesetzt
-                                    eMail.setTid(0);
-                                    System.out.println("Tid gesetzt!");
-
-                                    eMail.setAbsender(message.getFrom()[0].toString());
-                                    System.out.println("Absender gesetzt!");
-
-                                    if(InternetAddress.toString(message.getRecipients(Message.RecipientType.CC)) != null){
-                                        eMail.setCc(InternetAddress.toString(message.getRecipients(Message.RecipientType.CC)));
-                                        System.out.println("CC übernommen!");
-                                    }
-                                    else {
-                                        eMail.setCc("");
-                                        System.out.println("Leerer CC gesetzt!");
-                                    }
-
-                                    if(InternetAddress.toString(message.getRecipients(Message.RecipientType.BCC)) != null){
-                                        eMail.setBcc(InternetAddress.toString(message.getRecipients(Message.RecipientType.BCC)));
-                                        System.out.println("BCC übernommen!");
-                                    }
-                                    else {
-                                        eMail.setBcc("");
-                                        System.out.println("Leerer BCC gesetzt!");
-                                    }
-
-                                    if(InternetAddress.toString(message.getRecipients(Message.RecipientType.TO)) != null){
-                                        eMail.setEmpfaenger(InternetAddress.toString(message.getRecipients(Message.RecipientType.TO)));
-                                        System.out.println("Empfaenger übernommen!");
-                                    }
-                                    else {
-                                        eMail.setEmpfaenger("");
-                                        System.out.println("Leerer Empfaenger gesetzt!");
-                                    }
-
-                                    // MimeMessage in ByteArrayOutPutStream schreiben, von da aus in einen String umwandeln
-                                    // und in die DB schreiben. So bleibt die Original-Mail erhalten!
-                                    try{
-                                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                        message.writeTo(baos);
-                                        eMail.setContentOriginal(baos.toString());
-                                    }catch (Exception e){
-                                        System.out.println("ByteArrayOutputStream wirft Exception: " + e.getMessage());
-                                    }
-
-                                    if(durchlauf == 1){
-                                        eMail.setZustand("gelesen");
-                                        System.out.println("Zustand auf gelesen gesetzt!");
-                                    }
-                                    else if(durchlauf == 2){
-                                        eMail.setZustand("ungelesen");
-                                        System.out.println("Zustand auf ungelesen gesetzt!");
-                                    }
-                                    else if(durchlauf == 3){
-                                        eMail.setZustand("geloescht");
-                                        System.out.println("Zustand auf ungelesen gesetzt!");
-                                    }
-                                    else if(durchlauf == 4){
-                                        eMail.setZustand("entwurf");
-                                        System.out.println("Zustand auf ungelesen gesetzt!");
-                                    }
-                                    else if(durchlauf == 5){
-                                        eMail.setZustand("beantwortet");
-                                        System.out.println("Zustand auf ungelesen gesetzt!");
-                                    }
-                                    else if(durchlauf == 6){
-                                        eMail.setZustand("flagged");
-                                        System.out.println("Zustand auf ungelesen gesetzt!");
-                                    }
-                                    else if(durchlauf == 7){
-                                        eMail.setZustand("recent");
-                                        System.out.println("Zustand auf ungelesen gesetzt!");
-                                    }
-                                    else if(durchlauf == 8){
-                                        eMail.setZustand("user");
-                                        System.out.println("Zustand auf ungelesen gesetzt!");
-                                    }
-
-                                    eMail.setMessageID(id);
-                                    System.out.println("Message-ID gesetzt!");
-
-                                    crudeMail.createEMail(eMail);
-
-                                    //Ausgabe zur Kontrolle
-                                    System.out.println(messageCounter + ". Nachricht wurde importiert!\nbenötigte Zeit für diese Nachricht: " + messageTime + "s\nbenötigte Zeit Total:" + totalTime + "s\n\n");
-                                    messageCounter++;
-                                }
-                                else {
-                                    System.out.println("\nE-Mail bereits in der DB!");
-                                }
-                            }catch (NullPointerException e){
-                                System.out.println("NullPointerException wurde geworfen: " + e.getMessage());
-                            }
-                        }
-                        folder.close(true);
+                    //Ordner öfnnen
+                    if(!folder.isOpen()){
+                        folder.open((Folder.READ_ONLY));
                     }
-                    durchlauf++;
-                }while (durchlauf < 9);
+
+                    messages = folder.getMessages();
+
+                    for(Message message : messages){
+
+                        System.out.println("Ordner: " + folder.getFullName());
+
+                        String content = "";
+                        int exist = 0;
+                        try{
+                            //Zeiterfassung
+                            long currentMillis = System.currentTimeMillis();
+                            long currentSeconds = TimeUnit.MILLISECONDS.toSeconds(currentMillis);
+
+                            //Beginn Zeitmessung für die aktuelle Nachricht
+                            long startMillis = System.currentTimeMillis();
+                            long startSeconds = TimeUnit.MILLISECONDS.toSeconds(startMillis);
+
+                            //NachrichtenContent in PlainText umwandeln und HTML - Content entfernen
+                            String mailContent = getTextFromMessage(message);
+
+                            //Existiert die E-Mail bereits in der DB?
+
+                            if(crudeMail.getEMailByMessageInhalt(mailContent) == null){
+
+                                eMail.setBetref(message.getSubject());
+
+                                eMail.setInhalt(mailContent);
+
+                                //Anfangs wird noch kein Tag gesetzt
+                                eMail.setTid(0);
+
+                                eMail.setAbsender(message.getFrom()[0].toString());
+
+                                if (InternetAddress.toString(message.getRecipients(Message.RecipientType.CC)) != null) {
+                                    eMail.setCc(InternetAddress.toString(message.getRecipients(Message.RecipientType.CC)));
+                                } else {
+                                    eMail.setCc("");
+                                }
+
+                                if (InternetAddress.toString(message.getRecipients(Message.RecipientType.BCC)) != null) {
+                                    eMail.setBcc(InternetAddress.toString(message.getRecipients(Message.RecipientType.BCC)));
+                                } else {
+                                    eMail.setBcc("");
+                                }
+
+                                if (InternetAddress.toString(message.getRecipients(Message.RecipientType.TO)) != null) {
+                                    eMail.setEmpfaenger(InternetAddress.toString(message.getRecipients(Message.RecipientType.TO)));
+                                } else {
+                                    eMail.setEmpfaenger("");
+                                }
+
+                                /*
+                                if (durchlauf == 1) {
+                                    eMail.setZustand("gelesen");
+                                } else if (durchlauf == 2) {
+                                    eMail.setZustand("ungelesen");
+                                }
+                                */
+
+                                eMail.setContentOriginal(content);
+
+                                eMail.setOrdner(folder.getFullName());
+
+                                // MimeMessage in ByteArrayOutPutStream schreiben, von da aus in einen String umwandeln
+                                // und in die DB schreiben. So bleibt die Original-Mail erhalten!
+                                try {
+                                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                    message.writeTo(baos);
+                                    content = baos.toString();
+                                } catch (Exception e) {
+                                    System.out.println("ByteArrayOutputStream wirft Exception: " + e.getMessage());
+                                }
+
+                                crudeMail.createEMail(eMail);
+
+                                long messageTime = currentSeconds - startSeconds;
+                                long totalTime = currentSeconds - beginnSeconds;
+
+                                //Ausgabe zur Kontrolle
+                                System.out.println(messageCounter + ". Nachricht wurde importiert!\nbenötigte Zeit für diese Nachricht: " + messageTime + "s\nbenötigte Zeit Total:" + totalTime + "s\n\n");
+                                messageCounter++;
+                            }
+                            else {
+
+                                System.out.println("\nE-Mail bereits in der DB!");
+                                long messageTime = currentSeconds - startSeconds;
+                                long totalTime = currentSeconds - beginnSeconds;
+                                System.out.println("benötigte Zeit für diese Nachricht: " + messageTime + "s\nbenötigte Zeit Total:" + totalTime + "s\n\n");
+                            }
+
+                        }catch (NullPointerException e){
+                            System.out.println("NullPointerException wurde geworfen: " + e.getMessage());
+                        }
+                    }
+                    folder.close(true);
+                }
             }
         }
         catch (NoSuchProviderException e) {
