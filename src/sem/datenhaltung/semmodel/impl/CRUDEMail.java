@@ -44,8 +44,8 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
         return eMails.size() > 0 ? eMails.get(0) : null;
     }
 
-    public EMail getEMailByMessageInhalt(String inhalt) throws IOException, SQLException {
-        ArrayList<EMail> eMails = query("SELECT * FROM email WHERE inhalt = ?", inhalt);
+    public EMail getEMailByMessageID(String id) throws IOException, SQLException {
+        ArrayList<EMail> eMails = query("SELECT * FROM email WHERE messageID = ?", id);
         return eMails.size() > 0 ? eMails.get(0) : null;
     }
 
