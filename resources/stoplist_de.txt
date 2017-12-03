@@ -9,6 +9,7 @@ bei
 bin
 bis
 bist
+bitte
 da
 dadurch
 daher
@@ -27,6 +28,7 @@ deshalb
 die
 dies
 dieser
+diese
 dieses
 doch
 dort
@@ -43,6 +45,7 @@ es
 euer
 eure
 für
+haben
 hatte
 hatten
 hattest
@@ -82,6 +85,8 @@ nachdem
 nein
 nicht
 nun
+nur
+noch
 oder
 seid
 sein
