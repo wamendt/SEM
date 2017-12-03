@@ -46,20 +46,20 @@ public class CRUDWort extends DBCRUDTeamplate<Wort> implements ICRUDWort {
     @Override
     public boolean deleteWort(int wid) throws IOException, SQLException {
         int ret = updateOrDelete("DELETE FROM wort WHERE wid = ?", wid);
-        return ret == 1? true : false;
+        return ret == 1;
     }
 
     @Override
-    public boolean deleteWortWithTagId(int tid) throws IOException, SQLException {
+    public boolean deleteWoerterMitTagId(int tid) throws IOException, SQLException {
         int ret = updateOrDelete("DELETE FROME wort WHERE tid= ?", tid);
-        return ret == 1? true : false;
+        return ret == 1;
     }
 
     @Override
     public boolean updateWort(Wort wort) throws IOException, SQLException {
         int ret = updateOrDelete("UPDATE wort SET " +
                 " wort = ? , tid = ? WHERE wid = ?", wort.getWort(), wort.getTid(), wort.getWid());
-        return ret == 1? true : false;
+        return ret == 1;
     }
 
 
