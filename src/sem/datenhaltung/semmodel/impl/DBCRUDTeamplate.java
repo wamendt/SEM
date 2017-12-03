@@ -64,6 +64,8 @@ public abstract class DBCRUDTeamplate<T> {
     protected int updateOrDelete(String sql, Object... objects)throws IOException, SQLException {
         Connection connection = null;
         connection = DBConnectionManager.getConnection();
+        Statement stmt = connection.createStatement();
+        stmt.execute("PRAGMA foreign_keys=ON");
         PreparedStatement statement = connection.prepareStatement(sql);
         if(objects != null) {
             for (int i = 1; i <= objects.length; i++) {

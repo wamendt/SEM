@@ -50,7 +50,7 @@ public class CRUDWort extends DBCRUDTeamplate<Wort> implements ICRUDWort {
     }
 
     @Override
-    public boolean deleteWoerterMitTagId(int tid) throws IOException, SQLException {
+    public boolean deleteAlleWoerterMitTagId(int tid) throws IOException, SQLException {
         int ret = updateOrDelete("DELETE FROME wort WHERE tid= ?", tid);
         return ret == 1;
     }

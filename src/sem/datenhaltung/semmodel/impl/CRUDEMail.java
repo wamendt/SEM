@@ -62,7 +62,7 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
     @Override
     public boolean deleteEMail(int mid) throws IOException, SQLException {
         int ret = updateOrDelete("DELETE FROM email WHERE mid = ?", mid);
-        return ret == 1? true : false;
+        return ret == 1;
     }
 
     @Override
@@ -70,7 +70,7 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
         int ret = updateOrDelete("UPDATE email" +
                         " SET betreff = ? , inhalt = ?, tid = ?, absender = ? " +
                         "WHERE mid = ?", email.getBetreff(), email.getInhalt()
-                ,email.getTid(), email.getAbsender());
-        return ret == 1? true : false;
+                ,email.getTid(), email.getAbsender(), email.getMid());
+        return ret == 1;
     }
 }

@@ -28,7 +28,7 @@ public class CRUDTag extends DBCRUDTeamplate<Tag> implements ICRUDTag{
 
     @Override
     public Tag getTagById(int tid) throws IOException, SQLException {
-        ArrayList<Tag> tags = query("SELECT * FROM adresse WHERE tid=?", tid);
+        ArrayList<Tag> tags = query("SELECT * FROM tag WHERE tid=?", tid);
         return tags.size() > 0 ? tags.get(0) : null;
     }
 
@@ -39,14 +39,20 @@ public class CRUDTag extends DBCRUDTeamplate<Tag> implements ICRUDTag{
 
     @Override
     public boolean deleteTag(int tid) throws IOException, SQLException {
-        int ret = updateOrDelete("DELETE FROM adresse WHERE tid = ?", tid);
-        return ret == 1? true : false;
+        int ret = updateOrDelete("DELETE FROM tag WHERE tid = ?;", tid);
+        return ret == 1;
     }
+
+    @Override
+    public int deleteAlleTags() throws IOException, SQLException {
+        return  updateOrDelete("DELETE FROM tag");
+    }
+
 
     @Override
     public boolean updateTag(Tag tag) throws IOException, SQLException {
         int ret = updateOrDelete("UPDATE tag" +
                         " name = ? WHERE tid = ?", tag.getName(), tag.getTid());
-        return ret == 1? true : false;
+        return ret == 1;
     }
 }
