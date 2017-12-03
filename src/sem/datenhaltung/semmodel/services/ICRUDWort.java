@@ -12,6 +12,6 @@ public interface ICRUDWort {
     ArrayList<Wort> getAlleWoerter() throws IOException, SQLException;
     ArrayList<Wort> getAlleWoerterMitTagId(int tid) throws IOException, SQLException;
     boolean deleteWort(int wid) throws IOException, SQLException;
-    boolean deleteWoerterMitTagId(int tid) throws IOException, SQLException;
+    boolean deleteAlleWoerterMitTagId(int tid) throws IOException, SQLException;
     boolean updateWort(Wort wort) throws IOException, SQLException;
 }

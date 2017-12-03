@@ -11,5 +11,6 @@ public interface ICRUDTag {
     Tag getTagById(int tid) throws IOException, SQLException ;
     ArrayList<Tag> getAlleTags() throws IOException, SQLException ;
     boolean deleteTag(int tid) throws IOException, SQLException ;
+    int deleteAlleTags() throws IOException, SQLException;
     boolean updateTag(Tag tag) throws IOException, SQLException ;
 }
