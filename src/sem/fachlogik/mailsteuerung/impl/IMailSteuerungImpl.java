@@ -1,4 +1,6 @@
 package sem.fachlogik.mailsteuerung.impl;
 
-public class IMailSteuerungImpl {
+import sem.fachlogik.mailsteuerung.services.IMailSteuerung;
+
+public class IMailSteuerungImpl implements IMailSteuerung{
 }
