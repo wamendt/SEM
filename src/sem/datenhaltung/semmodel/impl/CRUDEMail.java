@@ -24,7 +24,8 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
         email.setEmpfaenger(rs.getString("empfaenger"));
         email.setContentOriginal(rs.getString("contentOriginal"));
         email.setZustand(rs.getString("zustand"));
-        email.setMessageID(rs.getString("messageID"));
+        email.setMessageID(rs.getInt("messageID"));
+        email.setOrdner(rs.getString("ordner"));
         return email;
     }
 
@@ -44,7 +45,7 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
         return eMails.size() > 0 ? eMails.get(0) : null;
     }
 
-    public EMail getEMailByMessageID(String id) throws IOException, SQLException {
+    public EMail getEMailByMessageIDUndOrdner(int id, String ordner) throws IOException, SQLException {
         ArrayList<EMail> eMails = query("SELECT * FROM email WHERE messageID = ?", id);
         return eMails.size() > 0 ? eMails.get(0) : null;
     }

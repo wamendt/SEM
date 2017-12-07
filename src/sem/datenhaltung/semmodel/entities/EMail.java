@@ -11,7 +11,7 @@ public class EMail {
     private String empfaenger;
     private String contentOriginal;
     private String zustand;
-    private String messageID;
+    private int messageID;
     private String ordner;
 
     //Konstruktor
@@ -101,11 +101,11 @@ public class EMail {
         this.contentOriginal = contentOriginal;
     }
 
-    public String getMessageID() {
+    public int getMessageID() {
         return messageID;
     }
 
-    public void setMessageID(String messageID) {
+    public void setMessageID(int messageID) {
         this.messageID = messageID;
     }
 
