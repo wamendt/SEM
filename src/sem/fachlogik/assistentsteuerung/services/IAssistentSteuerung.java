@@ -1,7 +1,10 @@
 package sem.fachlogik.assistentsteuerung.services;
 
+import sem.fachlogik.grenzklassen.TagGrenz;
+
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public interface IAssistentSteuerung {
 
@@ -17,4 +20,6 @@ public interface IAssistentSteuerung {
      * Trainiert ein vorhandenes Modell, mit den Instanzen aus der DB.
      */
     void trainiereVorhandenSEM() throws IOException, SQLException;
+
+    ArrayList<TagGrenz> zeigeAlleTagsAn() throws IOException, SQLException;
 }
