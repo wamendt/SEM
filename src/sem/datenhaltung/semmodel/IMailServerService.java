@@ -18,7 +18,7 @@ public interface IMailServerService {
     //Aktionen mit Mails
     public boolean importiereAllEMails(Konto konto) throws MessagingException;
     public boolean verschiebeEMail(Konto konto, String vonOrdner, String zuOrdner, EMail email) throws MessagingException;
-    public boolean setzeTagsZurServerEMail(Konto konto, EMail email, String art);
+    public boolean setzeTagsZurServerEMail(Konto konto, EMail email, String art) throws MessagingException;
     public boolean speichereEMailImOrdner(Konto konto, EMail eMail, String pfad) throws MessagingException;
 
 }

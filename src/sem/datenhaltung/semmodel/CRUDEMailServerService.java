@@ -75,37 +75,28 @@ public class CRUDEMailServerService implements IMailServerService {
             Store store = storeManager.setImapConnection(konto.getIMAPhost(), konto.getEmailAddress(), konto.getPassWort());
 
             //Alle Ordner holen
-            Folder[] folders = store.getDefaultFolder().list("*");
-
-            //Suchkriterien erstellen
-            SearchTerm searchTerm = new MessageIDTerm(eMail.getMessageID());
+            Folder folder = store.getFolder(eMail.getOrdner());
 
             //Ausgabe zur Kontrolle
-            for (Folder folder : folders) {
-                if ((folder.getType() & Folder.HOLDS_MESSAGES) != 0) {
-                    System.out.println("Gefundener Ordner: " + folder.getFullName());
+            if ((folder.getType() & Folder.HOLDS_MESSAGES) != 0) {
+                System.out.println("Gefundener Ordner: " + folder.getFullName());
 
-                    //Ordner öfnnen
-                    if(!folder.isOpen()){
-                        folder.open((Folder.READ_WRITE));
-                    }
-
-                    //Hole die Nachricht mit der MessageID
-                    MimeMessage[] messages = (MimeMessage[]) folder.search(searchTerm);
-
-                    for (MimeMessage message: messages){
-                        if(Objects.equals(eMail.getMessageID(), message.getMessageID())){
-                            System.out.println("Lösche EMAIL!");
-                            message.setFlag(Flags.Flag.DELETED, true);
-                            folder.expunge();
-                            folder.close(true);
-                            System.out.println("EMAIL gelöscht!");
-                            return true;
-                        }
-                    }
+                //Ordner öfnnen
+                if(!folder.isOpen()){
+                    folder.open((Folder.READ_WRITE));
                 }
+
+                //Hole die Nachricht mit der MessageID
+                Message message = folder.getMessage(eMail.getMessageID());
+                System.out.println("Lösche EMAIL!");
+                message.setFlag(Flags.Flag.DELETED, true);
+                folder.expunge();
                 folder.close(true);
+                System.out.println("EMAIL gelöscht!");
+                return true;
             }
+            folder.close(true);
+
         }
         catch (NullPointerException e){
             System.out.println("NullPointerException wurde geworfen!" + e.getMessage());
@@ -220,12 +211,10 @@ public class CRUDEMailServerService implements IMailServerService {
 
                 //Alle Ordner holen
                 Folder[] folders = store.getDefaultFolder().list("*");
-
                 long beginnMillisTotal = System.currentTimeMillis();
                 long beginnSeconds = TimeUnit.MILLISECONDS.toSeconds(beginnMillisTotal);
 
                 Message[] messages = null;
-
                 for (Folder folder : folders) {
 
                     //Ordner öfnnen
@@ -236,12 +225,12 @@ public class CRUDEMailServerService implements IMailServerService {
                     //Nachrichten des Ordners holen
                     messages = folder.getMessages();
 
-                    for(Message message : messages){
-
+                    for(int i = 1; i <= messages.length; i++){
+                        Message message = folder.getMessage(i);
                         System.out.println("Ordner: " + folder.getFullName());
-
+                        System.out.println("MessageID: " + i);
                         String content = "";
-                        String messageID;
+                        int messageID = i;
                         int exist = 0;
                         try{
                             //Beginn Zeitmessung für die aktuelle Nachricht
@@ -253,7 +242,7 @@ public class CRUDEMailServerService implements IMailServerService {
 
                             //Existiert die E-Mail bereits in der DB?
 
-                            if(crudeMail.getEMailByMessageID(mailContent) == null){
+                            if(crudeMail.getEMailByMessageIDUndOrdner(i, folder.getFullName()) == null){
 
                                 eMail.setBetref(message.getSubject());
 
@@ -290,7 +279,7 @@ public class CRUDEMailServerService implements IMailServerService {
                                 }
                                 */
 
-                                eMail.setContentOriginal(content);
+
 
                                 eMail.setOrdner(folder.getFullName());
 
@@ -304,9 +293,11 @@ public class CRUDEMailServerService implements IMailServerService {
                                     System.out.println("ByteArrayOutputStream wirft Exception: " + e.getMessage());
                                 }
 
+                                eMail.setContentOriginal(content);
                                 message.getHeader("Message-Id");
                                 Enumeration headers = message.getAllHeaders();
 
+                                /*
                                 while (headers.hasMoreElements()) {
                                     Header h = (Header) headers.nextElement();
                                     String mID = h.getName();
@@ -316,7 +307,9 @@ public class CRUDEMailServerService implements IMailServerService {
                                         eMail.setMessageID(messageID);
                                     }
                                 }
+                                */
 
+                                eMail.setMessageID(messageID);
                                 crudeMail.createEMail(eMail);
                                 //Zeiterfassung
                                 long currentMillis = System.currentTimeMillis();
@@ -436,14 +429,16 @@ public class CRUDEMailServerService implements IMailServerService {
 
                     }
 
-                    //Suchkriterien erstellen
-                    SearchTerm searchTerm = new MessageIDTerm(email.getMessageID());
-
-                    //Hole die Nachricht mit der MessageID
-                    MimeMessage[] messages = (MimeMessage[]) fromFolder.search(searchTerm);
+                    Message message = fromFolder.getMessage(email.getMessageID());
+                    Message[] messages = new Message[1];
+                    messages[0] = message;
 
                     //Nachrichten in den ZielOrdner kopieren
-                    fromFolder.copyMessages(messages, toFolder);
+                    folder.copyMessages(messages, toFolder);
+
+                    //Wird noch entfernt werden müssen
+                    email.setOrdner(vonOrdner);
+                    
                     System.out.println("Nachricht kopiert");
 
                     if(loeschEMailVomServer(konto, email)){
@@ -456,11 +451,77 @@ public class CRUDEMailServerService implements IMailServerService {
     }
 
     @Override
-    public boolean setzeTagsZurServerEMail(Konto konto, EMail email, String art) {
+    public boolean setzeTagsZurServerEMail(Konto konto, EMail email, String art) throws MessagingException {
         //Hier werden sämtliche Flags zu einer Email gesetzt, bisher werden diese in den andern Methoden gesetzt,
         //Dies wird ausgekappselt und hier umgesetzt!
+        boolean ret = false;
 
-        return false;
+        //Wenn mindestens zwei Ordner verfügbar sind, fortfahren
+        //Store holen
+        MailStoreManager storeManager = new MailStoreManager();
+        Store store = storeManager.setImapConnection(konto.getIMAPhost(), konto.getEmailAddress(), konto.getPassWort());
+
+        Folder folder = store.getFolder(email.getOrdner());
+        System.out.println("Ordner gefunden!: " + folder.getFullName());
+
+        if (!folder.isOpen()) {
+            folder.open(Folder.READ_WRITE);
+        }
+
+        Message message = folder.getMessage(email.getMessageID());
+        System.out.println("Zum Vergleich: \n" +
+                "EMail DB - Betreff :   " + email.getBetreff() + "\n" +
+                "EMail Server - Betreff:" + message.getSubject());
+
+            System.out.println("Message ID nicht leer und identisch!");
+            switch (art) {
+                case "gelesen":
+                    message.setFlag(Flags.Flag.SEEN, true);
+                    ret = true;
+                    break;
+                case "ungelesen":
+                    message.setFlag(Flags.Flag.SEEN, false);
+                    ret = true;
+                    break;
+                case "entwurf":
+                    Message[] messages1 = new Message[1];
+                    messages1[0] = message;
+                    Folder ToFolder = store.getFolder("Entwürfe");
+                    message.setFlag(Flags.Flag.DRAFT, true);
+                    folder.copyMessages(messages1, ToFolder);
+                    email.setOrdner("INBOX");
+                    if(loeschEMailVomServer(konto, email)){
+                        ret = true;
+                    }
+                    else {
+                        ret = false;
+                    }
+                    break;
+                case "geloescht":
+                    Message[] messages = new Message[1];
+                    Folder toFolder = store.getFolder("Gelöschte Elemente");
+                    message.setFlag(Flags.Flag.DELETED, true);
+                    messages[0] = message;
+                    folder.copyMessages(messages, toFolder);
+                    email.setOrdner("INBOX");
+                    if(loeschEMailVomServer(konto, email)){
+                        ret = true;
+                    }
+                    else {
+                        ret = false;
+                    }
+                    break;
+                    /* Macht das Sinn????
+                case "beantwortet":
+                    messages1 = null;
+                    message.setFlag(Flags.Flag.ANSWERED, true);
+                    ret = true;
+                    break;
+                    */
+            }
+            folder.expunge();
+            folder.close(true);
+            return ret;
     }
 
     @Override
