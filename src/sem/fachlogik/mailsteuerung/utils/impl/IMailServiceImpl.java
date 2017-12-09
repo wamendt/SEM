@@ -1,49 +1,42 @@
-package sem.datenhaltung.semmodel;
+package sem.fachlogik.mailsteuerung.utils.impl;
 
-import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.imap.IMAPStore;
-import com.sun.xml.internal.org.jvnet.mimepull.MIMEMessage;
-import org.apache.commons.mail.Email;
-import sem.datenhaltung.semmodel.impl.CRUDEMail;
-import sem.datenhaltung.semmodel.mailConnection.MailIMAPStoreConnection;
-import sem.datenhaltung.semmodel.mailConnection.MailStoreManager;
+import sem.fachlogik.mailsteuerung.event.MsgReceivedEvent;
+import sem.fachlogik.mailsteuerung.listener.MsgReceivedListener;
+import sem.fachlogik.mailsteuerung.listener.MsgRemovedListener;
+import sem.fachlogik.mailsteuerung.utils.services.IMailService;
+import sem.fachlogik.mailsteuerung.utils.mailConnection.MailStoreManager;
 import sem.datenhaltung.semmodel.entities.EMail;
 import sem.datenhaltung.semmodel.entities.Konto;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.mail.event.MessageCountAdapter;
 import javax.mail.event.MessageCountEvent;
+import javax.mail.event.MessageCountListener;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import javax.mail.search.FlagTerm;
 import javax.mail.*;
-import javax.mail.search.MessageIDTerm;
-import javax.mail.search.SearchTerm;
-import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
 import java.io.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.jsoup.Jsoup;
 import sem.datenhaltung.semmodel.services.ICRUDMail;
 import sem.datenhaltung.semmodel.services.ICRUDManagerSingleton;
 
 
-public class CRUDEMailServerService implements IMailServerService {
+public class IMailServiceImpl implements IMailService, MessageCountListener {
+
+    //Add und Remove von Strg-Klassen
+    private static ArrayList<MsgReceivedListener> receivedListeners = new ArrayList<>();
+    private static ArrayList<MsgRemovedListener> removedListeners = new ArrayList<>();
 
     private static MailStoreManager storeManager;
     private static Store store;
     IMAPStore imapStore;
 
-    public CRUDEMailServerService(){
+    public IMailServiceImpl(){
         storeManager = MailStoreManager.getStoreManager();
     }
 
@@ -51,6 +44,17 @@ public class CRUDEMailServerService implements IMailServerService {
     // #################################################################################################################
     // ############################################   Hilfsfunktionen   ################################################
     // #################################################################################################################
+
+
+    public static ArrayList<MsgReceivedListener> getReceivedListeners() {
+        return receivedListeners;
+    }
+
+    public static ArrayList<MsgRemovedListener> getRemovedListeners() {
+        return removedListeners;
+    }
+
+
 
     //Methode um das Store-Objekt zu setzen und die Verbindung aufzubauen
     private Store setStore(Konto konto){
@@ -695,4 +699,67 @@ public class CRUDEMailServerService implements IMailServerService {
         }
         return folders;
     }
+
+
+    private void notifyMsgReceivedListener(MsgReceivedEvent msg){
+        for(MsgReceivedListener listener : receivedListeners){
+            listener.messageAngekommen(msg);
+        }
+    }
+
+    @Override
+    public void messagesAdded(MessageCountEvent messageCountEvent) {
+        System.out.println("Neue Message erhalten");
+    }
+
+    @Override
+    public void messagesRemoved(MessageCountEvent messageCountEvent) {
+        System.out.println("Message gelöscht");
+    }
+
+
+    /*
+    * @Override
+    public boolean sendeEmail(Konto konto, EMail email){
+        boolean ret = false;
+
+        //Hier müssen die Daten vom Konto geladen werden
+        final String username = "hikoelle@gmail.com";
+        final String password = "root(133)";
+        final String name = "E-Mail Sortierer";
+
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+
+        javax.mail.Authenticator auth = null;
+        auth = new javax.mail.Authenticator() {
+            @Override
+            public javax.mail.PasswordAuthentication getPasswordAuthentication() {
+                return new javax.mail.PasswordAuthentication(username, password);
+            }
+        };
+
+        Session session = Session.getInstance(props, auth);
+
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(username));
+            message.setRecipients(Message.RecipientType.TO,InternetAddress.parse("w.amendt@live.de"));
+            //message.setRecipients(Message.RecipientType.TO,InternetAddress.parse("w.amendt@live.de"));
+            //message.setRecipients(Message.RecipientType.TO,InternetAddress.parse("w.amendt@live.de"));
+            //message.setRecipients(Message.RecipientType.TO,InternetAddress.parse("w.amendt@live.de"));
+            message.setSubject("Dies ist ein Betreff!");
+            message.setText("\n\nTestinhalt!\n\n");
+
+            Transport.send(message);
+            ret = true;
+        } catch (MessagingException e) {
+            System.out.println("Fehler: " + e.getMessage());
+        }
+        return ret;
+    *
+    * */
 }

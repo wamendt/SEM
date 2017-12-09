@@ -1,4 +1,4 @@
-package sem.datenhaltung.semmodel.mailConnection;
+package sem.fachlogik.mailsteuerung.utils.mailConnection;
 
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
@@ -7,11 +7,19 @@ import java.util.Properties;
 
 public class MailStoreManager {
 
-    public MailStoreManager(){
+    private static MailStoreManager mailStoreManager;
+    private static Store store;
+    private Session session;
 
+    private MailStoreManager(){
     }
 
-    private Session session;
+    public static MailStoreManager getStoreManager(){
+        if(mailStoreManager == null){
+            mailStoreManager = new MailStoreManager();
+        }
+        return mailStoreManager;
+    }
 
     //Erstellt eine Imap - Verbindung und liefert das Store - Objekt zurück
     public Store setImapConnection(String host, String username, String password) throws NoSuchProviderException {
@@ -32,7 +40,7 @@ public class MailStoreManager {
         };
 
         this.session = Session.getInstance(props, auth);
-        Store store = session.getStore("imaps");
+        store = session.getStore("imaps");
         try {
             System.out.println("Connecting to IMAP server: ");
             store.connect(host, 993, username, password);
