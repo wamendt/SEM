@@ -121,6 +121,8 @@ public class Assistent2 {
 
         List<Pipe> pipes = new ArrayList<>();
         pipes.add(new Target2Label());
+        pipes.add(new CharSequenceRemoveUUEncodedBlocks());
+        pipes.add(new CharSequenceRemoveHTML());
         pipes.add(new CharSequence2TokenSequence());
         pipes.add(new TokenSequenceRemoveStopwords()
                 .addStopWords(new File(STOPLIST_DE))

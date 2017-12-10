@@ -20,46 +20,11 @@ import java.util.TreeMap;
 
 public class IAssistentSteuerungImpl implements IAssistentSteuerung{
 
-    private void loescheAlleTagsAusDB() throws IOException, SQLException {
-        ICRUDTag crudTag = ICRUDManagerSingleton.getIcrudTagInstance();
-        ICRUDWort crudWort = ICRUDManagerSingleton.getIcrudWordInstance();
-        ArrayList<Tag> tags = crudTag.getAlleTags();
-
-        for(Tag tag : tags){
-            crudWort.deleteAlleWoerterMitTagId(tag.getTid());
-            crudTag.deleteTag(tag.getTid());
-        }
-
-    }
-
-    private ArrayList<TagGrenz> holeAlleTagsAusDB() throws IOException, SQLException {
-        ICRUDTag crudTag = ICRUDManagerSingleton.getIcrudTagInstance();
-        ICRUDWort crudWort = ICRUDManagerSingleton.getIcrudWordInstance();
-
-        ArrayList<TagGrenz> tagGrenzs = new ArrayList<>();
-        ArrayList<Tag> tags = crudTag.getAlleTags();
-
-        for(Tag tag : tags){
-            TagGrenz tagGrenz = new TagGrenz();
-            tagGrenz.setName(tag.getName());
-            tagGrenz.setTid(tag.getTid());
-            ArrayList<String> woerterStrings = new ArrayList<>();
-            ArrayList<Wort> woerter = crudWort.getAlleWoerterMitTagId(tag.getTid());
-            for(Wort w : woerter){
-                woerterStrings.add(w.getWort());
-            }
-            tagGrenz.setWoerter(woerterStrings);
-
-            tagGrenzs.add(tagGrenz);
-        }
-        return  tagGrenzs;
-    }
     @Override
     public void trainiereSEM(int numTopics, double alphasum, double beta) throws IOException, SQLException {
         Assistent2 assistent = Assistent2.getInstance();
         assistent.makeModel(numTopics,alphasum,beta);
-        assistent.setNumIterations(50);
-
+        assistent.setNumIterations(2500);
         ICRUDTag icrudTag = ICRUDManagerSingleton.getIcrudTagInstance();
         icrudTag.deleteAlleTags();
 
@@ -77,13 +42,23 @@ public class IAssistentSteuerungImpl implements IAssistentSteuerung{
 
         ArrayList<Tag> tags = new ArrayList<>();
 
+        ICRUDWort icrudWort = ICRUDManagerSingleton.getIcrudWordInstance();
+
         Object[][] topwords = assistent.getTopWords(10);
         for(int i = 0; i < numTopics; i++){
             Tag tag = new Tag();
+            tag.setName("tag" + i);
             int tid = icrudTag.createTag(tag);
             tag.setTid(tid);
-
             tags.add(tag);
+
+            Object[] topicTopWords  = topwords[i];
+            for(Object s : topicTopWords){
+                Wort w = new Wort();
+                w.setWort((String)s);
+                w.setTid(tid);
+                icrudWort.createWort(w);
+            }
         }
         for(int i = 0; i < emails.size(); i++){
             double[] topicverteilung = assistent.getTopicDistribution(i);
@@ -105,26 +80,50 @@ public class IAssistentSteuerungImpl implements IAssistentSteuerung{
 
     @Override
     public void trainiereVorhandenSEM() throws IOException, SQLException {
-        Assistent2 assistent = Assistent2.getInstance();
-        assistent.loadModel();
+        throw new UnsupportedOperationException("TODO");
+//        Assistent2 assistent = Assistent2.getInstance();
+//        assistent.loadModel();
+//
+//        ICRUDMail crudmail = ICRUDManagerSingleton.getIcrudMailInstance();
+//        ArrayList<EMail> emails = crudmail.getAlleEMails();
+//        List<String> emailtrain = new ArrayList<>();
+//        List<String> emailtest = new ArrayList<>();
+//        Map<String, List<String>> data = new TreeMap<>();
+//
+//        int i = 0;
+//        for(EMail e : emails){
+//            if(i%10 == 0){
+//                emailtest.add(e.getInhalt());
+//            }else{
+//                emailtrain.add(e.getInhalt());
+//            }
+//        }
+//        data.put("inhalt", emailtrain);
+//        assistent.evaluate(data);
+//        assistent.saveModel();
+    }
 
-        ICRUDMail crudmail = ICRUDManagerSingleton.getIcrudMailInstance();
-        ArrayList<EMail> emails = crudmail.getAlleEMails();
-        List<String> emailtrain = new ArrayList<>();
-        List<String> emailtest = new ArrayList<>();
-        Map<String, List<String>> data = new TreeMap<>();
+    @Override
+    public ArrayList<TagGrenz> zeigeAlleTagsAn() throws IOException, SQLException {
+        ICRUDTag crudtag = ICRUDManagerSingleton.getIcrudTagInstance();
+        ICRUDWort crudwort = ICRUDManagerSingleton.getIcrudWordInstance();
+        ArrayList<Tag> tags = crudtag.getAlleTags();
+        ArrayList<TagGrenz> tagGrenzs = new ArrayList<>();
 
-        int i = 0;
-        for(EMail e : emails){
-            if(i%10 == 0){
-                emailtest.add(e.getInhalt());
-            }else{
-                emailtrain.add(e.getInhalt());
+        for(Tag t : tags){
+            TagGrenz tagGrenz = new TagGrenz();
+            ArrayList<Wort> woerter = crudwort.getAlleWoerterMitTagId(t.getTid());
+
+            ArrayList<String> stringwoerter = new ArrayList<>();
+            for(Wort w : woerter){
+                stringwoerter.add(w.getWort());
             }
+            tagGrenz.setWoerter(stringwoerter);
+            tagGrenz.setTid(t.getTid());
+            tagGrenz.setName(t.getName());
+            tagGrenzs.add(tagGrenz);
         }
-        data.put("inhalt", emailtrain);
-        assistent.evaluate(data);
-        assistent.saveModel();
+        return tagGrenzs;
     }
 
 
