@@ -1,0 +1,8 @@
+.search_field{
+    //-fx-background-image: url("../../../../resources/search.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 30;
+    -fx-border-color: darkgrey;
+    -fx-background-color: transparent;
+    -fx-background-position: left;
+}
