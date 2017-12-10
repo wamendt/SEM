@@ -1,3 +1,4 @@
+alle
 aber
 als
 am
@@ -10,6 +11,7 @@ bin
 bis
 bist
 bitte
+beim
 da
 dadurch
 daher
@@ -19,12 +21,14 @@ daß
 dass
 dein
 deine
+deinen
 dem
 den
 der
 des
 dessen
 deshalb
+dich
 die
 dies
 dieser
@@ -46,6 +50,8 @@ euer
 eure
 für
 haben
+hast
+hat
 hatte
 hatten
 hattest
@@ -55,6 +61,8 @@ hinter
 ich
 ihr
 ihre
+ihren
+ihnen
 im
 in
 ist
@@ -74,6 +82,7 @@ könnt
 machen
 mein
 meine
+man
 mit
 muß
 mußt
@@ -102,6 +111,7 @@ sonst
 soweit
 sowie
 und
+uns
 unser
 unsere
 unter
