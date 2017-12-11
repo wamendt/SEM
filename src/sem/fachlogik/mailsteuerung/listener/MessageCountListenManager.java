@@ -27,7 +27,6 @@ public class MessageCountListenManager {
                 throw new RuntimeException("IDLE not supported");
             }
 
-            folder = (IMAPFolder) store.getFolder("INBOX");
             folder.addMessageCountListener(new MessageCountAdapter() {
 
                 @Override
@@ -46,7 +45,7 @@ public class MessageCountListenManager {
 
                 @Override
                 public void messagesRemoved(MessageCountEvent event){
-                    System.out.println("Nachricht gelöscht!\nAb hier Update in die Wege leiten!");
+                    System.out.println("Nachricht wurde im Ordner: " + folder.getFullName() + "gelöscht!\nAb hier Update in die Wege leiten!");
                 }
             });
 

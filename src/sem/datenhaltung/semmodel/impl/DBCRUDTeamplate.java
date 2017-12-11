@@ -126,4 +126,12 @@ public abstract class DBCRUDTeamplate<T> {
         return object;
     }
 
+
+    protected boolean create(String sql) throws IOException, SQLException {
+        boolean ret = false;
+        Connection connection = DBConnectionManager.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ret = preparedStatement.execute();
+        return ret;
+    }
 }

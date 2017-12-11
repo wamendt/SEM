@@ -10,6 +10,10 @@ public class EMailGrenz {
     private ArrayList<String> bcc;
     private String betreff;
     private String inhalt;
+    private String contentOriginal;
+    private String zustand;
+    private int messageID;
+    private String ordner;
     private ArrayList<FileGrenz> files;
 
     public TagGrenz getTag() {
@@ -84,5 +88,37 @@ public class EMailGrenz {
 
     public void setFiles(ArrayList<FileGrenz> files) {
         this.files = files;
+    }
+
+    public String getContentOriginal() {
+        return contentOriginal;
+    }
+
+    public void setContentOriginal(String contentOriginal) {
+        this.contentOriginal = contentOriginal;
+    }
+
+    public String getZustand() {
+        return zustand;
+    }
+
+    public void setZustand(String zustand) {
+        this.zustand = zustand;
+    }
+
+    public int getMessageID() {
+        return messageID;
+    }
+
+    public void setMessageID(int messageID) {
+        this.messageID = messageID;
+    }
+
+    public String getOrdner() {
+        return ordner;
+    }
+
+    public void setOrdner(String ordner) {
+        this.ordner = ordner;
     }
 }
