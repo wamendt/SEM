@@ -19,9 +19,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public interface IMailService {
-
-    public Store getStore();
-
     //EMail-Ordner
     ArrayList<String> getAlleOrdnerVonKonto(Konto konto) throws NoSuchProviderException;
     boolean loeschEMailVomServer(Konto konto, EMail eMail);
