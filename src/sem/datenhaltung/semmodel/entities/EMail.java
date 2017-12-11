@@ -1,7 +1,5 @@
 package sem.datenhaltung.semmodel.entities;
 
-import sem.datenhaltung.semmodel.entities.File;
-
 import java.util.ArrayList;
 
 public class EMail {
