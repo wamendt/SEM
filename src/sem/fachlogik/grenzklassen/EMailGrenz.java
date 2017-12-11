@@ -15,6 +15,7 @@ public class EMailGrenz {
     private int messageID;
     private String ordner;
     private ArrayList<FileGrenz> files;
+    private TagGrenz tag;
 
     public TagGrenz getTag() {
         return tag;
@@ -23,8 +24,6 @@ public class EMailGrenz {
     public void setTag(TagGrenz tag) {
         this.tag = tag;
     }
-
-    private TagGrenz tag;
 
     public int getMid() {
         return mid;
