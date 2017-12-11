@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.web.WebView?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="900.0" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.controller.HauptfensterController">
+   <children>
+      <SplitPane dividerPositions="0.23041894353369763, 0.4663023679417122" layoutX="55.0" layoutY="200.0" prefHeight="160.0" prefWidth="1100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
+        <items>
+          <AnchorPane maxWidth="250.0" minHeight="560.0" minWidth="200.0" prefHeight="560.0" prefWidth="250.0">
+               <children>
+                  <SplitPane dividerPositions="0.5" layoutX="55.0" layoutY="55.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <items>
+                      <AnchorPane maxHeight="400.0" minHeight="300.0" minWidth="160.0" prefHeight="357.0" prefWidth="248.0">
+                           <children>
+                              <Button layoutX="182.0" layoutY="14.0" mnemonicParsing="false" onAction="#clickOnOrdner" text="Button" />
+                           </children>
+                        </AnchorPane>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                           <children>
+                              <Button id="button_option" fx:id="button_option" layoutX="202.0" layoutY="8.0" mnemonicParsing="false" onMouseEntered="#button_optionOnMouseEntered" onMouseExited="#button_optionOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_option" stylesheets="@buttonstylesheet.css" />
+                              <ScrollPane centerShape="false" layoutX="25.0" layoutY="50.0" prefHeight="202.0" prefWidth="230.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+                                 <content>
+                                    <FlowPane id="flowPaneTags" fx:id="flowPaneTags" alignment="TOP_CENTER" centerShape="false" columnHalignment="CENTER" hgap="20.0" maxWidth="237.0" prefHeight="200.0" prefWidth="237.0" vgap="20.0">
+                                       <opaqueInsets>
+                                          <Insets left="300.0" />
+                                       </opaqueInsets>
+                                       <padding>
+                                          <Insets left="10.0" right="10.0" />
+                                       </padding>
+                                    </FlowPane>
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                    </items>
+                  </SplitPane>
+               </children>
+            </AnchorPane>
+            <AnchorPane maxHeight="560.0" maxWidth="400.0" minHeight="560.0" minWidth="250.0" prefHeight="560.0" prefWidth="300.0">
+               <children>
+                  <ListView fx:id="listViewEmails" layoutX="14.0" layoutY="21.0" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children></AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: lightgray;">
+               <children>
+                  <AnchorPane prefHeight="105.0" prefWidth="583.0" style="-fx-background-color: white;" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                     <children>
+                        <GridPane layoutX="8.0" layoutY="8.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <columnConstraints>
+                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="181.33331298828125" minWidth="0.0" prefWidth="53.33331298828125" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="376.0" minWidth="10.0" prefWidth="312.00002034505206" />
+                            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="260.66668701171875" minWidth="10.0" prefWidth="182.66668701171875" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="Von:" />
+                              <Label text="An:" GridPane.rowIndex="1" />
+                              <Label text="Label" GridPane.columnIndex="1" />
+                              <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <HBox alignment="CENTER_RIGHT" prefHeight="53.0" prefWidth="71.0" spacing="70.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                 <children>
+                                    <Label text="Datum" />
+                                    <Button id="button_mailoption" fx:id="button_mailoption" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="button_mailoption" stylesheets="@buttonstylesheet.css" />
+                                 </children>
+                                 <GridPane.margin>
+                                    <Insets right="10.0" />
+                                 </GridPane.margin>
+                              </HBox>
+                           </children>
+                        </GridPane>
+                     </children>
+                  </AnchorPane>
+                  <WebView fx:id="webViewEmail" layoutX="69.0" layoutY="157.0" prefHeight="420.0" prefWidth="563.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="130.0" />
+               </children></AnchorPane>
+        </items>
+      </SplitPane>
+      <ToolBar cache="true" layoutX="263.0" prefHeight="40.0" prefWidth="837.0" snapToPixel="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+            <Button id="button_neue" fx:id="button_neue" mnemonicParsing="false" onMouseEntered="#button_neueOnMouseEntered" onMouseExited="#button_neueOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_neue" stylesheets="@buttonstylesheet.css" />
+            <Pane maxWidth="230.0" minWidth="5.0" prefHeight="20.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+            <Button id="button_search" fx:id="button_search" mnemonicParsing="false" onMouseEntered="#button_searchOnMouseEntered" onMouseExited="#button_searchOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_search" stylesheets="@buttonstylesheet.css" />
+            <TextField id="search_field" fx:id="search_field" prefHeight="30.0" prefWidth="200.0" style="-fx-border-radius: 10;" styleClass="search_field" stylesheets="@searchstylesheet.css">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </TextField>
+            <Pane prefHeight="20.0" prefWidth="30.0" />
+            <Button id="button_weiterleiten" fx:id="button_weiterleiten" alignment="CENTER" mnemonicParsing="false" onMouseEntered="#button_weiterleitenOnMauseEntered" onMouseExited="#button_weiterleitenOnMouseEntered" prefHeight="30.0" prefWidth="30.0" styleClass="button_weiterleiten" stylesheets="@buttonstylesheet.css" />
+            <Button id="button_mailantworten" fx:id="button_mailantworten" mnemonicParsing="false" onMouseEntered="#button_mailantwortenOnMouseEntered" onMouseExited="#button_mailantwortenOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_mailantworten" stylesheets="@buttonstylesheet.css" />
+            <Button id="button_loeschen" fx:id="button_loeschen" mnemonicParsing="false" onMouseEntered="#button_loeschenOnMouseEntered" onMouseExited="#button_loeschenOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_loeschen" stylesheets="@buttonstylesheet.css" />
+            <Pane prefHeight="25.0" prefWidth="127.0" HBox.hgrow="ALWAYS" />
+            <Button id="button_menu" fx:id="button_menu" mnemonicParsing="false" onMouseEntered="#button_menuOnMouseEntered" onMouseExited="#button_menuOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_menu" stylesheets="@buttonstylesheet.css" />
+        </items>
+      </ToolBar>
+   </children>
+</AnchorPane>
