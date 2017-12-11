@@ -9,6 +9,8 @@ import java.util.ArrayList;
 public interface ICRUDMail {
     int createEMail(EMail email) throws IOException, SQLException;
     EMail getEMailById(int mid) throws IOException, SQLException;
+    ArrayList<EMail> getEMailByOrdner(String name) throws IOException, SQLException;
+    ArrayList<EMail> getEMailByTag(int tid) throws IOException, SQLException;
     ArrayList<EMail> getAlleEMails() throws IOException, SQLException;
     ArrayList<EMail> getAlleEMailsMitTagId(int tid) throws IOException, SQLException ;
     boolean deleteEMail(int mid) throws IOException, SQLException ;
