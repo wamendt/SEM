@@ -325,11 +325,6 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
     // ############################################   /Hilfsfunktionen   ###############################################
     // #################################################################################################################
 
-    @Override
-    public Store getStore(){
-        return store;
-    }
-
 
     @Override
     public ArrayList<String> getAlleOrdnerVonKonto(Konto konto){
