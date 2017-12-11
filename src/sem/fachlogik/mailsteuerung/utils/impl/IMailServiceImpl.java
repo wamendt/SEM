@@ -907,10 +907,10 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                 for(File file : email.getFiles()) {
                     //File holen und in DataSource zuweisen
                     messageBodyPart = new MimeBodyPart();
-                    String filename = "/Users/wamendt/Desktop/photo_2017-10-21_14-12-43.jpg";
-                    DataSource source = new FileDataSource(filename);
+                    String filePath = file.getPfad();
+                    DataSource source = new FileDataSource(filePath);
                     messageBodyPart.setDataHandler(new DataHandler(source));
-                    messageBodyPart.setFileName(filename);
+                    messageBodyPart.setFileName(file.getName());
                     multipart.addBodyPart(messageBodyPart);
                 }
                 // Nachricht fertigbauen
