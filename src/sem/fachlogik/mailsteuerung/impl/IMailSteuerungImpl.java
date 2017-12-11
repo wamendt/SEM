@@ -7,7 +7,7 @@ import sem.fachlogik.grenzklassen.KontoGrenz;
 import sem.fachlogik.mailsteuerung.listener.MsgReceivedListener;
 import sem.fachlogik.mailsteuerung.listener.MsgRemovedListener;
 import sem.fachlogik.mailsteuerung.services.IMailSteuerung;
-import sem.fachlogik.mailsteuerung.utils.impl.IMailServiceImplSingleton;
+import sem.fachlogik.mailsteuerung.utils.impl.IMailServiceImpl;
 import sem.fachlogik.mailsteuerung.utils.services.IMailService;
 
 import javax.mail.MessagingException;
@@ -23,22 +23,22 @@ public class IMailSteuerungImpl implements IMailSteuerung{
     // #################################################################################################################
     @Override
     public void addMsgReceivedListener(MsgReceivedListener msgReceivedListener) {
-        IMailServiceImplSingleton.getReceivedListeners().add(msgReceivedListener);
+        IMailServiceImpl.getReceivedListeners().add(msgReceivedListener);
     }
 
     @Override
     public void removeMsgReceivedListener(MsgReceivedListener msgReceivedListener) {
-        IMailServiceImplSingleton.getReceivedListeners().remove(msgReceivedListener);
+        IMailServiceImpl.getReceivedListeners().remove(msgReceivedListener);
     }
 
     @Override
     public void addMsgRemovedListener(MsgRemovedListener msgRemovedListener) {
-        IMailServiceImplSingleton.getRemovedListeners().add(msgRemovedListener);
+        IMailServiceImpl.getRemovedListeners().add(msgRemovedListener);
     }
 
     @Override
     public void removeMsgRemovedListener(MsgRemovedListener msgRemovedListener) {
-        IMailServiceImplSingleton.getRemovedListeners().remove(msgRemovedListener);
+        IMailServiceImpl.getRemovedListeners().remove(msgRemovedListener);
     }
     // #################################################################################################################
     // ###############################################   /Listener   ###################################################
@@ -55,7 +55,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
         assert name != null;
         if(kontoGrenz != null && !name.equals("")){
             //Service anlegen
-            IMailService iMailService = IMailServiceImplSingleton.getMailService();
+            IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
             Konto konto = new Konto();
@@ -72,7 +72,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
         boolean ret = false;
         if(kontoGrenz != null && name != null && !name.equals("")){
             //Service anlegen
-            IMailService iMailService = IMailServiceImplSingleton.getMailService();
+            IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
             Konto konto = new Konto();
@@ -99,7 +99,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             ArrayList<EMail> eMailList = new ArrayList<>();
 
             //Service anlegen
-            IMailService iMailService = IMailServiceImplSingleton.getMailService();
+            IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
             Konto konto = new Konto();
@@ -137,7 +137,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
         assert art != null;
         if(kontoGrenz != null && !art.equals("") && eMailGrenz != null) {
             //Service anlegen
-            IMailService iMailService = IMailServiceImplSingleton.getMailService();
+            IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
             Konto konto = new Konto();
@@ -168,7 +168,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
         boolean ret = false;
         if (kontoGrenz != null && eMailGrenz != null){
             //Service anlegen
-            IMailService iMailService = IMailServiceImplSingleton.getMailService();
+            IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
             Konto konto = new Konto();
@@ -195,7 +195,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
         EMailGrenz eMailGrenz1 = null;
         if (kontoGrenz != null && eMailGrenz != null) {
             //Service anlegen
-            IMailService iMailService = IMailServiceImplSingleton.getMailService();
+            IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
             Konto konto = new Konto();
@@ -216,7 +216,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
         boolean ret = false;
         if (kontoGrenz != null && eMailGrenz != null){
             //Service anlegen
-            IMailService iMailService = IMailServiceImplSingleton.getMailService();
+            IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
             Konto konto = new Konto();
@@ -242,7 +242,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
         boolean ret = false;
         if (kontoGrenz != null && eMailGrenz != null){
             //Service anlegen
-            IMailService iMailService = IMailServiceImplSingleton.getMailService();
+            IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
             Konto konto = new Konto();
@@ -268,7 +268,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
         boolean ret = false;
         if (kontoGrenz != null && eMailGrenz != null){
             //Service anlegen
-            IMailService iMailService = IMailServiceImplSingleton.getMailService();
+            IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
             Konto konto = new Konto();
@@ -302,7 +302,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
         assert zuOrdner != null;
         if (kontoGrenz != null && eMailGrenz != null && !vonOrdner.equals("") && !zuOrdner.equals("")){
             //Service anlegen
-            IMailService iMailService = IMailServiceImplSingleton.getMailService();
+            IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
             Konto konto = new Konto();
@@ -334,7 +334,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
         boolean ret = false;
         if (kontoGrenz != null && eMailGrenz != null){
             //Service anlegen
-            IMailService iMailService = IMailServiceImplSingleton.getMailService();
+            IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
             Konto konto = new Konto();
@@ -363,7 +363,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             ArrayList<EMail> eMailList = new ArrayList<>();
 
             //Service anlegen
-            IMailService iMailService = IMailServiceImplSingleton.getMailService();
+            IMailService iMailService = IMailServiceImpl.getMailService();
 
             try {
                 eMailList = iMailService.sucheEMail(suche);
@@ -396,7 +396,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             ArrayList<String> ordnerList = new ArrayList<>();
 
             //Service anlegen
-            IMailService iMailService = IMailServiceImplSingleton.getMailService();
+            IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
             Konto konto = new Konto();
@@ -454,7 +454,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             ArrayList<String> ordnerList = new ArrayList<>();
 
             //Service anlegen
-            IMailService iMailService = IMailServiceImplSingleton.getMailService();
+            IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
             Konto konto = new Konto();
