@@ -62,7 +62,7 @@ public class CRUDAdresse extends DBCRUDTeamplate<Adresse> implements ICRUDAdress
     @Override
     public boolean deleteAdresse(int aid) throws IOException, SQLException {
         int ret = updateOrDelete("DELETE FROM adresse WHERE aid = ?", aid);
-        return ret == 1? true : false;
+        return ret == 1;
     }
 
     @Override
@@ -71,6 +71,6 @@ public class CRUDAdresse extends DBCRUDTeamplate<Adresse> implements ICRUDAdress
                 " SET adresse = ? , name = ?, mid = ?, zustand = ? " +
                 "WHERE aid = ?", adresse.getAdresse(), adresse.getName()
                 , adresse.getMid(), adresse.getZustand(), adresse.getAid());
-        return ret == 1? true : false;
+        return ret == 1;
     }
 }

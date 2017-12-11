@@ -45,6 +45,16 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
         return eMails.size() > 0 ? eMails.get(0) : null;
     }
 
+    @Override
+    public ArrayList<EMail> getEMailByOrdner(String name) throws IOException, SQLException {
+        return query("SELECT * FROM email WHERE odner = ?", name);
+    }
+
+    @Override
+    public ArrayList<EMail> getEMailByTag(int tid) throws IOException, SQLException {
+        return query("SELECT * FROM email WHERE tid = ?", tid);
+    }
+
     public EMail getEMailByMessageIDUndOrdner(int id, String ordner) throws IOException, SQLException {
         ArrayList<EMail> eMails = query("SELECT * FROM email WHERE messageID = ?", id);
         return eMails.size() > 0 ? eMails.get(0) : null;
@@ -71,11 +81,10 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
         int mid = Integer.parseInt(suchwort);
         int tid = Integer.parseInt(suchwort);
         int messageID = Integer.parseInt(suchwort);
-        ArrayList<EMail> eMails = query("SELECT * FROM email WHERE mid = ? OR betreff = ? OR inhalt = ? OR tid = ?" +
+        return query("SELECT * FROM email WHERE mid = ? OR betreff = ? OR inhalt = ? OR tid = ?" +
                 "OR absender = ? OR cc = ? OR bcc = ? OR empfaenger = ? OR contentOriginal = ? OR zustand = ?" +
                 "OR ordner = ? OR messageID = ?", mid, suchwort, suchwort, tid, suchwort, suchwort, suchwort, suchwort,
                 suchwort, suchwort, suchwort, messageID);
-        return eMails;
     }
 
     @Override
@@ -95,46 +104,34 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
 
     @Override
     public boolean createEMailTable() throws IOException, SQLException {
-        boolean ret = false;
-        ret = create("CREATE TABLE IF NOT EXISTS email (mid INTEGER NOT NULL, betreff VARCHAR, inhalt TEXT, tid INTEGER, " +
+        return create("CREATE TABLE IF NOT EXISTS email (mid INTEGER NOT NULL, betreff VARCHAR, inhalt TEXT, tid INTEGER, " +
                         "absender VARCHAR, cc TEXT, bcc TEXT, empfaenger TEXT, contentOriginal TEXT, " +
                         "zustand VARCHAR(50), ordner TEXT, messageID INTEGER);");
-        return ret;
     }
 
     @Override
     public boolean createFileTable() throws IOException, SQLException {
-        boolean ret = false;
-        ret = create("CREATE TABLE IF NOT EXISTS file (fid  INTEGER NOT NULL, pfad VARCHAR, mid  INTEGER);");
-        return ret;
+        return create("CREATE TABLE IF NOT EXISTS file (fid  INTEGER NOT NULL, pfad VARCHAR, mid  INTEGER);");
     }
 
     @Override
     public boolean createAdresseTable() throws IOException, SQLException {
-        boolean ret = false;
-        ret = create("CREATE TABLE IF NOT EXISTS adresse (aid INTEGER NOT NULL, adresse VARCHAR, " +
+        return create("CREATE TABLE IF NOT EXISTS adresse (aid INTEGER NOT NULL, adresse VARCHAR, " +
                 "name VARCHAR, mid INTEGER, zustand VARCHAR);");
-        return ret;
     }
 
     @Override
     public boolean createTagTable() throws IOException, SQLException {
-        boolean ret = false;
-        ret = create("CREATE TABLE IF NOT EXISTS tag (tid INTEGER NOT NULL PRIMARY KEY, name VARCHAR);");
-        return ret;
+        return create("CREATE TABLE IF NOT EXISTS tag (tid INTEGER NOT NULL PRIMARY KEY, name VARCHAR);");
     }
 
     @Override
     public boolean createWortTable() throws IOException, SQLException {
-        boolean ret = false;
-        ret = create("CREATE TABLE IF NOT EXISTS wort (wid INTEGER NOT NULL, wort VARCHAR, tid INTEGER NOT NULL);");
-        return ret;
+        return create("CREATE TABLE IF NOT EXISTS wort (wid INTEGER NOT NULL, wort VARCHAR, tid INTEGER NOT NULL);");
     }
 
     @Override
     public boolean deleteTable(String tableName) throws IOException, SQLException{
-        boolean ret = false;
-
-        return ret;
+        return false;
     }
 }

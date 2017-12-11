@@ -48,7 +48,7 @@ public class CRUDFile extends DBCRUDTeamplate<File> implements ICRUDFile{
     @Override
     public boolean deleteFile(int fid) throws IOException, SQLException {
         int ret = updateOrDelete("DELETE FROM file WHERE fid = ?", fid);
-        return ret == 1? true : false;
+        return ret == 1;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class CRUDFile extends DBCRUDTeamplate<File> implements ICRUDFile{
         int ret = updateOrDelete("UPDATE file" +
                 " pfad = ? , mid = ? WHERE fid = ?",
                 file.getPfad(), file.getMid(), file.getFid());
-        return ret == 1? true : false;
+        return ret == 1;
     }
 
 }
