@@ -1,6 +1,11 @@
 package sem.fachlogik.mailsteuerung.utils.impl;
 
-import com.sun.mail.imap.IMAPStore;
+import sem.datenhaltung.semmodel.entities.Tag;
+import sem.datenhaltung.semmodel.services.ICRUDTag;
+import sem.fachlogik.grenzklassen.EMailGrenz;
+import sem.fachlogik.grenzklassen.FileGrenz;
+import sem.fachlogik.grenzklassen.KontoGrenz;
+import sem.fachlogik.grenzklassen.TagGrenz;
 import sem.fachlogik.mailsteuerung.event.MsgReceivedEvent;
 import sem.fachlogik.mailsteuerung.listener.MsgReceivedListener;
 import sem.fachlogik.mailsteuerung.listener.MsgRemovedListener;
@@ -9,6 +14,8 @@ import sem.fachlogik.mailsteuerung.utils.mailConnection.MailStoreManager;
 import sem.datenhaltung.semmodel.entities.EMail;
 import sem.datenhaltung.semmodel.entities.Konto;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.mail.event.MessageCountEvent;
 import javax.mail.event.MessageCountListener;
 import javax.mail.internet.InternetAddress;
@@ -16,6 +23,9 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.*;
+import javax.activation.DataSource;
+import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
@@ -24,22 +34,51 @@ import java.io.*;
 import org.jsoup.Jsoup;
 import sem.datenhaltung.semmodel.services.ICRUDMail;
 import sem.datenhaltung.semmodel.services.ICRUDManagerSingleton;
-
+import sem.datenhaltung.semmodel.entities.File;
 
 public class IMailServiceImpl implements IMailService, MessageCountListener {
 
     //Add und Remove von Strg-Klassen
+    private static IMailServiceImpl mailService;
     private static ArrayList<MsgReceivedListener> receivedListeners = new ArrayList<>();
     private static ArrayList<MsgRemovedListener> removedListeners = new ArrayList<>();
-
     private static MailStoreManager storeManager;
-    private static Store store;
-    IMAPStore imapStore;
+    private Store store;
 
     public IMailServiceImpl(){
         storeManager = MailStoreManager.getStoreManager();
     }
 
+    public static IMailServiceImpl getMailService() {
+        if (mailService == null){
+            mailService = new IMailServiceImpl();
+        }
+        return mailService;
+    }
+
+    // #################################################################################################################
+    // ###############################################   Listener   ####################################################
+    // #################################################################################################################
+
+
+    @Override
+    public void messagesAdded(MessageCountEvent messageCountEvent) {
+        System.out.println("Neue Message erhalten");
+    }
+
+    @Override
+    public void messagesRemoved(MessageCountEvent messageCountEvent) {
+        System.out.println("Message gelöscht");
+    }
+
+    private void notifyMsgReceivedListener(MsgReceivedEvent msg){
+        for(MsgReceivedListener listener : receivedListeners){
+            listener.messageAngekommen(msg);
+        }
+    }
+    // #################################################################################################################
+    // ###############################################   /Listener   ###################################################
+    // #################################################################################################################
 
     // #################################################################################################################
     // ############################################   Hilfsfunktionen   ################################################
@@ -55,21 +94,47 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
     }
 
 
+    private Multipart addAttachment(EMail eMail, Multipart multipart){
+        for(File file : eMail.getFiles()) {
+            //File holen und in DataSource zuweisen
+            BodyPart messageBodyPart = new MimeBodyPart();
+            String filePath = file.getPfad();
+            DataSource source = new FileDataSource(filePath);
+            try {
+                messageBodyPart.setDataHandler(new DataHandler(source));
+                messageBodyPart.setFileName(file.getName());
+                multipart.addBodyPart(messageBodyPart);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        }
+        // store file
+        //message.writeTo(new FileOutputStream(new File("c:/mail.eml")));
+        return multipart;
+    }
+
+
+    private EMail getContentOriginal(Message message, EMail email){
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            message.writeTo(baos);
+            String content = baos.toString();
+            email.setContentOriginal(content);
+        } catch (Exception e) {
+            System.out.println("ByteArrayOutputStream wirft Exception: " + e.getMessage());
+        }
+        return email;
+    }
+
 
     //Methode um das Store-Objekt zu setzen und die Verbindung aufzubauen
-    private Store setStore(Konto konto){
+    private void setStore(Konto konto){
         store = null;
         try{
             store = storeManager.setImapConnection(konto.getIMAPhost(), konto.getEmailAddress(), konto.getPassWort());
         }catch (NoSuchProviderException e){
             System.out.println("StoreManager wirft Exception: " + e.getMessage());
         }
-        return store;
-    }
-
-    @Override
-    public Store getStore(){
-        return store;
     }
 
 
@@ -180,10 +245,108 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
         return "";
     }
 
-    // #################################################################################################################
-    // ############################################   Hilfsfunktionen   ################################################
-    // #################################################################################################################
 
+    private EMail checkEMailAndSetToDB(Folder folder, Message message, ICRUDMail crudeMail, int i, long beginnSeconds, int messageCounter){
+        EMail eMail = null;
+        try {
+            //Beginn Zeitmessung für die aktuelle Nachricht
+            long startMillis = System.currentTimeMillis();
+
+            //Existiert die E-Mail bereits in der DB?
+            if (crudeMail.getEMailByMessageIDUndOrdner(i, folder.getFullName()) == null) {
+                eMail = new EMail();
+
+                //Betreff setzen
+                eMail.setBetref(message.getSubject());
+
+                //NachrichtenContent in PlainText umwandeln und HTML - Content entfernen
+                String mailContent = getTextFromMessage(message);
+                eMail.setInhalt(mailContent);
+
+                //Anfangs wird noch kein Tag gesetzt
+                eMail.setTid(0);
+
+                //Absender setzen
+                eMail.setAbsender(message.getFrom()[0].toString());
+
+                //CC setzen
+                if (InternetAddress.toString(message.getRecipients(Message.RecipientType.CC)) != null) {
+                    eMail.setCc(InternetAddress.toString(message.getRecipients(Message.RecipientType.CC)));
+                } else {
+                    eMail.setCc("");
+                }
+
+                //BCC setzen
+                if (InternetAddress.toString(message.getRecipients(Message.RecipientType.BCC)) != null) {
+                    eMail.setBcc(InternetAddress.toString(message.getRecipients(Message.RecipientType.BCC)));
+                } else {
+                    eMail.setBcc("");
+                }
+
+                //Empfänger setzen
+                if (InternetAddress.toString(message.getRecipients(Message.RecipientType.TO)) != null) {
+                    eMail.setEmpfaenger(InternetAddress.toString(message.getRecipients(Message.RecipientType.TO)));
+                } else {
+                    eMail.setEmpfaenger("");
+                }
+
+                //Zustand der Email setzen
+                eMail = setZustand(eMail, message);
+
+                //Ordner setzen
+                eMail.setOrdner(folder.getFullName());
+
+                //Message-Content als Plain-Text umwandeln und in die Datenbank speichern
+                eMail = getContentOriginal(message, eMail);
+
+                //MessageNumber setzen
+                eMail.setMessageID(i);
+
+                //E-Mail in der Datenbank hinterlegen
+                crudeMail.createEMail(eMail);
+
+                //End-Zeiterfassung anhalten
+                long currentMillis = System.currentTimeMillis();
+                long currentSeconds = TimeUnit.MILLISECONDS.toSeconds(currentMillis);
+
+                //und die benötigte Zeit berechnen
+                long messageTime = currentMillis - startMillis;
+                long totalTime = currentSeconds - beginnSeconds;
+
+                //Ausgabe zur Kontrolle
+                System.out.println(messageCounter + ". Nachricht wurde importiert!\nbenötigte Zeit für diese Nachricht: " + messageTime + "ms\nbenötigte Zeit Total:" + totalTime + "s\n\n");
+            } else {
+                //End-Zeiterfassung anhalten
+                long currentMillis = System.currentTimeMillis();
+                long currentSeconds = TimeUnit.MILLISECONDS.toSeconds(currentMillis);
+
+                //und die benötigte Zeit berechnen
+                long messageTime = currentMillis - startMillis;
+                long totalTime = currentSeconds - beginnSeconds;
+
+                //Ausgabe zur Kontrolle
+                System.out.println("\nE-Mail bereits in der DB!");
+                System.out.println("benötigte Zeit für diese Nachricht: " + messageTime + "ms\nbenötigte Zeit Total:" + totalTime + "s\n\n");
+            }
+        }
+        catch (NoSuchProviderException e) {
+                System.out.println("StoreManager wirft Exception: " + e.getMessage());
+            }
+        catch (FolderNotFoundException fe){
+                System.out.println("FolderNotFoundException wurde geworfen: " + fe.getMessage());
+            }
+        catch (MessagingException e) {
+                System.out.println("MessagingException wurde geworfen: " + e.getMessage());
+            }
+        catch (Exception e) {
+                System.out.println("Exception wurde geworfen: " + e.getMessage());
+            }
+        return eMail;
+    }
+
+    // #################################################################################################################
+    // ############################################   /Hilfsfunktionen   ###############################################
+    // #################################################################################################################
 
 
     @Override
@@ -219,6 +382,12 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
             if(folder != null){
                 ret = markiereUndloescheMail(folder, eMail);
             }
+
+            //Falls Löschung auf dem Server erfolgreich war,
+            if(ret){
+                ICRUDMail icrudMail = ICRUDManagerSingleton.getIcrudMailInstance();
+                ret = icrudMail.deleteEMail(eMail.getMid());
+            }
         }
         catch (NullPointerException e){
             System.out.println("NullPointerException wurde geworfen!" + e.getMessage());
@@ -228,6 +397,10 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
         }
         catch (MessagingException e) {
             System.out.println("MessagingException wird geworfen: " + e.getMessage());
+        } catch (SQLException e) {
+            System.out.println("SQLException wird geworfen: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("IOException wird geworfen: " + e.getMessage());
         }
 
         return ret;
@@ -298,7 +471,9 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                 //Ordner letzendlich löschen
                 folder.delete(true);
 
-                ret = true;
+                //E-Mail lokal löschen
+                ICRUDMail icrudMail = ICRUDManagerSingleton.getIcrudMailInstance();
+                ret = icrudMail.deleteEMailByFolder(folder.getFullName());
             }
 
             folder.close(true);
@@ -311,21 +486,25 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
         }
         catch (MessagingException e) {
             System.out.println("MessagingException wird geworfen: " + e.getMessage());
+        } catch (SQLException e) {
+            System.out.println("SQLException wird geworfen: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("IOException wird geworfen: " + e.getMessage());
         }
 
         return ret;
     }
 
+
     @Override
     public boolean importiereAllEMails(Konto konto){
+        boolean ret = false;
+
         //Store - Objekt holen
         setStore(konto);
 
         //CRUDObjekt zur Überprüfung ob Mails bereits importiert wurden!
         ICRUDMail crudeMail = ICRUDManagerSingleton.getIcrudMailInstance();
-        EMail eMail = new EMail();
-
-        long messageCounter = 1;
 
         try {
             //Alle Ordner holen
@@ -335,7 +514,6 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
             long beginnMillisTotal = System.currentTimeMillis();
             long beginnSeconds = TimeUnit.MILLISECONDS.toSeconds(beginnMillisTotal);
 
-            Message[] messages = null;
             for (String name : ordnerList) {
 
                 Folder folder = store.getFolder(name);
@@ -346,109 +524,22 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                 }
 
                 //Nachrichten des Ordners holen
-                messages = folder.getMessages();
+                int messageCount = folder.getMessageCount();
 
-                for(int i = 1; i <= messages.length; i++){
+                for(int i = 1; i <= messageCount; i++){
 
                     //Hole Nachricht anhand des Indexes
                     Message message = folder.getMessage(i);
-
-                    try{
-                        //Beginn Zeitmessung für die aktuelle Nachricht
-                        long startMillis = System.currentTimeMillis();
-
-                        //Existiert die E-Mail bereits in der DB?
-                        if(crudeMail.getEMailByMessageIDUndOrdner(i, folder.getFullName()) == null){
-
-                            //Betreff setzen
-                            eMail.setBetref(message.getSubject());
-
-                            //NachrichtenContent in PlainText umwandeln und HTML - Content entfernen
-                            String mailContent = getTextFromMessage(message);
-                            eMail.setInhalt(mailContent);
-
-                            //Anfangs wird noch kein Tag gesetzt
-                            eMail.setTid(0);
-
-                            //Absender setzen
-                            eMail.setAbsender(message.getFrom()[0].toString());
-
-                            //CC setzen
-                            if (InternetAddress.toString(message.getRecipients(Message.RecipientType.CC)) != null) {
-                                eMail.setCc(InternetAddress.toString(message.getRecipients(Message.RecipientType.CC)));
-                            } else {
-                                eMail.setCc("");
-                            }
-
-                            //BCC setzen
-                            if (InternetAddress.toString(message.getRecipients(Message.RecipientType.BCC)) != null) {
-                                eMail.setBcc(InternetAddress.toString(message.getRecipients(Message.RecipientType.BCC)));
-                            } else {
-                                eMail.setBcc("");
-                            }
-
-                            //Empfänger setzen
-                            if (InternetAddress.toString(message.getRecipients(Message.RecipientType.TO)) != null) {
-                                eMail.setEmpfaenger(InternetAddress.toString(message.getRecipients(Message.RecipientType.TO)));
-                            } else {
-                                eMail.setEmpfaenger("");
-                            }
-
-                            //Zustand der Email setzen
-                            eMail = setZustand(eMail, message);
-
-                            //Ordner setzen
-                            eMail.setOrdner(folder.getFullName());
-
-                            //Message-Content als Plain-Text umwandeln und in die Datenbank speichern
-                            String content = "";
-                            try {
-                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                message.writeTo(baos);
-                                content = baos.toString();
-                                eMail.setContentOriginal(content);
-                            } catch (Exception e) {
-                                System.out.println("ByteArrayOutputStream wirft Exception: " + e.getMessage());
-                            }
-
-                            //MessageNumber setzen
-                            eMail.setMessageID(i);
-
-                            //E-Mail in der Datenbank hinterlegen
-                            crudeMail.createEMail(eMail);
-
-                            //End-Zeiterfassung anhalten
-                            long currentMillis = System.currentTimeMillis();
-                            long currentSeconds = TimeUnit.MILLISECONDS.toSeconds(currentMillis);
-
-                            //und die benötigte Zeit berechnen
-                            long messageTime = currentMillis - startMillis;
-                            long totalTime = currentSeconds - beginnSeconds;
-
-                            //Ausgabe zur Kontrolle
-                            System.out.println(messageCounter + ". Nachricht wurde importiert!\nbenötigte Zeit für diese Nachricht: " + messageTime + "ms\nbenötigte Zeit Total:" + totalTime + "s\n\n");
-                            messageCounter++;
-                        }
-                        else {
-                            //End-Zeiterfassung anhalten
-                            long currentMillis = System.currentTimeMillis();
-                            long currentSeconds = TimeUnit.MILLISECONDS.toSeconds(currentMillis);
-
-                            //und die benötigte Zeit berechnen
-                            long messageTime = currentMillis - startMillis;
-                            long totalTime = currentSeconds - beginnSeconds;
-
-                            //Ausgabe zur Kontrolle
-                            System.out.println("\nE-Mail bereits in der DB!");
-                            System.out.println("benötigte Zeit für diese Nachricht: " + messageTime + "ms\nbenötigte Zeit Total:" + totalTime + "s\n\n");
-                        }
-
-                    }catch (NullPointerException e){
+                    try {
+                        checkEMailAndSetToDB(folder, message, crudeMail, i, beginnSeconds, messageCount);
+                    }
+                    catch (NullPointerException e){
                         System.out.println("NullPointerException wurde geworfen: " + e.getMessage());
                     }
                 }
                 folder.close(true);
             }
+            ret = true;
         }
         catch (NoSuchProviderException e) {
             System.out.println("StoreManager wirft Exception: " + e.getMessage());
@@ -462,12 +553,70 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
         catch (Exception e) {
             System.out.println("Exception wurde geworfen: " + e.getMessage());
         }
-        return false;
+        return ret;
+    }
+
+
+    public ArrayList<EMail> importiereAllEMailsvomOrdner(Konto konto, String ordnerName) throws MessagingException{
+        //Store - Objekt holen
+        setStore(konto);
+
+        //CRUDObjekt zur Überprüfung ob Mails bereits importiert wurden!
+        ICRUDMail crudeMail = ICRUDManagerSingleton.getIcrudMailInstance();
+        EMail eMail;
+        ArrayList<EMail> eMailArrayList = new ArrayList<>();
+
+        try {
+            //Alle Ordner holen
+            Folder folder = store.getFolder(ordnerName);
+
+            //Starte die Zeitmessung
+            long beginnMillisTotal = System.currentTimeMillis();
+            long beginnSeconds = TimeUnit.MILLISECONDS.toSeconds(beginnMillisTotal);
+
+            //Ordner öfnnen
+            if(!folder.isOpen()){
+                folder.open((Folder.READ_ONLY));
+            }
+
+            //Nachrichten des Ordners holen
+            int messageCount = folder.getMessageCount();
+
+            for(int i = 1; i <= messageCount; i++){
+
+                //Hole Nachricht anhand des Indexes
+                Message message = folder.getMessage(i);
+                try {
+                    eMail = checkEMailAndSetToDB(folder, message, crudeMail, i, beginnSeconds, messageCount);
+                    if(eMail != null){
+                        eMailArrayList.add(eMail);
+                    }
+                }
+                catch (NullPointerException e){
+                    System.out.println("NullPointerException wurde geworfen: " + e.getMessage());
+                }
+            }
+            folder.close(true);
+
+        }
+        catch (NoSuchProviderException e) {
+            System.out.println("StoreManager wirft Exception: " + e.getMessage());
+        }
+        catch (FolderNotFoundException fe){
+            System.out.println("FolderNotFoundException wurde geworfen: " + fe.getMessage());
+        }
+        catch (MessagingException e) {
+            System.out.println("MessagingException wurde geworfen: " + e.getMessage());
+        }
+        catch (Exception e) {
+            System.out.println("Exception wurde geworfen: " + e.getMessage());
+        }
+        return eMailArrayList;
     }
 
 
     @Override
-    public boolean verschiebeEMail(Konto konto, String vonOrdner, String zuOrdner, EMail email) throws MessagingException {
+    public boolean verschiebeEMail(Konto konto, String vonOrdner, String zuOrdner, EMail email) throws MessagingException, IOException, SQLException {
         boolean ret = false;
 
         //Store-Objekt holen
@@ -514,6 +663,13 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                     //Nachrichten in den ZielOrdner kopieren
                     folder.copyMessages(messages, toFolder);
                     ret = markiereUndloescheMail(folder, email);
+
+                    //Nach der erfolgreichen Änderung auf dem Server nun auch lokal durchführen
+                    if(ret){
+                        email.setOrdner(zuOrdner);
+                        ICRUDMail icrudMail = ICRUDManagerSingleton.getIcrudMailInstance();
+                        ret = icrudMail.updateEMail(email);
+                    }
                 }
             }
         }
@@ -521,7 +677,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
     }
 
     @Override
-    public boolean setzeTagsZurServerEMail(Konto konto, EMail email, String art) throws MessagingException {
+    public boolean setzeTagsZurServerEMail(Konto konto, EMail email, String art) throws MessagingException, IOException, SQLException {
         boolean ret = false;
 
         //Store-Objekt holen
@@ -540,66 +696,77 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                 "EMail DB - Betreff :   " + email.getBetreff() + "\n" +
                 "EMail Server - Betreff:" + message.getSubject());
 
-            System.out.println("Message ID nicht leer und identisch!");
-            switch (art) {
-                case "gelesen":
-                    //E-Mail als gelesen markieren
-                    message.setFlag(Flags.Flag.SEEN, true);
+        System.out.println("Message ID nicht leer und identisch!");
+        switch (art) {
+            case "gelesen":
+                //E-Mail als gelesen markieren
+                message.setFlag(Flags.Flag.SEEN, true);
+                email.setZustand("gelesen");
+                ret = true;
+                break;
+            case "ungelesen":
+                //E-Mail als ungelesen markieren
+                message.setFlag(Flags.Flag.SEEN, false);
+                email.setZustand("ungelesen");
+                ret = true;
+                break;
+            case "entwurf":
+                //MessageArray erstellen für den Kopiervorgang
+                Message[] messages1 = new Message[1];
+                Folder ToFolder = store.getFolder("Entwürfe");
+
+                //Message als Entwurf setzen und ins Array übertragen
+                message.setFlag(Flags.Flag.DRAFT, true);
+                messages1[0] = message;
+
+                //Message in den EntwurfsOrdner kopieren
+                folder.copyMessages(messages1, ToFolder);
+
+                //E-Mail vom alten Ordner löschen
+                if(loeschEMailVomServer(konto, email)){
+                    email.setZustand("entworfen");
                     ret = true;
-                    break;
-                case "ungelesen":
-                    //E-Mail als ungelesen markieren
-                    message.setFlag(Flags.Flag.SEEN, false);
+                }
+                else {
+                    ret = false;
+                }
+
+                break;
+            case "geloescht":
+                //Message als gelöscht setzen und in das Array übertragen
+                Message[] messages = new Message[1];
+                message.setFlag(Flags.Flag.DELETED, true);
+                messages[0] = message;
+
+                //Papierkorb holen und die E-Mail in den Papierkorb verschieben
+                Folder toFolder = store.getFolder("Gelöschte Elemente");
+                folder.copyMessages(messages, toFolder);
+                email.setOrdner("INBOX");
+
+                //E-Mail vom alten Ordner löschen
+                if(loeschEMailVomServer(konto, email)){
+                    email.setZustand("geloescht");
                     ret = true;
-                    break;
-                case "entwurf":
-                    //MessageArray erstellen für den Kopiervorgang
-                    Message[] messages1 = new Message[1];
-                    Folder ToFolder = store.getFolder("Entwürfe");
+                }
+                else {
+                    ret = false;
+                }
+                break;
+        }
+        folder.expunge();
+        folder.close(true);
 
-                    //Message als Entwurf setzen und ins Array übertragen
-                    message.setFlag(Flags.Flag.DRAFT, true);
-                    messages1[0] = message;
-
-                    //Message in den EntwurfsOrdner kopieren
-                    folder.copyMessages(messages1, ToFolder);
-
-                    //E-Mail vom alten Ordner löschen
-                    if(loeschEMailVomServer(konto, email)){
-                        ret = true;
-                    }
-                    else {
-                        ret = false;
-                    }
-
-                    break;
-                case "geloescht":
-                    //Message als gelöscht setzen und in das Array übertragen
-                    Message[] messages = new Message[1];
-                    message.setFlag(Flags.Flag.DELETED, true);
-                    messages[0] = message;
-
-                    //Papierkorb holen und die E-Mail in den Papierkorb verschieben
-                    Folder toFolder = store.getFolder("Gelöschte Elemente");
-                    folder.copyMessages(messages, toFolder);
-                    email.setOrdner("INBOX");
-
-                    //E-Mail vom alten Ordner löschen
-                    if(loeschEMailVomServer(konto, email)){
-                        ret = true;
-                    }
-                    else {
-                        ret = false;
-                    }
-                    break;
-            }
-            folder.expunge();
-            folder.close(true);
-            return ret;
+        //Zustand lokal ändern
+        if(ret){
+            ICRUDMail icrudMail = ICRUDManagerSingleton.getIcrudMailInstance();
+            ret = icrudMail.updateEMail(email);
+        }
+        return ret;
     }
 
+
     @Override
-    public boolean speichereEMailImOrdner(Konto konto, EMail eMail, String pfad) throws MessagingException {
+    public boolean speichereEMailImOrdner(Konto konto, EMail eMail, String pfad) throws MessagingException, IOException, SQLException {
         boolean ret = false;
 
         //Store-Objekt holen
@@ -630,37 +797,22 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                     message.setSubject(eMail.getBetreff());
 
                     //MessageContent erstellen
-                    MimeBodyPart content = new MimeBodyPart();
+                    BodyPart messageBodyPart = new MimeBodyPart();
 
                     //Content füllen
-                    message.setText(eMail.getInhalt());
+                    messageBodyPart.setText(eMail.getInhalt());
                     Multipart multipart = new MimeMultipart();
-                    multipart.addBodyPart(content);
+                    multipart.addBodyPart(messageBodyPart);
 
-                    // add attachments
-                /*f(eMail.getAttachment() != null){
-                    for(File file : attachments) {
-                        MimeBodyPart attachment = new MimeBodyPart();
-                        DataSource source = new FileDataSource(file);
-                        attachment.setDataHandler(new DataHandler(source));
-                        attachment.setFileName(file.getName());
-                        multipart.addBodyPart(attachment);
+                    // Anhang hinzufügen
+                    if(eMail.getFiles().size() > 0){
+                        message.setContent(addAttachment(eMail, multipart));
                     }
-                    // integration
-                    message.setContent(multipart);
-                    // store file
-                    message.writeTo(new FileOutputStream(new File("c:/mail.eml")));
-                }*/
 
                     message.setFlag(Flags.Flag.DRAFT, true);
                     MimeMessage draftMessages[] = {message};
                     folder.appendMessages(draftMessages);
-                /*
-                Message[] messages = new Message[1];
-                messages[0] = message;
-                defaultFolder.copyMessages(messages, folder);
-                */
-                    return true;
+                    ret = true;
                 }
                 catch (MessagingException ex) {
                     System.out.println("MessagingException wurde geworfen: " + ex.getMessage());
@@ -675,7 +827,17 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
             System.out.println("Der angegebene Ordner existiert nicht auf dem E-Mail - Server!");
             return false;
         }
-        return false;
+
+        //Vorgang lokal umsetzen
+        if(ret){
+            int id = -1;
+            ICRUDMail icrudMail = ICRUDManagerSingleton.getIcrudMailInstance();
+            id = icrudMail.createEMail(eMail);
+            if(id != -1){
+                ret = true;
+            }
+        }
+        return ret;
     }
 
 
@@ -684,7 +846,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
     public ArrayList<Folder> holeFolderFuerListener(Konto konto) throws MessagingException {
         ArrayList<String> ordnerListe = getAlleOrdnerVonKonto(konto);
         ArrayList<Folder> folders = new ArrayList<>();
-        Folder folder = null;
+        Folder folder;
         if(ordnerListe.size() > 0){
             for(String ordnerName : ordnerListe){
                 try{
@@ -695,71 +857,291 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                     System.out.println("MessagingException wurde geworfen: " + e.getMessage());
                 }
             }
-
         }
         return folders;
     }
 
 
-    private void notifyMsgReceivedListener(MsgReceivedEvent msg){
-        for(MsgReceivedListener listener : receivedListeners){
-            listener.messageAngekommen(msg);
+    @Override
+    public Folder getOrdnerByName(Konto konto, String name) {
+        //Store-Objekt holen
+        setStore(konto);
+        Folder folder = null;
+        try{
+            folder = store.getFolder(name);
         }
+        catch (MessagingException e){
+            System.out.println("MessagingException wurde geworfen: " + e.getMessage());
+        }
+        return folder;
     }
+
 
     @Override
-    public void messagesAdded(MessageCountEvent messageCountEvent) {
-        System.out.println("Neue Message erhalten");
-    }
-
-    @Override
-    public void messagesRemoved(MessageCountEvent messageCountEvent) {
-        System.out.println("Message gelöscht");
-    }
-
-
-    /*
-    * @Override
-    public boolean sendeEmail(Konto konto, EMail email){
+    public boolean sendeEmail(Konto konto, EMail email) {
         boolean ret = false;
 
-        //Hier müssen die Daten vom Konto geladen werden
-        final String username = "hikoelle@gmail.com";
-        final String password = "root(133)";
-        final String name = "E-Mail Sortierer";
-
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-
-        javax.mail.Authenticator auth = null;
-        auth = new javax.mail.Authenticator() {
-            @Override
-            public javax.mail.PasswordAuthentication getPasswordAuthentication() {
-                return new javax.mail.PasswordAuthentication(username, password);
-            }
-        };
-
-        Session session = Session.getInstance(props, auth);
-
         try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(username));
-            message.setRecipients(Message.RecipientType.TO,InternetAddress.parse("w.amendt@live.de"));
-            //message.setRecipients(Message.RecipientType.TO,InternetAddress.parse("w.amendt@live.de"));
-            //message.setRecipients(Message.RecipientType.TO,InternetAddress.parse("w.amendt@live.de"));
-            //message.setRecipients(Message.RecipientType.TO,InternetAddress.parse("w.amendt@live.de"));
-            message.setSubject("Dies ist ein Betreff!");
-            message.setText("\n\nTestinhalt!\n\n");
+            Session session = storeManager.setSmtpConnection(konto.getSMTPhost(), konto.getEmailAddress(), konto.getPassWort());
 
+            String[] empfaengerList = email.getEmpfaenger().split(";");
+
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(email.getAbsender()));
+            for (String anEmpfaengerList : empfaengerList) {
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(anEmpfaengerList));
+            }
+            message.setSubject(email.getBetreff());
+
+            //MessageContent erstellen
+            //MimeBodyPart content = new MimeBodyPart();
+            BodyPart messageBodyPart = new MimeBodyPart();
+
+            //Content füllen
+            messageBodyPart.setText(email.getInhalt());
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(messageBodyPart);
+
+            message.setContent(addAttachment(email, multipart));
+
+            //Nachricht senden
             Transport.send(message);
-            ret = true;
-        } catch (MessagingException e) {
-            System.out.println("Fehler: " + e.getMessage());
+
+            //Gesendete E-Mail lokal sichern
+            email.setOrdner("Gesendet");
+
+            //Message-Content als Plain-Text umwandeln und in die Datenbank speichern
+            email = getContentOriginal(message, email);
+
+            ICRUDMail icrudMail = ICRUDManagerSingleton.getIcrudMailInstance();
+            int id = -1;
+            id = icrudMail.createEMail(email);
+            if(id != -1){
+                ret = true;
+            }
+        }
+        catch (NoSuchProviderException e){
+            System.out.println("NoSuchProviderException: " + e.getMessage());
+        }
+        catch (MessagingException e) {
+            System.out.println("MessagingException: " + e.getMessage());
+        }
+        catch (SQLException e) {
+            System.out.println("SQLException: " + e.getMessage());
+        }
+        catch (IOException e) {
+            System.out.println("IOException: " + e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
         }
         return ret;
-    *
-    * */
+    }
+
+    // #################################################################################################################
+    // #################################################   Setter   ####################################################
+    // #################################################################################################################
+    @Override
+    public EMailGrenz getEMailGrenz(EMail eMail) {
+        EMailGrenz eMailGrenz = new EMailGrenz();
+        eMailGrenz.setMid(eMail.getMid());
+        eMailGrenz.setBetreff(eMail.getBetreff());
+        eMailGrenz.setInhalt(eMail.getInhalt());
+
+        Tag tag;
+        TagGrenz tagGrenz;
+        try{
+            ICRUDTag icrudTag = ICRUDManagerSingleton.getIcrudTagInstance();
+            tag = icrudTag.getTagById(eMail.getTid());
+            if(tag != null){
+                tagGrenz = getTagGrenz(tag);
+                eMailGrenz.setTag(tagGrenz);
+            }
+        }
+        catch (SQLException e){
+            System.out.println("SQLException wird geworfen: " + e.getMessage());
+        }
+        catch (IOException e){
+            System.out.println("IOException wird geworfen: " + e.getMessage());
+        }
+        eMailGrenz.setAbsender(eMail.getAbsender());
+
+        ArrayList<String> ccList = implodeAdresses(eMail.getCc());
+        eMailGrenz.setCc(ccList);
+
+        ArrayList<String> bccList = implodeAdresses(eMail.getBcc());
+        eMailGrenz.setBcc(bccList);
+
+        ArrayList<String> empfaengerList = implodeAdresses(eMail.getEmpfaenger());
+        eMailGrenz.setEmpfaenger(empfaengerList);
+
+        eMailGrenz.setContentOriginal(eMail.getContentOriginal());
+        eMailGrenz.setZustand(eMail.getZustand());
+        eMailGrenz.setMessageID(eMail.getMessageID());
+        eMailGrenz.setOrdner(eMail.getOrdner());
+
+        if(eMail.getFiles().size() > 0) {
+            ArrayList<FileGrenz> fileList = new ArrayList<>();
+            for (File file : eMail.getFiles()) {
+                FileGrenz fileGrenz = getFileGrenz(file);
+                fileList.add(fileGrenz);
+            }
+            eMailGrenz.setFiles(fileList);
+        }
+        return eMailGrenz;
+    }
+
+    @Override
+    public EMail getEMail(EMailGrenz eMailGrenz) {
+        EMail eMail = new EMail();
+        eMail.setMid(eMailGrenz.getMid());
+        eMail.setBetref(eMailGrenz.getBetreff());
+        eMail.setInhalt(eMailGrenz.getInhalt());
+        eMail.setTid(eMailGrenz.getTag().getTid());
+        eMail.setAbsender(eMail.getAbsender());
+
+        String ccList = explodeAdresses(eMailGrenz.getCc());
+        eMail.setCc(ccList);
+
+        String bccList = explodeAdresses(eMailGrenz.getBcc());
+        eMail.setBcc(bccList);
+
+        String empfaengerList = explodeAdresses(eMailGrenz.getEmpfaenger());
+        eMail.setEmpfaenger(empfaengerList);
+
+        eMail.setContentOriginal(eMail.getContentOriginal());
+        eMail.setZustand(eMail.getZustand());
+        eMail.setMessageID(eMail.getMessageID());
+        eMail.setOrdner(eMail.getOrdner());
+
+        if(eMail.getFiles().size() > 0) {
+            ArrayList<File> fileList = new ArrayList<>();
+            for (FileGrenz fileGrenz : eMailGrenz.getFiles()) {
+                File file = getFile(fileGrenz);
+                fileList.add(file);
+            }
+            eMail.setFiles(fileList);
+        }
+        return eMail;
+    }
+
+    @Override
+    public KontoGrenz getKontoGrenz(Konto konto) {
+        KontoGrenz kontoGrenz = new KontoGrenz();
+        kontoGrenz.setUserName(konto.getUserName());
+        kontoGrenz.setPassWort(konto.getPassWort());
+        kontoGrenz.setAccountAt(konto.getAccountAt());
+        kontoGrenz.setIMAPhost(konto.getIMAPhost());
+        kontoGrenz.setSMTPhost(konto.getSMTPhost());
+        kontoGrenz.setEmailAddress(konto.getEmailAddress());
+        kontoGrenz.setPort(konto.getPort());
+        return kontoGrenz;
+    }
+
+    @Override
+    public Konto getKonto(KontoGrenz kontoGrenz) {
+        Konto konto = new Konto();
+        konto.setUserName(kontoGrenz.getUserName());
+        konto.setPassWort(kontoGrenz.getPassWort());
+        konto.setAccountAt(kontoGrenz.getAccountAt());
+        konto.setIMAPhost(kontoGrenz.getIMAPhost());
+        konto.setSMTPhost(kontoGrenz.getSMTPhost());
+        konto.setEmailAddress(kontoGrenz.getEmailAddress());
+        konto.setPort(kontoGrenz.getPort());
+        return konto;
+    }
+
+    @Override
+    public TagGrenz getTagGrenz(Tag tag) {
+        TagGrenz tagGrenz = new TagGrenz();
+        tagGrenz.setTid(tag.getTid());
+        tagGrenz.setName(tag.getName());
+        tagGrenz.setNumIndex(tag.getNumIndex());
+        tagGrenz.setWoerter(tag.getWoerter());
+        return tagGrenz;
+    }
+
+    @Override
+    public Tag getTag(TagGrenz tagGrenz) {
+        Tag tag = new Tag();
+        tag.setTid(tagGrenz.getTid());
+        tag.setName(tagGrenz.getName());
+        tag.setNumIndex(tagGrenz.getNumIndex());
+        tag.setWoerter(tagGrenz.getWoerter());
+        return null;
+    }
+
+    @Override
+    public FileGrenz getFileGrenz(File file) {
+        FileGrenz fileGrenz = new FileGrenz();
+        fileGrenz.setFid(file.getFid());
+        fileGrenz.setMId(file.getMid());
+        fileGrenz.setPfad(file.getPfad());
+        fileGrenz.setName(file.getName());
+        return fileGrenz;
+    }
+
+    @Override
+    public File getFile(FileGrenz fileGrenz) {
+        File file = new File();
+        file.setFid(fileGrenz.getFid());
+        file.setMId(fileGrenz.getMid());
+        file.setPfad(fileGrenz.getPfad());
+        file.setName(fileGrenz.getName());
+        return file;
+    }
+
+    @Override
+    public String explodeAdresses(ArrayList<String> adresses) {
+        String adressString = "";
+        if(adresses.size() > 0){
+            for (String adress: adresses){
+                adressString = adressString.concat(adress + ";");
+            }
+        }
+        return adressString;
+    }
+
+    @Override
+    public ArrayList<String> implodeAdresses(String adresses) {
+        ArrayList<String> adressList = null;
+        if(adresses != null){
+            String[] adressArray = adresses.split(";");
+            adressList = new ArrayList<>();
+            adressList.addAll(Arrays.asList(adressArray));
+        }
+        return adressList;
+    }
+
+    @Override
+    public ArrayList<EMail> holeAlleEMails(Konto konto) {
+        ArrayList<EMail> eMailList = new ArrayList<>();
+        ICRUDMail icrudMail = ICRUDManagerSingleton.getIcrudMailInstance();
+        try{
+            eMailList = icrudMail.getAlleEMails();
+        }
+        catch (IOException e){
+            System.out.println("IOException wurde geworfen: " + e.getMessage());
+        }
+        catch (SQLException e){
+            System.out.println("SQLException wurde geworfen: " + e.getMessage());
+        }
+        return eMailList;
+    }
+
+    @Override
+    public ArrayList<EMail> sucheEMail(String suchwort) {
+        ArrayList<EMail> eMailArrayList = new ArrayList<>();
+
+        ICRUDMail icrudMail = ICRUDManagerSingleton.getIcrudMailInstance();
+
+        try{
+            eMailArrayList = icrudMail.searchEMail(suchwort);
+        } catch (SQLException e) {
+            System.out.println("SQLException wurde geworfen: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("IOException wurde geworfen: " + e.getMessage());
+        }
+        return eMailArrayList;
+    }
+    // #################################################################################################################
+    // ################################################   /Setter   ####################################################
+    // #################################################################################################################
 }

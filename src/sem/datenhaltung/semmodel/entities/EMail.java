@@ -1,5 +1,7 @@
 package sem.datenhaltung.semmodel.entities;
 
+import java.util.ArrayList;
+
 public class EMail {
     private int mid;
     private String betreff;
@@ -13,6 +15,7 @@ public class EMail {
     private String zustand;
     private int messageID;
     private String ordner;
+    private ArrayList<File> files;
 
     //Konstruktor
     public EMail(){}
@@ -115,5 +118,13 @@ public class EMail {
 
     public void setOrdner(String ordner) {
         this.ordner = ordner;
+    }
+
+    public ArrayList<File> getFiles() {
+        return files;
+    }
+
+    public void setFiles(ArrayList<File> files) {
+        this.files = files;
     }
 }

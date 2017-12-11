@@ -8,7 +8,6 @@ import java.util.Properties;
 public class MailStoreManager {
 
     private static MailStoreManager mailStoreManager;
-    private static Store store;
     private Session session;
 
     private MailStoreManager(){
@@ -31,7 +30,7 @@ public class MailStoreManager {
         props.put("mail.imaps.port", "993");
 
 
-        javax.mail.Authenticator auth = null;
+        javax.mail.Authenticator auth;
         auth = new javax.mail.Authenticator() {
             @Override
             public javax.mail.PasswordAuthentication getPasswordAuthentication() {
@@ -40,7 +39,7 @@ public class MailStoreManager {
         };
 
         this.session = Session.getInstance(props, auth);
-        store = session.getStore("imaps");
+        Store store = session.getStore("imaps");
         try {
             System.out.println("Connecting to IMAP server: ");
             store.connect(host, 993, username, password);
@@ -52,7 +51,27 @@ public class MailStoreManager {
         return store;
     }
 
-    public Session getSession() {
+
+    //Erstellt eine Imap - Verbindung und liefert das Store - Objekt zurück
+    public Session setSmtpConnection(String host, String username, String password) throws NoSuchProviderException {
+        Properties props = new Properties();
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "465");
+
+
+        javax.mail.Authenticator auth;
+        auth = new javax.mail.Authenticator() {
+            @Override
+            public javax.mail.PasswordAuthentication getPasswordAuthentication() {
+                return new javax.mail.PasswordAuthentication(username, password);
+            }
+        };
+
+        this.session = Session.getInstance(props, auth);
+
         return session;
     }
 }

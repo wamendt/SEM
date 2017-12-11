@@ -1,7 +1,5 @@
 package sem.fachlogik.mailsteuerung.listener;
 
-import java.util.ArrayList;
-
 import javax.mail.*;
 import javax.mail.event.MessageCountAdapter;
 import javax.mail.event.MessageCountEvent;
@@ -12,13 +10,11 @@ import sem.datenhaltung.semmodel.entities.Konto;
 
 public class MessageCountListenManager {
     private IMAPStore store;
-    private ArrayList<Folder> folders = new ArrayList<>();
     private static Konto konto;
 
-    public MessageCountListenManager(Store store, ArrayList<Folder> folders, Konto konto){
+    public MessageCountListenManager(Store store, Konto konto){
         this.store = (IMAPStore) store;
-        this.folders = folders;
-        this.konto = konto;
+        MessageCountListenManager.konto = konto;
     }
 
     public void runListener(Folder folder) {
@@ -27,7 +23,6 @@ public class MessageCountListenManager {
                 throw new RuntimeException("IDLE not supported");
             }
 
-            folder = (IMAPFolder) store.getFolder("INBOX");
             folder.addMessageCountListener(new MessageCountAdapter() {
 
                 @Override
@@ -46,7 +41,7 @@ public class MessageCountListenManager {
 
                 @Override
                 public void messagesRemoved(MessageCountEvent event){
-                    System.out.println("Nachricht gelöscht!\nAb hier Update in die Wege leiten!");
+                    System.out.println("Nachricht wurde im Ordner: " + folder.getFullName() + "gelöscht!\nAb hier Update in die Wege leiten!");
                 }
             });
 
@@ -74,13 +69,12 @@ public class MessageCountListenManager {
         private final Folder folder;
         private volatile boolean running = true;
 
-        public IdleThread(Folder folder) {
+        IdleThread(Folder folder) {
             super();
             this.folder = folder;
         }
 
         public synchronized void kill() {
-
             if (!running)
                 return;
             this.running = false;
@@ -131,7 +125,7 @@ public class MessageCountListenManager {
 
     }
 
-    public static void ensureOpen(final Folder folder) throws MessagingException {
+    static void ensureOpen(final Folder folder) throws MessagingException {
 
         if (folder != null) {
             Store store = folder.getStore();
