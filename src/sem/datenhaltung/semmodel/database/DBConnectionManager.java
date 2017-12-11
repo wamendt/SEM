@@ -19,13 +19,12 @@ public class DBConnectionManager {
         return connection;
     }
 
-    public static boolean closeConnection() throws SQLException {
+    public static void closeConnection() throws SQLException {
         boolean ret = false;
         if(connection != null) {
             connection.close();
             connection = null;
             ret = true;
         }
-        return ret;
     }
 }
