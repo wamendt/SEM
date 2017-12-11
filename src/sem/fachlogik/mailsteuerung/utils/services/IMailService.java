@@ -13,7 +13,6 @@ import sem.fachlogik.grenzklassen.TagGrenz;
 import javax.mail.Folder;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
-import javax.mail.Store;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
