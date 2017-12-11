@@ -1,6 +1,5 @@
 package sem.fachlogik.mailsteuerung.services;
 
-import sem.datenhaltung.semmodel.entities.Tag;
 import sem.fachlogik.grenzklassen.EMailGrenz;
 import sem.fachlogik.grenzklassen.KontoGrenz;
 import sem.fachlogik.grenzklassen.TagGrenz;
