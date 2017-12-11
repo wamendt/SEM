@@ -36,22 +36,22 @@ import sem.datenhaltung.semmodel.services.ICRUDMail;
 import sem.datenhaltung.semmodel.services.ICRUDManagerSingleton;
 import sem.datenhaltung.semmodel.entities.File;
 
-public class IMailServiceImplSingleton implements IMailService, MessageCountListener {
+public class IMailServiceImpl implements IMailService, MessageCountListener {
 
     //Add und Remove von Strg-Klassen
-    private static IMailServiceImplSingleton mailService;
+    private static IMailServiceImpl mailService;
     private static ArrayList<MsgReceivedListener> receivedListeners = new ArrayList<>();
     private static ArrayList<MsgRemovedListener> removedListeners = new ArrayList<>();
     private static MailStoreManager storeManager;
     private Store store;
 
-    private IMailServiceImplSingleton(){
+    public IMailServiceImpl(){
         storeManager = MailStoreManager.getStoreManager();
     }
 
-    public static IMailServiceImplSingleton getMailService() {
+    public static IMailServiceImpl getMailService() {
         if (mailService == null){
-            mailService = new IMailServiceImplSingleton();
+            mailService = new IMailServiceImpl();
         }
         return mailService;
     }
