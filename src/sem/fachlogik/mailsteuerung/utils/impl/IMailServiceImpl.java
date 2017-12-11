@@ -94,16 +94,47 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
     }
 
 
+    private Multipart addAttachment(EMail eMail, Multipart multipart){
+        for(File file : eMail.getFiles()) {
+            //File holen und in DataSource zuweisen
+            BodyPart messageBodyPart = new MimeBodyPart();
+            String filePath = file.getPfad();
+            DataSource source = new FileDataSource(filePath);
+            try {
+                messageBodyPart.setDataHandler(new DataHandler(source));
+                messageBodyPart.setFileName(file.getName());
+                multipart.addBodyPart(messageBodyPart);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        }
+        // store file
+        //message.writeTo(new FileOutputStream(new File("c:/mail.eml")));
+        return multipart;
+    }
+
+
+    private EMail getContentOriginal(Message message, EMail email){
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            message.writeTo(baos);
+            String content = baos.toString();
+            email.setContentOriginal(content);
+        } catch (Exception e) {
+            System.out.println("ByteArrayOutputStream wirft Exception: " + e.getMessage());
+        }
+        return email;
+    }
+
 
     //Methode um das Store-Objekt zu setzen und die Verbindung aufzubauen
-    private Store setStore(Konto konto){
+    private void setStore(Konto konto){
         store = null;
         try{
             store = storeManager.setImapConnection(konto.getIMAPhost(), konto.getEmailAddress(), konto.getPassWort());
         }catch (NoSuchProviderException e){
             System.out.println("StoreManager wirft Exception: " + e.getMessage());
         }
-        return store;
     }
 
 
@@ -215,7 +246,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
     }
 
 
-    public EMail checkEMailAndSetToDB(Folder folder, Message message, ICRUDMail crudeMail, int i, long beginnSeconds, int messageCounter){
+    private EMail checkEMailAndSetToDB(Folder folder, Message message, ICRUDMail crudeMail, int i, long beginnSeconds, int messageCounter){
         EMail eMail = null;
         try {
             //Beginn Zeitmessung für die aktuelle Nachricht
@@ -266,15 +297,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                 eMail.setOrdner(folder.getFullName());
 
                 //Message-Content als Plain-Text umwandeln und in die Datenbank speichern
-                String content = "";
-                try {
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    message.writeTo(baos);
-                    content = baos.toString();
-                    eMail.setContentOriginal(content);
-                } catch (Exception e) {
-                    System.out.println("ByteArrayOutputStream wirft Exception: " + e.getMessage());
-                }
+                eMail = getContentOriginal(message, eMail);
 
                 //MessageNumber setzen
                 eMail.setMessageID(i);
@@ -375,9 +398,9 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
         catch (MessagingException e) {
             System.out.println("MessagingException wird geworfen: " + e.getMessage());
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("SQLException wird geworfen: " + e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("IOException wird geworfen: " + e.getMessage());
         }
 
         return ret;
@@ -464,9 +487,9 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
         catch (MessagingException e) {
             System.out.println("MessagingException wird geworfen: " + e.getMessage());
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("SQLException wird geworfen: " + e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("IOException wird geworfen: " + e.getMessage());
         }
 
         return ret;
@@ -482,9 +505,6 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
 
         //CRUDObjekt zur Überprüfung ob Mails bereits importiert wurden!
         ICRUDMail crudeMail = ICRUDManagerSingleton.getIcrudMailInstance();
-        EMail eMail = new EMail();
-
-        long messageCounter = 1;
 
         try {
             //Alle Ordner holen
@@ -512,7 +532,6 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                     Message message = folder.getMessage(i);
                     try {
                         checkEMailAndSetToDB(folder, message, crudeMail, i, beginnSeconds, messageCount);
-                        messageCounter++;
                     }
                     catch (NullPointerException e){
                         System.out.println("NullPointerException wurde geworfen: " + e.getMessage());
@@ -544,10 +563,8 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
 
         //CRUDObjekt zur Überprüfung ob Mails bereits importiert wurden!
         ICRUDMail crudeMail = ICRUDManagerSingleton.getIcrudMailInstance();
-        EMail eMail = null;
+        EMail eMail;
         ArrayList<EMail> eMailArrayList = new ArrayList<>();
-
-        long messageCounter = 1;
 
         try {
             //Alle Ordner holen
@@ -574,7 +591,6 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                     if(eMail != null){
                         eMailArrayList.add(eMail);
                     }
-                    messageCounter++;
                 }
                 catch (NullPointerException e){
                     System.out.println("NullPointerException wurde geworfen: " + e.getMessage());
@@ -781,36 +797,21 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                     message.setSubject(eMail.getBetreff());
 
                     //MessageContent erstellen
-                    MimeBodyPart content = new MimeBodyPart();
+                    BodyPart messageBodyPart = new MimeBodyPart();
 
                     //Content füllen
-                    message.setText(eMail.getInhalt());
+                    messageBodyPart.setText(eMail.getInhalt());
                     Multipart multipart = new MimeMultipart();
-                    multipart.addBodyPart(content);
+                    multipart.addBodyPart(messageBodyPart);
 
-                    // add attachments
-                /*f(eMail.getAttachment() != null){
-                    for(File file : attachments) {
-                        MimeBodyPart attachment = new MimeBodyPart();
-                        DataSource source = new FileDataSource(file);
-                        attachment.setDataHandler(new DataHandler(source));
-                        attachment.setFileName(file.getName());
-                        multipart.addBodyPart(attachment);
+                    // Anhang hinzufügen
+                    if(eMail.getFiles().size() > 0){
+                        message.setContent(addAttachment(eMail, multipart));
                     }
-                    // integration
-                    message.setContent(multipart);
-                    // store file
-                    message.writeTo(new FileOutputStream(new File("c:/mail.eml")));
-                }*/
 
                     message.setFlag(Flags.Flag.DRAFT, true);
                     MimeMessage draftMessages[] = {message};
                     folder.appendMessages(draftMessages);
-                /*
-                Message[] messages = new Message[1];
-                messages[0] = message;
-                defaultFolder.copyMessages(messages, folder);
-                */
                     ret = true;
                 }
                 catch (MessagingException ex) {
@@ -836,7 +837,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                 ret = true;
             }
         }
-        return false;
+        return ret;
     }
 
 
@@ -845,7 +846,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
     public ArrayList<Folder> holeFolderFuerListener(Konto konto) throws MessagingException {
         ArrayList<String> ordnerListe = getAlleOrdnerVonKonto(konto);
         ArrayList<Folder> folders = new ArrayList<>();
-        Folder folder = null;
+        Folder folder;
         if(ordnerListe.size() > 0){
             for(String ordnerName : ordnerListe){
                 try{
@@ -887,8 +888,8 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
 
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(email.getAbsender()));
-            for (int i = 0; i < empfaengerList.length; i++){
-                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(empfaengerList[i]));
+            for (String anEmpfaengerList : empfaengerList) {
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(anEmpfaengerList));
             }
             message.setSubject(email.getBetreff());
 
@@ -901,23 +902,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(messageBodyPart);
 
-            // Anhang hinzufügen
-            if(email.getFiles().size() > 0){
-
-                for(File file : email.getFiles()) {
-                    //File holen und in DataSource zuweisen
-                    messageBodyPart = new MimeBodyPart();
-                    String filePath = file.getPfad();
-                    DataSource source = new FileDataSource(filePath);
-                    messageBodyPart.setDataHandler(new DataHandler(source));
-                    messageBodyPart.setFileName(file.getName());
-                    multipart.addBodyPart(messageBodyPart);
-                }
-                // Nachricht fertigbauen
-                message.setContent(multipart);
-                // store file
-                //message.writeTo(new FileOutputStream(new File("c:/mail.eml")));
-            }
+            message.setContent(addAttachment(email, multipart));
 
             //Nachricht senden
             Transport.send(message);
@@ -926,15 +911,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
             email.setOrdner("Gesendet");
 
             //Message-Content als Plain-Text umwandeln und in die Datenbank speichern
-            String content = "";
-            try {
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                message.writeTo(baos);
-                content = baos.toString();
-                email.setContentOriginal(content);
-            } catch (Exception e) {
-                System.out.println("ByteArrayOutputStream wirft Exception: " + e.getMessage());
-            }
+            email = getContentOriginal(message, email);
 
             ICRUDMail icrudMail = ICRUDManagerSingleton.getIcrudMailInstance();
             int id = -1;
@@ -958,7 +935,6 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
         return ret;
     }
 
-
     // #################################################################################################################
     // #################################################   Setter   ####################################################
     // #################################################################################################################
@@ -969,8 +945,8 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
         eMailGrenz.setBetreff(eMail.getBetreff());
         eMailGrenz.setInhalt(eMail.getInhalt());
 
-        Tag tag = null;
-        TagGrenz tagGrenz = null;
+        Tag tag;
+        TagGrenz tagGrenz;
         try{
             ICRUDTag icrudTag = ICRUDManagerSingleton.getIcrudTagInstance();
             tag = icrudTag.getTagById(eMail.getTid());
