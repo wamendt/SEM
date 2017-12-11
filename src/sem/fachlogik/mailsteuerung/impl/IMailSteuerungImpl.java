@@ -22,6 +22,33 @@ import java.util.ArrayList;
 public class IMailSteuerungImpl implements IMailSteuerung{
 
     // #################################################################################################################
+    // ###########################################   /Hilfsmethoden   ##################################################
+    // #################################################################################################################
+    private ArrayList<EMailGrenz> convertEMailListToEMailGrenzList(ArrayList<EMail> eMails){
+        ArrayList<EMailGrenz> eMailGrenzList = new ArrayList<>();
+        if(eMails.size() > 0){
+            //Service anlegen
+            IMailService iMailService = IMailServiceImpl.getMailService();
+
+            EMailGrenz eMailGrenz = new EMailGrenz();
+            for (EMail eMail : eMails){
+                try {
+                    eMailGrenz = iMailService.getEMailGrenz(eMail);
+                } catch (IOException e) {
+                    System.out.println("IOException wurde geworfen: " + e.getMessage());
+                } catch (SQLException e) {
+                    System.out.println("SQLException wurde geworfen: " + e.getMessage());
+                }
+                eMailGrenzList.add(eMailGrenz);
+            }
+        }
+        return eMailGrenzList;
+    }
+    // #################################################################################################################
+    // ###########################################   /Hilfsmethoden   ##################################################
+    // #################################################################################################################
+
+    // #################################################################################################################
     // ###############################################   Listener   ####################################################
     // #################################################################################################################
     @Override
@@ -61,8 +88,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
-            Konto konto = new Konto();
-            konto = iMailService.getKonto(kontoGrenz);
+            Konto konto = iMailService.getKonto(kontoGrenz);
 
             //neuen Ordner erstellen und RückgabeTyp ermitteln
             ret = iMailService.erstelleEMailOrdner(konto, name);
@@ -78,8 +104,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
-            Konto konto = new Konto();
-            konto = iMailService.getKonto(kontoGrenz);
+            Konto konto = iMailService.getKonto(kontoGrenz);
 
             //neuen Ordner erstellen und RückgabeTyp ermitteln
             ret = iMailService.loescheEMailOrdner(konto, name);
@@ -95,8 +120,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
-            Konto konto = new Konto();
-            konto = iMailService.getKonto(kontoGrenz);
+            Konto konto = iMailService.getKonto(kontoGrenz);
 
             //neuen Ordner erstellen und RückgabeTyp ermitteln
             try {
@@ -120,30 +144,18 @@ public class IMailSteuerungImpl implements IMailSteuerung{
     public ArrayList<EMailGrenz> zeigeAlleEMails(KontoGrenz kontoGrenz) {
         ArrayList<EMailGrenz> eMailGrenzList = new ArrayList<>();
         if(kontoGrenz != null){
-            ArrayList<EMail> eMailList = new ArrayList<>();
+            ArrayList<EMail> eMailList;
 
             //Service anlegen
             IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
-            Konto konto = new Konto();
-            konto = iMailService.getKonto(kontoGrenz);
+            Konto konto = iMailService.getKonto(kontoGrenz);
 
             try{
                 //Hole alle E-Mails aus der DB
                 eMailList = iMailService.holeAlleEMails(konto);
-
-                if(eMailList.size() > 0){
-                    //Wandle alle E-Mails in E-MailGrenz um
-                    EMailGrenz eMailGrenz = new EMailGrenz();
-                    for(EMail eMail : eMailList){
-                        eMailGrenz = iMailService.getEMailGrenz(eMail);
-                        // und in die Sammlung einfügen
-                        if(eMailGrenz != null){
-                            eMailGrenzList.add(eMailGrenz);
-                        }
-                    }
-                }
+                eMailGrenzList = convertEMailListToEMailGrenzList(eMailList);
             }
             catch (SQLException e) {
                 System.out.println("SQLException wurde geworfen: " + e.getMessage());
@@ -164,12 +176,10 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
-            Konto konto = new Konto();
-            konto = iMailService.getKonto(kontoGrenz);
+            Konto konto = iMailService.getKonto(kontoGrenz);
 
             //Wandle EMailGrenz in E-Mail um
-            EMail eMail = new EMail();
-            eMail = iMailService.getEMail(eMailGrenz);
+            EMail eMail = iMailService.getEMail(eMailGrenz);
 
             try {
                 ret = iMailService.setzeTagsZurServerEMail(konto, eMail, art);
@@ -195,12 +205,10 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
-            Konto konto = new Konto();
-            konto = iMailService.getKonto(kontoGrenz);
+            Konto konto = iMailService.getKonto(kontoGrenz);
 
             //Wandle EMailGrenz in E-Mail um
-            EMail eMail = new EMail();
-            eMail = iMailService.getEMail(eMailGrenz);
+            EMail eMail = iMailService.getEMail(eMailGrenz);
 
             //E-Mail löschen
             ret = iMailService.loeschEMailVomServer(konto, eMail);
@@ -222,12 +230,10 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
-            Konto konto = new Konto();
-            konto = iMailService.getKonto(kontoGrenz);
+            Konto konto = iMailService.getKonto(kontoGrenz);
 
             //Wandle EMailGrenz in E-Mail um
-            EMail eMail = new EMail();
-            eMail = iMailService.getEMail(eMailGrenz);
+            EMail eMail = iMailService.getEMail(eMailGrenz);
 
             //E-Mail holen
             //....
@@ -243,12 +249,10 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
-            Konto konto = new Konto();
-            konto = iMailService.getKonto(kontoGrenz);
+            Konto konto = iMailService.getKonto(kontoGrenz);
 
             //Wandle EMailGrenz in E-Mail um
-            EMail eMail = new EMail();
-            eMail = iMailService.getEMail(eMailGrenz);
+            EMail eMail = iMailService.getEMail(eMailGrenz);
 
             //E-Mail senden
             try{
@@ -269,12 +273,34 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
-            Konto konto = new Konto();
-            konto = iMailService.getKonto(kontoGrenz);
+            Konto konto = iMailService.getKonto(kontoGrenz);
 
             //Wandle EMailGrenz in E-Mail um
-            EMail eMail = new EMail();
-            eMail = iMailService.getEMail(eMailGrenz);
+            EMail eMail = iMailService.getEMail(eMailGrenz);
+
+            //E-Mail senden
+            try{
+                ret = iMailService.sendeEmail(konto, eMail);
+            }
+            catch (NoSuchProviderException e){
+                System.out.println("NoSuchProviderException wurde geworfen: " + e.getMessage());
+            }
+        }
+        return ret;
+    }
+
+    @Override
+    public boolean sendeEMail(KontoGrenz kontoGrenz, EMailGrenz eMailGrenz) {
+        boolean ret = false;
+        if (kontoGrenz != null && eMailGrenz != null){
+            //Service anlegen
+            IMailService iMailService = IMailServiceImpl.getMailService();
+
+            //KontoGrenz in Konto konvertieren
+            Konto konto = iMailService.getKonto(kontoGrenz);
+
+            //Wandle EMailGrenz in E-Mail um
+            EMail eMail = iMailService.getEMail(eMailGrenz);
 
             //E-Mail senden
             try{
@@ -295,12 +321,10 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
-            Konto konto = new Konto();
-            konto = iMailService.getKonto(kontoGrenz);
+            Konto konto = iMailService.getKonto(kontoGrenz);
 
             //Wandle EMailGrenz in E-Mail um
-            EMail eMail = new EMail();
-            eMail = iMailService.getEMail(eMailGrenz);
+            EMail eMail = iMailService.getEMail(eMailGrenz);
 
             //E-Mail speichern
             try{
@@ -329,12 +353,10 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
-            Konto konto = new Konto();
-            konto = iMailService.getKonto(kontoGrenz);
+            Konto konto = iMailService.getKonto(kontoGrenz);
 
             //Wandle EMailGrenz in E-Mail um
-            EMail eMail = new EMail();
-            eMail = iMailService.getEMail(eMailGrenz);
+            EMail eMail = iMailService.getEMail(eMailGrenz);
 
             //E-Mail verschieben
             try{
@@ -354,37 +376,11 @@ public class IMailSteuerungImpl implements IMailSteuerung{
     }
 
     @Override
-    public boolean sendeEMail(KontoGrenz kontoGrenz, EMailGrenz eMailGrenz) {
-        boolean ret = false;
-        if (kontoGrenz != null && eMailGrenz != null){
-            //Service anlegen
-            IMailService iMailService = IMailServiceImpl.getMailService();
-
-            //KontoGrenz in Konto konvertieren
-            Konto konto = new Konto();
-            konto = iMailService.getKonto(kontoGrenz);
-
-            //Wandle EMailGrenz in E-Mail um
-            EMail eMail = new EMail();
-            eMail = iMailService.getEMail(eMailGrenz);
-
-            //E-Mail senden
-            try{
-                ret = iMailService.sendeEmail(konto, eMail);
-            }
-            catch (NoSuchProviderException e){
-                System.out.println("NoSuchProviderException wurde geworfen: " + e.getMessage());
-            }
-        }
-        return ret;
-    }
-
-    @Override
     public ArrayList<EMailGrenz> sucheEMail(String suche) {
         assert suche != null;
         ArrayList<EMailGrenz> eMailGrenzList = new ArrayList<>();
         if (!suche.equals("")){
-            ArrayList<EMail> eMailList = new ArrayList<>();
+            ArrayList<EMail> eMailList;
 
             //Service anlegen
             IMailService iMailService = IMailServiceImpl.getMailService();
@@ -394,7 +390,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
 
                 if(eMailList.size() > 0){
                     //Wandle alle E-Mails in E-MailGrenz um
-                    EMailGrenz eMailGrenz = new EMailGrenz();
+                    EMailGrenz eMailGrenz;
                     for(EMail eMail : eMailList){
                         eMailGrenz = iMailService.getEMailGrenz(eMail);
                         // und in die Sammlung einfügen
@@ -417,14 +413,13 @@ public class IMailSteuerungImpl implements IMailSteuerung{
         ArrayList<EMailGrenz> eMailGrenzList = new ArrayList<>();
         if(kontoGrenz != null){
             ArrayList<EMail> eMailList = new ArrayList<>();
-            ArrayList<String> ordnerList = new ArrayList<>();
+            ArrayList<String> ordnerList;
 
             //Service anlegen
             IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
-            Konto konto = new Konto();
-            konto = iMailService.getKonto(kontoGrenz);
+            Konto konto = iMailService.getKonto(kontoGrenz);
 
             try{
                 //Alle Ordner des Kontos holen
@@ -447,23 +442,12 @@ public class IMailSteuerungImpl implements IMailSteuerung{
                 }
 
                 //Wenn E-Mails existieren ...
-                if (eMailList.size() > 0){
-                    //Wandle die Liste in E-MailGrenz - Liste um
-                    EMailGrenz eMailGrenz = new EMailGrenz();
-                    for (EMail eMail : eMailList){
-                        eMailGrenz = iMailService.getEMailGrenz(eMail);
-                        eMailGrenzList.add(eMailGrenz);
-                    }
-                }
+                eMailGrenzList = convertEMailListToEMailGrenzList(eMailList);
             }
             catch (NoSuchProviderException e){
                 System.out.println("NoSuchProviderException wurde geworfen: " + e.getMessage());
             } catch (MessagingException e) {
                 System.out.println("MessagingException wurde geworfen: " + e.getMessage());
-            } catch (SQLException e) {
-                System.out.println("SQLException wurde geworfen: " + e.getMessage());
-            } catch (IOException e) {
-                System.out.println("IOException wurde geworfen: " + e.getMessage());
             }
         }
         return eMailGrenzList;
@@ -474,15 +458,13 @@ public class IMailSteuerungImpl implements IMailSteuerung{
         assert ordnerName != null;
         ArrayList<EMailGrenz> eMailGrenzList = new ArrayList<>();
         if(kontoGrenz != null && !ordnerName.equals("")){
-            ArrayList<EMail> eMailList = new ArrayList<>();
-            ArrayList<String> ordnerList = new ArrayList<>();
+            ArrayList<EMail> eMailList;
 
             //Service anlegen
             IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
-            Konto konto = new Konto();
-            konto = iMailService.getKonto(kontoGrenz);
+            Konto konto = iMailService.getKonto(kontoGrenz);
 
             try{
                 //hole alle E-Mails ...
@@ -491,7 +473,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
                 //Wenn E-Mails existieren ...
                 if (eMailList.size() > 0){
                     //Wandle die Liste in E-MailGrenz - Liste um
-                    EMailGrenz eMailGrenz = new EMailGrenz();
+                    EMailGrenz eMailGrenz;
                     for (EMail eMail : eMailList){
                         eMailGrenz = iMailService.getEMailGrenz(eMail);
                         eMailGrenzList.add(eMailGrenz);
@@ -516,7 +498,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
         assert ordnerName != null;
         ArrayList<EMailGrenz> eMailGrenzList = new ArrayList<>();
         if(kontoGrenz != null && !ordnerName.equals("")){
-            ArrayList<EMail> eMailList = new ArrayList<>();
+            ArrayList<EMail> eMailList;
             ICRUDMail icrudMail = ICRUDManagerSingleton.getIcrudMailInstance();
             try {
                 eMailList = icrudMail.getEMailByOrdner(ordnerName);
@@ -524,7 +506,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
                     //Service anlegen
                     IMailService iMailService = IMailServiceImpl.getMailService();
 
-                    EMailGrenz eMailGrenz = new EMailGrenz();
+                    EMailGrenz eMailGrenz;
                     for (EMail eMail : eMailList){
                         eMailGrenz = iMailService.getEMailGrenz(eMail);
                         eMailGrenzList.add(eMailGrenz);
@@ -548,20 +530,11 @@ public class IMailSteuerungImpl implements IMailSteuerung{
         if(tagGrenz != null){
             tid = tagGrenz.getTid();
             if(tid > 0){
-                ArrayList<EMail> eMailList = new ArrayList<>();
+                ArrayList<EMail> eMailList;
                 ICRUDMail icrudMail = ICRUDManagerSingleton.getIcrudMailInstance();
                 try {
                     eMailList = icrudMail.getEMailByTag(tid);
-                    if(eMailList.size() > 0){
-                        //Service anlegen
-                        IMailService iMailService = IMailServiceImpl.getMailService();
-
-                        EMailGrenz eMailGrenz = new EMailGrenz();
-                        for (EMail eMail : eMailList){
-                            eMailGrenz = iMailService.getEMailGrenz(eMail);
-                            eMailGrenzList.add(eMailGrenz);
-                        }
-                    }
+                    eMailGrenzList = convertEMailListToEMailGrenzList(eMailList);
                 }
                 catch (IOException e) {
                     System.out.println("IOException wurde geworfen: " + e.getMessage());
@@ -573,8 +546,6 @@ public class IMailSteuerungImpl implements IMailSteuerung{
         }
         return eMailGrenzList;
     }
-
-
     // #################################################################################################################
     // ################################################   /E-Mail   ####################################################
     // #################################################################################################################
