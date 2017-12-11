@@ -5,9 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
@@ -15,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import sem.datenhaltung.semmodel.entities.EMail;
 import sem.datenhaltung.semmodel.entities.Tag;
+import sem.datenhaltung.semmodel.services.ICRUDAdresse;
 import sem.datenhaltung.semmodel.services.ICRUDMail;
 import sem.datenhaltung.semmodel.services.ICRUDManagerSingleton;
 import sem.datenhaltung.semmodel.services.ICRUDTag;
@@ -42,6 +41,12 @@ public class HauptfensterController implements Initializable{
 
     @FXML
     private WebView webViewEmail;
+
+    @FXML
+    private TreeView <String> treeview;
+
+    @FXML
+    private Label labelAn, labelVon, labelDatum;
 
     @FXML
     public void button_weiterleitenOnMauseEntered(MouseEvent event){
@@ -113,7 +118,7 @@ public class HauptfensterController implements Initializable{
         try {
             ArrayList<EMail> emails = crudMail.getAlleEMails();
             for (EMail eMail : emails){
-                EmailListElementController emailListElementController = new EmailListElementController(webViewEmail, eMail);
+                EmailListElementController emailListElementController = new EmailListElementController(webViewEmail, eMail,labelVon,labelAn,labelDatum);
                 listViewEmails.getItems().add(emailListElementController);
 
             }
@@ -126,6 +131,7 @@ public class HauptfensterController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        //Tags
         ICRUDTag icrudTag = ICRUDManagerSingleton.getIcrudTagInstance();
         try {
             ArrayList <Tag> tags = icrudTag.getAlleTags();
@@ -140,6 +146,11 @@ public class HauptfensterController implements Initializable{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        //Ordnerstruktur
+        ICRUDAdresse icrudAdresse = ICRUDManagerSingleton.getIcrudAdresseInstance();
+        TreeItem <String> treeItemroot = new TreeItem<>();
+
+        treeview.setRoot(treeItemroot);
 
     }
 }

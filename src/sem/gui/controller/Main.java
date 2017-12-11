@@ -13,14 +13,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("../view/mainwin.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 1100, 600));
+        Parent root = FXMLLoader.load(getClass().getResource("../view/Verbindungsfenster.fxml"));
+        primaryStage.setTitle("Smart Email Manager");
+        primaryStage.setScene(new Scene(root));
         primaryStage.show();
 
-        IMailLocalService mailService = new IMailLocalServiceImpl();
-        EMail email = new EMail();
-        mailService.sendeEmail(null, email);
     }
 
 

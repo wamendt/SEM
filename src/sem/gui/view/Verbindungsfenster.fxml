@@ -13,11 +13,14 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="515.0" prefWidth="650.0" style="-fx-background-color: lightgray;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.benutzeroberflaeche.gui.controller.Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="515.0" prefWidth="650.0" style="-fx-background-color: lightgray;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.controller.VerbindungsfensterController">
     <children>
         <HBox alignment="CENTER" layoutX="374.0" layoutY="504.6666564941406" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="504.6666564941406">
             <children>
-                <Button fx:id="btn" alignment="CENTER" mnemonicParsing="false" onAction="#btnConnectAction" text="Connect Account" textFill="#123456" HBox.hgrow="SOMETIMES" />
+                <Button fx:id="btnConnect" alignment="CENTER" mnemonicParsing="false" onAction="#btnConnectAction" text="Connect Account" textFill="#123456" HBox.hgrow="SOMETIMES">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font></Button>
             </children>
         </HBox>
         <AnchorPane layoutX="-37.0" layoutY="92.0" prefHeight="350.0" prefWidth="740.0" AnchorPane.bottomAnchor="90.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
@@ -44,12 +47,12 @@
                     <children>
                         <Label text="Incoming Mail (IMAP)" textFill="#123456">
                             <font>
-                                <Font size="18.0" />
+                                <Font name="Trebuchet MS" size="18.0" />
                             </font>
                         </Label>
                         <Label text="Outgoing Mail (SMTP)" textFill="#123456" GridPane.columnIndex="1">
                             <font>
-                                <Font size="18.0" />
+                                <Font name="Trebuchet MS" size="18.0" />
                             </font>
                         </Label>
                         <Label text="Server" textFill="#123456" GridPane.rowIndex="1" />
