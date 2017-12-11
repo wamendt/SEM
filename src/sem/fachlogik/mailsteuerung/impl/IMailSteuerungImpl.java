@@ -2,8 +2,11 @@ package sem.fachlogik.mailsteuerung.impl;
 
 import sem.datenhaltung.semmodel.entities.EMail;
 import sem.datenhaltung.semmodel.entities.Konto;
+import sem.datenhaltung.semmodel.services.ICRUDMail;
+import sem.datenhaltung.semmodel.services.ICRUDManagerSingleton;
 import sem.fachlogik.grenzklassen.EMailGrenz;
 import sem.fachlogik.grenzklassen.KontoGrenz;
+import sem.fachlogik.grenzklassen.TagGrenz;
 import sem.fachlogik.mailsteuerung.listener.MsgReceivedListener;
 import sem.fachlogik.mailsteuerung.listener.MsgRemovedListener;
 import sem.fachlogik.mailsteuerung.services.IMailSteuerung;
@@ -82,6 +85,27 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             ret = iMailService.loescheEMailOrdner(konto, name);
         }
         return ret;
+    }
+
+    @Override
+    public ArrayList<String> zeigeAlleOrdner(KontoGrenz kontoGrenz) {
+        ArrayList<String> ordnerList = new ArrayList<>();
+        if(kontoGrenz != null){
+            //Service anlegen
+            IMailService iMailService = IMailServiceImpl.getMailService();
+
+            //KontoGrenz in Konto konvertieren
+            Konto konto = new Konto();
+            konto = iMailService.getKonto(kontoGrenz);
+
+            //neuen Ordner erstellen und RückgabeTyp ermitteln
+            try {
+                ordnerList = iMailService.getAlleOrdnerVonKonto(konto);
+            } catch (NoSuchProviderException e) {
+                e.printStackTrace();
+            }
+        }
+        return ordnerList;
     }
     // #################################################################################################################
     // ################################################   /Ordner   ####################################################
@@ -486,6 +510,71 @@ public class IMailSteuerungImpl implements IMailSteuerung{
         }
         return eMailGrenzList;
     }
+
+    @Override
+    public ArrayList<EMailGrenz> zeigeAlleEMailsAusOrdner(KontoGrenz kontoGrenz, String ordnerName) {
+        assert ordnerName != null;
+        ArrayList<EMailGrenz> eMailGrenzList = new ArrayList<>();
+        if(kontoGrenz != null && !ordnerName.equals("")){
+            ArrayList<EMail> eMailList = new ArrayList<>();
+            ICRUDMail icrudMail = ICRUDManagerSingleton.getIcrudMailInstance();
+            try {
+                eMailList = icrudMail.getEMailByOrdner(ordnerName);
+                if(eMailList.size() > 0){
+                    //Service anlegen
+                    IMailService iMailService = IMailServiceImpl.getMailService();
+
+                    EMailGrenz eMailGrenz = new EMailGrenz();
+                    for (EMail eMail : eMailList){
+                        eMailGrenz = iMailService.getEMailGrenz(eMail);
+                        eMailGrenzList.add(eMailGrenz);
+                    }
+                }
+            }
+            catch (IOException e) {
+                System.out.println("IOException wurde geworfen: " + e.getMessage());
+            }
+            catch (SQLException e) {
+                System.out.println("SQLException wurde geworfen: " + e.getMessage());
+            }
+        }
+        return eMailGrenzList;
+    }
+
+    @Override
+    public ArrayList<EMailGrenz> sucheEMailByTag(TagGrenz tagGrenz) {
+        int tid = -1;
+        ArrayList<EMailGrenz> eMailGrenzList = new ArrayList<>();
+        if(tagGrenz != null){
+            tid = tagGrenz.getTid();
+            if(tid > 0){
+                ArrayList<EMail> eMailList = new ArrayList<>();
+                ICRUDMail icrudMail = ICRUDManagerSingleton.getIcrudMailInstance();
+                try {
+                    eMailList = icrudMail.getEMailByTag(tid);
+                    if(eMailList.size() > 0){
+                        //Service anlegen
+                        IMailService iMailService = IMailServiceImpl.getMailService();
+
+                        EMailGrenz eMailGrenz = new EMailGrenz();
+                        for (EMail eMail : eMailList){
+                            eMailGrenz = iMailService.getEMailGrenz(eMail);
+                            eMailGrenzList.add(eMailGrenz);
+                        }
+                    }
+                }
+                catch (IOException e) {
+                    System.out.println("IOException wurde geworfen: " + e.getMessage());
+                }
+                catch (SQLException e) {
+                    System.out.println("SQLException wurde geworfen: " + e.getMessage());
+                }
+            }
+        }
+        return eMailGrenzList;
+    }
+
+
     // #################################################################################################################
     // ################################################   /E-Mail   ####################################################
     // #################################################################################################################
