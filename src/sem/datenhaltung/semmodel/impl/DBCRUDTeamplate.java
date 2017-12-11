@@ -45,9 +45,10 @@ public abstract class DBCRUDTeamplate<T> {
         }
 
         ResultSet resultSet = statement.executeQuery();
-        while(resultSet.next())
+        while(resultSet.next()) {
             result.add(makeObject(resultSet));
-
+        }
+        DBConnectionManager.closeConnection();
         return result;
     }
 
@@ -73,6 +74,7 @@ public abstract class DBCRUDTeamplate<T> {
             }
         }
         int ret = statement.executeUpdate();
+        DBConnectionManager.closeConnection();
         return ret;
     }
 
@@ -100,6 +102,7 @@ public abstract class DBCRUDTeamplate<T> {
         if(resultSet.next()){
             key = resultSet.getInt(1);
         }
+        DBConnectionManager.closeConnection();
         return key;
     }
 
@@ -122,16 +125,16 @@ public abstract class DBCRUDTeamplate<T> {
         if (resultSet.next()){
             object = makeObject(resultSet);
         }
-
+        DBConnectionManager.closeConnection();
         return object;
     }
 
 
     protected boolean create(String sql) throws IOException, SQLException {
-        boolean ret = false;
         Connection connection = DBConnectionManager.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        ret = preparedStatement.execute();
+        boolean ret = preparedStatement.execute();
+        DBConnectionManager.closeConnection();
         return ret;
     }
 }
