@@ -1,7 +1,6 @@
 package sem.datenhaltung.semmodel.services;
 
 import sem.datenhaltung.semmodel.entities.EMail;
-
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ public interface ICRUDMail {
     ArrayList<EMail> getAlleEMailsMitTagId(int tid) throws IOException, SQLException ;
     boolean deleteEMail(int mid) throws IOException, SQLException ;
     boolean updateEMail(EMail email) throws IOException, SQLException;
-    public EMail getEMailByMessageIDUndOrdner(int id, String ordner) throws IOException, SQLException;
+    EMail getEMailByMessageIDUndOrdner(int id, String ordner) throws IOException, SQLException;
     boolean deleteEMailByFolder(String folder) throws IOException, SQLException ;
     boolean createEMailTable() throws IOException, SQLException ;
     boolean createFileTable() throws IOException, SQLException ;
