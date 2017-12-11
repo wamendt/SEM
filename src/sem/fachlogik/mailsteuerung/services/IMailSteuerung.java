@@ -1,7 +1,9 @@
 package sem.fachlogik.mailsteuerung.services;
 
+import sem.datenhaltung.semmodel.entities.Tag;
 import sem.fachlogik.grenzklassen.EMailGrenz;
 import sem.fachlogik.grenzklassen.KontoGrenz;
+import sem.fachlogik.grenzklassen.TagGrenz;
 import sem.fachlogik.mailsteuerung.listener.MsgReceivedListener;
 import sem.fachlogik.mailsteuerung.listener.MsgRemovedListener;
 
@@ -23,6 +25,7 @@ public interface IMailSteuerung {
     //Ordner
     boolean erstelleEMailOrdner(KontoGrenz kontoGrenz, String name);
     boolean loescheEMailOrdner(KontoGrenz kontoGrenz, String name);
+    ArrayList<String> zeigeAlleOrdner(KontoGrenz kontoGrenz);  //x
 
 
     //E-Mails
@@ -38,4 +41,6 @@ public interface IMailSteuerung {
     ArrayList<EMailGrenz> sucheEMail(String suche);
     ArrayList<EMailGrenz> importEMails(KontoGrenz kontoGrenz);
     ArrayList<EMailGrenz> importEMailsAusOrdner(KontoGrenz kontoGrenz, String ordnerName);
+    ArrayList<EMailGrenz> zeigeAlleEMailsAusOrdner(KontoGrenz kontoGrenz, String ordnerName);  //x
+    ArrayList<EMailGrenz> sucheEMailByTag(TagGrenz tagGrenz);  //x
 }
