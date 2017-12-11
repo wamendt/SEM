@@ -8,7 +8,6 @@ import java.util.Properties;
 public class MailStoreManager {
 
     private static MailStoreManager mailStoreManager;
-    private static Store store;
     private Session session;
 
     private MailStoreManager(){
@@ -31,7 +30,7 @@ public class MailStoreManager {
         props.put("mail.imaps.port", "993");
 
 
-        javax.mail.Authenticator auth = null;
+        javax.mail.Authenticator auth;
         auth = new javax.mail.Authenticator() {
             @Override
             public javax.mail.PasswordAuthentication getPasswordAuthentication() {
@@ -40,7 +39,7 @@ public class MailStoreManager {
         };
 
         this.session = Session.getInstance(props, auth);
-        store = session.getStore("imaps");
+        Store store = session.getStore("imaps");
         try {
             System.out.println("Connecting to IMAP server: ");
             store.connect(host, 993, username, password);
@@ -63,7 +62,7 @@ public class MailStoreManager {
         props.put("mail.smtp.port", "465");
 
 
-        javax.mail.Authenticator auth = null;
+        javax.mail.Authenticator auth;
         auth = new javax.mail.Authenticator() {
             @Override
             public javax.mail.PasswordAuthentication getPasswordAuthentication() {
@@ -73,10 +72,6 @@ public class MailStoreManager {
 
         this.session = Session.getInstance(props, auth);
 
-        return session;
-    }
-
-    public Session getSession() {
         return session;
     }
 }
