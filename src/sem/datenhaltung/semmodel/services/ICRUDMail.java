@@ -15,6 +15,7 @@ public interface ICRUDMail {
     boolean deleteEMail(int mid) throws IOException, SQLException ;
     boolean updateEMail(EMail email) throws IOException, SQLException;
     EMail getEMailByMessageIDUndOrdner(int id, String ordner) throws IOException, SQLException;
+    EMail checkMessageInDB(int id, String betreff, String absender, String ordner) throws IOException, SQLException;
     boolean deleteEMailByFolder(String folder) throws IOException, SQLException ;
     boolean createEMailTable() throws IOException, SQLException ;
     boolean createFileTable() throws IOException, SQLException ;
