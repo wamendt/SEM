@@ -32,8 +32,6 @@ public interface IMailSteuerung {
     boolean weiseEinerEMailFlagZu(KontoGrenz kontoGrenz, String art, EMailGrenz eMailGrenz) throws MessagingException, IOException, SQLException;
     boolean loescheEMailAusPapierkorb(KontoGrenz kontoGrenz, EMailGrenz eMailGrenz);
     EMailGrenz leseEMail(KontoGrenz kontoGrenz, EMailGrenz eMailGrenz);
-    boolean antworteAufEMail(KontoGrenz kontoGrenz, EMailGrenz eMailGrenz) throws NoSuchProviderException;
-    boolean leiteWeiterEMail(KontoGrenz kontoGrenz, EMailGrenz eMailGrenz);
     boolean speicherEMailEntwurf(KontoGrenz kontoGrenz, EMailGrenz eMailGrenz);
     boolean verschiebeEMail(KontoGrenz kontoGrenz, EMailGrenz eMailGrenz, String vonOrdner, String zuOrdner);
     boolean sendeEMail(KontoGrenz kontoGrenz, EMailGrenz eMailGrenz);

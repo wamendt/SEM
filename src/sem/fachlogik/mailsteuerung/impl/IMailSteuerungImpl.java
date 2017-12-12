@@ -242,54 +242,6 @@ public class IMailSteuerungImpl implements IMailSteuerung{
     }
 
     @Override
-    public boolean antworteAufEMail(KontoGrenz kontoGrenz, EMailGrenz eMailGrenz) {
-        boolean ret = false;
-        if (kontoGrenz != null && eMailGrenz != null){
-            //Service anlegen
-            IMailService iMailService = IMailServiceImpl.getMailService();
-
-            //KontoGrenz in Konto konvertieren
-            Konto konto = iMailService.getKonto(kontoGrenz);
-
-            //Wandle EMailGrenz in E-Mail um
-            EMail eMail = iMailService.getEMail(eMailGrenz);
-
-            //E-Mail senden
-            try{
-                ret = iMailService.sendeEmail(konto, eMail);
-            }
-            catch (NoSuchProviderException e){
-                System.out.println("NoSuchProviderException wurde geworfen: " + e.getMessage());
-            }
-        }
-        return ret;
-    }
-
-    @Override
-    public boolean leiteWeiterEMail(KontoGrenz kontoGrenz, EMailGrenz eMailGrenz) {
-        boolean ret = false;
-        if (kontoGrenz != null && eMailGrenz != null){
-            //Service anlegen
-            IMailService iMailService = IMailServiceImpl.getMailService();
-
-            //KontoGrenz in Konto konvertieren
-            Konto konto = iMailService.getKonto(kontoGrenz);
-
-            //Wandle EMailGrenz in E-Mail um
-            EMail eMail = iMailService.getEMail(eMailGrenz);
-
-            //E-Mail senden
-            try{
-                ret = iMailService.sendeEmail(konto, eMail);
-            }
-            catch (NoSuchProviderException e){
-                System.out.println("NoSuchProviderException wurde geworfen: " + e.getMessage());
-            }
-        }
-        return ret;
-    }
-
-    @Override
     public boolean sendeEMail(KontoGrenz kontoGrenz, EMailGrenz eMailGrenz) {
         boolean ret = false;
         if (kontoGrenz != null && eMailGrenz != null){
