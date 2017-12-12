@@ -21,5 +21,24 @@ public interface IAssistentSteuerung {
      */
     void trainiereVorhandenSEM() throws IOException, SQLException;
 
+    /**
+     * Holt alle Tags aus der Datenbank und konvertiert diese in eine Liste aus
+     * TagGrenz objekten.
+     * @return Die Liste der TagGrenzObjekte.
+     * @throws IOException
+     * @throws SQLException
+     */
     ArrayList<TagGrenz> zeigeAlleTagsAn() throws IOException, SQLException;
+
+    boolean setzeTagNamen(String name);
+
+    /**
+     * Methode die ein weiteres Wort zur Stoplistehinzufuegt. Diese Woerter
+     * werden dann vom Assistenten bei der Analyse ignoriert.
+     * @param wort
+     */
+    void wortZurStoplisteHinzufuegen(String wort);
+
+    void wortVonStoplisteEntfernen(String wort);
+
 }

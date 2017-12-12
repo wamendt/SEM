@@ -11,7 +11,7 @@ import sem.fachlogik.assistentsteuerung.core.Assistent2;
 import sem.fachlogik.assistentsteuerung.services.IAssistentSteuerung;
 import sem.fachlogik.grenzklassen.TagGrenz;
 
-import java.io.IOException;
+import java.io.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +47,7 @@ public class IAssistentSteuerungImpl implements IAssistentSteuerung{
         Object[][] topwords = assistent.getTopWords(10);
         for(int i = 0; i < numTopics; i++){
             Tag tag = new Tag();
-            tag.setName("tag" + i);
+            tag.setName((String)topwords[i][0]);
             int tid = icrudTag.createTag(tag);
             tag.setTid(tid);
             tags.add(tag);
@@ -125,6 +125,27 @@ public class IAssistentSteuerungImpl implements IAssistentSteuerung{
         }
         return tagGrenzs;
     }
+
+    @Override
+    public boolean setzeTagNamen(String name) {
+        return false;
+    }
+
+
+    @Override
+    public void wortZurStoplisteHinzufuegen(String wort) {
+        try(FileWriter fw = new FileWriter("resources/stoplist_sonstige.txt", true)) {
+            fw.write(wort + "\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void wortVonStoplisteEntfernen(String wort) {
+        throw new UnsupportedOperationException();
+    }
+
 
 
 }
