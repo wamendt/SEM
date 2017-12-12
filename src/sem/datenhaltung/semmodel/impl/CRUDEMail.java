@@ -47,7 +47,7 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
 
     @Override
     public ArrayList<EMail> getEMailByOrdner(String name) throws IOException, SQLException {
-        return query("SELECT * FROM email WHERE odner = ?", name);
+        return query("SELECT * FROM email WHERE ordner = ?", name);
     }
 
     @Override
