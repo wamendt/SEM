@@ -955,6 +955,9 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                 eMailGrenz.setTag(tagGrenz);
             }
         }
+        catch (NullPointerException e){
+            System.out.println("NullPointerException wird geworfen: " + e.getMessage());
+        }
         catch (SQLException e){
             System.out.println("SQLException wird geworfen: " + e.getMessage());
         }
