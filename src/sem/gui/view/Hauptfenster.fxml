@@ -1,24 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.control.TreeView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.web.WebView?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="900.0" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.controller.HauptfensterController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="900.0" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.controller.HauptfensterController">
    <children>
       <SplitPane dividerPositions="0.23041894353369763, 0.4663023679417122" layoutX="55.0" layoutY="200.0" prefHeight="160.0" prefWidth="1100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
         <items>
@@ -26,15 +14,21 @@
                <children>
                   <SplitPane dividerPositions="0.5" layoutX="55.0" layoutY="55.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <items>
-                      <AnchorPane maxHeight="400.0" minHeight="300.0" minWidth="160.0" prefHeight="357.0" prefWidth="248.0">
+                      <AnchorPane maxHeight="600.0" minHeight="300.0" minWidth="160.0" prefHeight="357.0" prefWidth="248.0">
                            <children>
-                              <Button layoutX="182.0" layoutY="14.0" mnemonicParsing="false" onAction="#clickOnOrdner" text="Button" />
-                              <TreeView fx:id="treeview" layoutX="24.0" layoutY="50.0" prefHeight="200.0" prefWidth="200.0" />
+                              <TreeView fx:id="treeviewOrdner" layoutX="2.0" layoutY="13.0" prefHeight="237.0" prefWidth="222.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                            </children>
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                            <children>
-                              <Button id="button_option" fx:id="button_option" layoutX="202.0" layoutY="8.0" mnemonicParsing="false" onMouseEntered="#button_optionOnMouseEntered" onMouseExited="#button_optionOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_option" stylesheets="@buttonstylesheet.css" />
+                              <Button id="button_option" fx:id="button_option" layoutX="202.0" layoutY="8.0" mnemonicParsing="false" onMouseEntered="#button_optionOnMouseEntered" onMouseExited="#button_optionOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_option" stylesheets="@buttonstylesheet.css">
+                                 <contextMenu>
+                                    <ContextMenu>
+                                      <items>
+                                        <MenuItem fx:id="assistentTrainierenMenu" mnemonicParsing="false" onAction="#assistentTrainierenMenuOnAction" text="Assistent Trainieren" />
+                                      </items>
+                                    </ContextMenu>
+                                 </contextMenu></Button>
                               <ScrollPane centerShape="false" layoutX="25.0" layoutY="50.0" prefHeight="202.0" prefWidth="230.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
                                  <content>
                                     <FlowPane id="flowPaneTags" fx:id="flowPaneTags" alignment="TOP_CENTER" centerShape="false" columnHalignment="CENTER" hgap="20.0" maxWidth="237.0" prefHeight="200.0" prefWidth="237.0" vgap="20.0">
@@ -53,7 +47,7 @@
                   </SplitPane>
                </children>
             </AnchorPane>
-            <AnchorPane maxHeight="560.0" maxWidth="400.0" minHeight="560.0" minWidth="250.0" prefHeight="560.0" prefWidth="300.0">
+            <AnchorPane maxWidth="400.0" minWidth="250.0" prefHeight="560.0" prefWidth="300.0">
                <children>
                   <ListView fx:id="listViewEmails" layoutX="14.0" layoutY="21.0" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children></AnchorPane>
@@ -74,11 +68,11 @@
                            <children>
                               <Label text="Von:" />
                               <Label text="An:" GridPane.rowIndex="1" />
-                              <Label text="Label" GridPane.columnIndex="1" />
-                              <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Label fx:id="labelVon" text="Label" GridPane.columnIndex="1" />
+                              <Label fx:id="labelAn" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <HBox alignment="CENTER_RIGHT" prefHeight="53.0" prefWidth="71.0" spacing="70.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                                  <children>
-                                    <Label text="Datum" />
+                                    <Label fx:id="labelDatum" text="Datum" />
                                     <Button id="button_mailoption" fx:id="button_mailoption" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="button_mailoption" stylesheets="@buttonstylesheet.css" />
                                  </children>
                                  <GridPane.margin>
@@ -96,7 +90,10 @@
       <ToolBar cache="true" layoutX="263.0" prefHeight="40.0" prefWidth="837.0" snapToPixel="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
             <Button id="button_neue" fx:id="button_neue" mnemonicParsing="false" onMouseEntered="#button_neueOnMouseEntered" onMouseExited="#button_neueOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_neue" stylesheets="@buttonstylesheet.css" />
-            <Pane maxWidth="230.0" minWidth="5.0" prefHeight="20.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+            <Pane maxWidth="230.0" minWidth="5.0" prefHeight="20.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Button layoutX="154.0" layoutY="5.0" mnemonicParsing="false" onAction="#clickOnOrdner" text="Button" />
+               </children></Pane>
             <Button id="button_search" fx:id="button_search" mnemonicParsing="false" onMouseEntered="#button_searchOnMouseEntered" onMouseExited="#button_searchOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_search" stylesheets="@buttonstylesheet.css" />
             <TextField id="search_field" fx:id="search_field" prefHeight="30.0" prefWidth="200.0" style="-fx-border-radius: 10;" styleClass="search_field" stylesheets="@searchstylesheet.css">
                <opaqueInsets>

@@ -29,6 +29,7 @@ public class VerbindungsfensterController implements Initializable{
         try {
             Parent root = (Parent) loader.load();
             Stage stage = new Stage();
+            stage.setTitle("Smart Email Manager");
             stage.setScene(new Scene(root));
             stage.show();
             btnConnect.getScene().getWindow().hide();
