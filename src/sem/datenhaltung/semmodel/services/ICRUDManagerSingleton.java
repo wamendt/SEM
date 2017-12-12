@@ -11,7 +11,6 @@ public class ICRUDManagerSingleton {
 
     private static ICRUDFile icrudFileInstance;
 
-    private static ICRUDAdresse icrudAdresseInstance;
 
     private static ICRUDMail icrudMailInstance;
 
@@ -36,11 +35,6 @@ public class ICRUDManagerSingleton {
         return icrudFileInstance;
     }
 
-    public static ICRUDAdresse getIcrudAdresseInstance(){
-        if(icrudAdresseInstance == null)
-            icrudAdresseInstance = new CRUDAdresse();
-        return  icrudAdresseInstance;
-    }
 
     public static ICRUDMail getIcrudMailInstance(){
         if(icrudMailInstance == null)
