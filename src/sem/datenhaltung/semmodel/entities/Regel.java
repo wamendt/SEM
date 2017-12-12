@@ -5,7 +5,7 @@ public class Regel {
     private String beschreibung;
     private String pfad;
     private boolean isActive;
-    private String zustand;
+
 
     public int getRid() {
         return rid;
@@ -39,11 +39,4 @@ public class Regel {
         isActive = active;
     }
 
-    public String getZustand() {
-        return zustand;
-    }
-
-    public void setZustand(String zustand) {
-        this.zustand = zustand;
-    }
 }

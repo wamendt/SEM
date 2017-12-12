@@ -1,7 +1,5 @@
 package sem.datenhaltung.semmodel.services;
 
-import sem.datenhaltung.semmodel.entities.Adresse;
-
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
