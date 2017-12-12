@@ -22,9 +22,9 @@ public class EmailListElementController extends AnchorPane{
     private WebView webView;
 
     private EMailGrenz email;
-    private Label labelVon, labelAn, labelDatum;
+    private Label labelVon, labelAn, labelDatum, labelBetreff;
 
-    public EmailListElementController(WebView webView, EMailGrenz email, Label labelVon, Label labelAn, Label labelDatum){
+    public EmailListElementController(WebView webView, EMailGrenz email, Label labelVon, Label labelAn, Label labelDatum, Label labelBetreff){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../view/EmailListElement.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -41,6 +41,7 @@ public class EmailListElementController extends AnchorPane{
         this.labelAn = labelAn;
         this.labelVon = labelVon;
         this.labelDatum = labelDatum;
+        this.labelBetreff = labelBetreff;
 
         webView.getEngine().setJavaScriptEnabled(true);
         this.setOnMouseClicked(event -> onMouseClicked (event) );
@@ -49,11 +50,12 @@ public class EmailListElementController extends AnchorPane{
     }
     public void onMouseClicked(javafx.scene.input.MouseEvent event){
 
-        //labelVon.setText(email.getAbsender());
-        //labelAn.setText(email.getEmpfaenger());
+        labelVon.setText(email.getAbsender());
+        labelAn.setText(email.getEmpfaenger().get(0));
         //labelDatum.setText(null);
+        labelBetreff.setText(email.getBetreff());
 
-        webView.getEngine().loadContent(email.getInhalt());
+        webView.getEngine().loadContent(email.getContentOriginal());
     }
 
 }

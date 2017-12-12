@@ -4,6 +4,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
@@ -13,6 +15,7 @@ import sem.datenhaltung.semmodel.services.ICRUDMail;
 import sem.datenhaltung.semmodel.services.ICRUDManagerSingleton;
 import sem.fachlogik.assistentsteuerung.impl.IAssistentSteuerungImpl;
 import sem.fachlogik.assistentsteuerung.services.IAssistentSteuerung;
+import sem.fachlogik.grenzklassen.EMailGrenz;
 import sem.fachlogik.grenzklassen.KontoGrenz;
 import sem.fachlogik.grenzklassen.TagGrenz;
 import sem.fachlogik.kontosteuerung.impl.IKonstoSteuerungImpl;
@@ -47,6 +50,12 @@ public class HauptfensterController implements Initializable{
 
     @FXML
     private Label labelAn, labelVon, labelDatum;
+
+    @FXML
+    private TextField search_field;
+
+    @FXML
+    private Label labelBetreff;
 
     private IMailSteuerung mailSteuerung = new IMailSteuerungImpl();
     private IKontoSteuerung kontoSteuerung = new IKonstoSteuerungImpl();
@@ -126,7 +135,7 @@ public class HauptfensterController implements Initializable{
             ArrayList<TagGrenz> tags = assistentSteuerung.zeigeAlleTagsAn();
             for(TagGrenz tag : tags)
                 flowPaneTags.getChildren().add(new TagElementController(mailSteuerung, tag, listViewEmails, webViewEmail,
-                        labelVon, labelAn, labelDatum));
+                        labelVon, labelAn, labelDatum, labelBetreff));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -153,6 +162,19 @@ public class HauptfensterController implements Initializable{
 
     }
 
+    @FXML
+    public void searchOnKeyPressed(KeyEvent event){
+        if(event.getCode() == KeyCode.ENTER){
+            String search = search_field.getText();
+            if(!search.isEmpty()){
+                ArrayList<EMailGrenz> emails = mailSteuerung.sucheEMail(search_field.getText());
+                listViewEmails.getItems().clear();
+                for(EMailGrenz email : emails){
+                    listViewEmails.getItems().add(new EmailListElementController(webViewEmail,email, labelVon, labelAn, labelDatum, labelBetreff));
+                }
+            }
+        }
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -162,7 +184,7 @@ public class HauptfensterController implements Initializable{
             ArrayList<TagGrenz> tags = assistentSteuerung.zeigeAlleTagsAn();
             for(TagGrenz tag : tags){
                 flowPaneTags.getChildren().add(new TagElementController(mailSteuerung, tag, listViewEmails,
-                        webViewEmail, labelVon, labelAn, labelDatum));
+                        webViewEmail, labelVon, labelAn, labelDatum, labelBetreff));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -173,11 +195,11 @@ public class HauptfensterController implements Initializable{
         ArrayList<String> ordner = mailSteuerung.zeigeAlleOrdner(kontoSteuerung.getKonto(1));
 
         TreeItem <Label> treeItemroot = new TreeItem<>(new OrdnerTreeViewRootElementController(kontoSteuerung.getKonto(1),
-                listViewEmails,mailSteuerung,webViewEmail,labelVon,labelAn,labelDatum));
+                listViewEmails,mailSteuerung,webViewEmail,labelVon,labelAn,labelDatum, labelBetreff));
 
         for(String o: ordner){
                 treeItemroot.getChildren().add(new TreeItem<>(new OrdnerTreeViewElementController(kontoSteuerung.getKonto(1),
-                        o,listViewEmails,mailSteuerung, webViewEmail, labelVon, labelAn, labelDatum)));
+                        o,listViewEmails,mailSteuerung, webViewEmail, labelVon, labelAn, labelDatum, labelBetreff)));
                 treeviewOrdner.setRoot(treeItemroot);
 
             }

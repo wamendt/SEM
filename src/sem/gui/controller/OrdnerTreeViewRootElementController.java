@@ -19,10 +19,10 @@ public class OrdnerTreeViewRootElementController extends Label {
     private ListView emailView;
     private KontoGrenz konto;
     private WebView webView;
-    private Label labelVon, labelAn, labelDatum;
+    private Label labelVon, labelAn, labelDatum, labelBetreff;
 
     public OrdnerTreeViewRootElementController(KontoGrenz konto, ListView emailView, IMailSteuerung mailSteuerung,
-                                               WebView webView, Label labelVon, Label labelAn , Label labelDatum){
+                                               WebView webView, Label labelVon, Label labelAn , Label labelDatum, Label labelBetreff){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../view/OrdnerTreeViewElement.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -39,7 +39,7 @@ public class OrdnerTreeViewRootElementController extends Label {
         this.labelAn = labelAn;
         this.labelVon = labelVon;
         this.labelDatum = labelDatum;
-
+        this.labelBetreff = labelBetreff;
         this.setText(konto.getEmailAddress());
 
         this.setOnMouseClicked(event -> onMouseClicked(event));
@@ -51,7 +51,7 @@ public class OrdnerTreeViewRootElementController extends Label {
             ArrayList<EMailGrenz> emails = mailSteuerung.zeigeAlleEMails(konto);
             emailView.getItems().clear();
             for(EMailGrenz email : emails){
-                emailView.getItems().add(new EmailListElementController(webView, email,labelVon,labelAn,labelDatum ));
+                emailView.getItems().add(new EmailListElementController(webView, email,labelVon,labelAn,labelDatum, labelBetreff ));
             }
         } catch (NoSuchProviderException e) {
             e.printStackTrace();

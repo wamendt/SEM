@@ -19,9 +19,10 @@ public class TagElementController extends Label {
     private ListView emailView;
     private Label labelVon, labelAn, labelDatum;
     private WebView webView;
+    private Label labelBetreff;
 
     public TagElementController(IMailSteuerung mailSteuerung, TagGrenz tagGrenz, ListView emailView, WebView webview,
-                                Label labelVon, Label labelAn, Label labelDatum){
+                                Label labelVon, Label labelAn, Label labelDatum, Label labelBetreff){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../view/TagElement.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -37,7 +38,7 @@ public class TagElementController extends Label {
         this.labelAn = labelAn;
         this.labelDatum = labelDatum;
         this.webView = webview;
-
+        this.labelBetreff = labelBetreff;
         this.mailSteuerung = mailSteuerung;
         this.tagGrenz = tagGrenz;
         this.emailView = emailView;
@@ -53,7 +54,7 @@ public class TagElementController extends Label {
         ArrayList<EMailGrenz> emails = mailSteuerung.sucheEMailByTag(tagGrenz);
 
         for(EMailGrenz email : emails){
-            emailView.getItems().add(new EmailListElementController(webView, email, labelVon, labelAn, labelDatum));
+            emailView.getItems().add(new EmailListElementController(webView, email, labelVon, labelAn, labelDatum, labelBetreff));
         }
     }
 
