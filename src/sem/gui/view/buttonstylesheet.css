@@ -1,13 +1,13 @@
 
 .button_weiterleiten{
-    -fx-background-image: url("../../../../resources/weiterleiten.png");
+    -fx-background-image: url("../../../../resources/bilder/weiterleiten.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 25;
     -fx-background-color: transparent;
     -fx-background-position: center;
 }
 .button_search{
-    -fx-background-image: url("../../../../resources/search.png");
+    -fx-background-image: url("../../../../resources/bilder/search.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 25;
     -fx-background-color: transparent;
@@ -15,7 +15,7 @@
 
 }
 .button_mailantworten{
-    -fx-background-image: url("../../../../resources/antworten2.png");
+    -fx-background-image: url("../../../../resources/bilder/antworten2.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 25;
     -fx-background-color: transparent;
@@ -23,7 +23,7 @@
 
 }
 .button_loeschen{
-    -fx-background-image: url("../../../../resources/loeschen.png");
+    -fx-background-image: url("../../../../resources/bilder/loeschen.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 25;
     -fx-background-color: transparent;
@@ -31,30 +31,31 @@
 
 }
 .button_neue{
-    -fx-background-image: url("../../../../resources/neue.png");
+    -fx-background-image: url("../../../../resources/bilder/neue.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 30;
     -fx-background-color: transparent;
     -fx-background-position: center;
 }
 .button_option {
-    -fx-background-image: url("../../../../resources/option.png");
+    -fx-background-image: url("../../../../resources/bilder/option.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 30;
     -fx-background-color: transparent;
     -fx-background-position: center;
 }
 .button_menu{
-    -fx-background-image: url("../../../../resources/menu.png");
+    -fx-background-image: url("../../../../resources/bilder/menu.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 30;
     -fx-background-color: transparent;
     -fx-background-position: center;
 }
 .button_mailoption{
-    -fx-background-image: url("../../../../resources/success.png");
+    -fx-background-image: url("../../../../resources/bilder/success.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 30;
     -fx-background-color: transparent;
     -fx-background-position: center;
 }
+
