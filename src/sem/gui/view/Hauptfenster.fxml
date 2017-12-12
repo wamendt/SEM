@@ -64,6 +64,7 @@
                           <rowConstraints>
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
                               <Label text="Von:" />
@@ -79,6 +80,8 @@
                                     <Insets right="10.0" />
                                  </GridPane.margin>
                               </HBox>
+                              <Label text="Betreff:" GridPane.rowIndex="2" />
+                              <Label fx:id="labelBetreff" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                            </children>
                         </GridPane>
                      </children>
@@ -90,12 +93,9 @@
       <ToolBar cache="true" layoutX="263.0" prefHeight="40.0" prefWidth="837.0" snapToPixel="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
             <Button id="button_neue" fx:id="button_neue" mnemonicParsing="false" onMouseEntered="#button_neueOnMouseEntered" onMouseExited="#button_neueOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_neue" stylesheets="@buttonstylesheet.css" />
-            <Pane maxWidth="230.0" minWidth="5.0" prefHeight="20.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
-               <children>
-                  <Button layoutX="154.0" layoutY="5.0" mnemonicParsing="false" onAction="#clickOnOrdner" text="Button" />
-               </children></Pane>
+            <Pane maxWidth="230.0" minWidth="5.0" prefHeight="20.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
             <Button id="button_search" fx:id="button_search" mnemonicParsing="false" onMouseEntered="#button_searchOnMouseEntered" onMouseExited="#button_searchOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_search" stylesheets="@buttonstylesheet.css" />
-            <TextField id="search_field" fx:id="search_field" prefHeight="30.0" prefWidth="200.0" style="-fx-border-radius: 10;" styleClass="search_field" stylesheets="@searchstylesheet.css">
+            <TextField id="search_field" fx:id="search_field" onKeyPressed="#searchOnKeyPressed" prefHeight="30.0" prefWidth="200.0" style="-fx-border-radius: 10;" styleClass="search_field" stylesheets="@searchstylesheet.css">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
