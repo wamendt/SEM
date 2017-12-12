@@ -44,6 +44,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
     private static ArrayList<MsgRemovedListener> removedListeners = new ArrayList<>();
     private static MailStoreManager storeManager;
     private static Store store;
+    private boolean textIsHtml = false;
 
     public IMailServiceImpl(){
         storeManager = MailStoreManager.getStoreManager();
@@ -116,9 +117,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
 
     private EMail getContentOriginal(Message message, EMail email){
         try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            message.writeTo(baos);
-            String content = baos.toString();
+            String content = getTextFromMessage(message);
             email.setContentOriginal(content);
         } catch (Exception e) {
             System.out.println("ByteArrayOutputStream wirft Exception: " + e.getMessage());
@@ -129,11 +128,12 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
 
     //Methode um das Store-Objekt zu setzen und die Verbindung aufzubauen
     private void setStore(Konto konto){
-        store = null;
-        try{
-            store = storeManager.setImapConnection(konto.getIMAPhost(), konto.getEmailAddress(), konto.getPassWort());
-        }catch (NoSuchProviderException e){
-            System.out.println("StoreManager wirft Exception: " + e.getMessage());
+        if(store == null){
+            try{
+                store = storeManager.setImapConnection(konto.getIMAPhost(), konto.getEmailAddress(), konto.getPassWort());
+            }catch (NoSuchProviderException e){
+                System.out.println("StoreManager wirft Exception: " + e.getMessage());
+            }
         }
     }
 
@@ -216,9 +216,51 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
         return eMail;
     }
 
+    /**
+     * Return the primary text content of the message.
+     */
+    private String getTextFromMessage(Part p) throws
+            MessagingException, IOException {
+        if (p.isMimeType("text/*")) {
+            String s = (String)p.getContent();
+            textIsHtml = p.isMimeType("text/html");
+            return s;
+        }
+
+        if (p.isMimeType("multipart/alternative")) {
+            // prefer html text over plain text
+            Multipart mp = (Multipart)p.getContent();
+            String text = null;
+            for (int i = 0; i < mp.getCount(); i++) {
+                Part bp = mp.getBodyPart(i);
+                if (bp.isMimeType("text/plain")) {
+                    if (text == null)
+                        text = getTextFromMessage(bp);
+                    continue;
+                } else if (bp.isMimeType("text/html")) {
+                    String s = getTextFromMessage(bp);
+                    if (s != null)
+                        return s;
+                } else {
+                    return getTextFromMessage(bp);
+                }
+            }
+            return text;
+        } else if (p.isMimeType("multipart/*")) {
+            Multipart mp = (Multipart)p.getContent();
+            for (int i = 0; i < mp.getCount(); i++) {
+                String s = getTextFromMessage(mp.getBodyPart(i));
+                if (s != null)
+                    return s;
+            }
+        }
+
+        return null;
+    }
+
 
     //Methode wandelt Multipart-Messages in Plaintext um
-    private String getTextFromMessage(Message message) throws Exception {
+    private String getPlainTextFromMessage(Message message) throws Exception {
         if (message.isMimeType("text/plain")) {
             return message.getContent().toString();
         }
@@ -260,7 +302,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                 eMail.setBetref(message.getSubject());
 
                 //NachrichtenContent in PlainText umwandeln und HTML - Content entfernen
-                String mailContent = getTextFromMessage(message);
+                String mailContent = getPlainTextFromMessage(message);
                 eMail.setInhalt(mailContent);
 
                 //Anfangs wird noch kein Tag gesetzt
@@ -297,6 +339,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                 eMail.setOrdner(folder.getFullName());
 
                 //Message-Content als Plain-Text umwandeln und in die Datenbank speichern
+
                 eMail = getContentOriginal(message, eMail);
 
                 //MessageNumber setzen
