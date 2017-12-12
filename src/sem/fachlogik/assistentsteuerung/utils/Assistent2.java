@@ -1,4 +1,4 @@
-package sem.fachlogik.assistentsteuerung.core;
+package sem.fachlogik.assistentsteuerung.utils;
 
 import cc.mallet.pipe.*;
 import cc.mallet.pipe.iterator.ArrayIterator;
