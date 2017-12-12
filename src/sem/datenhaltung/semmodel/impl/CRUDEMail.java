@@ -78,13 +78,9 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
 
     @Override
     public ArrayList<EMail> searchEMail(String suchwort) throws IOException, SQLException {
-        int mid = Integer.parseInt(suchwort);
-        int tid = Integer.parseInt(suchwort);
-        int messageID = Integer.parseInt(suchwort);
-        return query("SELECT * FROM email WHERE mid = ? OR betreff = ? OR inhalt = ? OR tid = ?" +
-                "OR absender = ? OR cc = ? OR bcc = ? OR empfaenger = ? OR contentOriginal = ? OR zustand = ?" +
-                "OR ordner = ? OR messageID = ?", mid, suchwort, suchwort, tid, suchwort, suchwort, suchwort, suchwort,
-                suchwort, suchwort, suchwort, messageID);
+
+        return query("SELECT * FROM email WHERE betreff LIKE ? OR inhalt LIKE ?  ", "%" + suchwort + "%", "%" + suchwort + "%");
+
     }
 
     @Override
