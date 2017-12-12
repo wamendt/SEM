@@ -43,7 +43,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
     private static ArrayList<MsgReceivedListener> receivedListeners = new ArrayList<>();
     private static ArrayList<MsgRemovedListener> removedListeners = new ArrayList<>();
     private static MailStoreManager storeManager;
-    private Store store;
+    private static Store store;
 
     public IMailServiceImpl(){
         storeManager = MailStoreManager.getStoreManager();
@@ -977,14 +977,20 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
         eMailGrenz.setMessageID(eMail.getMessageID());
         eMailGrenz.setOrdner(eMail.getOrdner());
 
-        if(eMail.getFiles().size() > 0) {
-            ArrayList<FileGrenz> fileList = new ArrayList<>();
-            for (File file : eMail.getFiles()) {
-                FileGrenz fileGrenz = getFileGrenz(file);
-                fileList.add(fileGrenz);
+        try{
+            if(eMail.getFiles().size() > 0) {
+                ArrayList<FileGrenz> fileList = new ArrayList<>();
+                for (File file : eMail.getFiles()) {
+                    FileGrenz fileGrenz = getFileGrenz(file);
+                    fileList.add(fileGrenz);
+                }
+                eMailGrenz.setFiles(fileList);
             }
-            eMailGrenz.setFiles(fileList);
         }
+        catch (NullPointerException e){
+            System.out.println("NullPointerException wurde geworfen: " + e.getMessage());
+        }
+
         return eMailGrenz;
     }
 
@@ -994,8 +1000,10 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
         eMail.setMid(eMailGrenz.getMid());
         eMail.setBetref(eMailGrenz.getBetreff());
         eMail.setInhalt(eMailGrenz.getInhalt());
-        eMail.setTid(eMailGrenz.getTag().getTid());
-        eMail.setAbsender(eMail.getAbsender());
+        if(eMailGrenz.getTag() != null){
+            eMail.setTid(eMailGrenz.getTag().getTid());
+        }
+        eMail.setAbsender(eMailGrenz.getAbsender());
 
         String ccList = explodeAdresses(eMailGrenz.getCc());
         eMail.setCc(ccList);
@@ -1006,19 +1014,25 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
         String empfaengerList = explodeAdresses(eMailGrenz.getEmpfaenger());
         eMail.setEmpfaenger(empfaengerList);
 
-        eMail.setContentOriginal(eMail.getContentOriginal());
-        eMail.setZustand(eMail.getZustand());
-        eMail.setMessageID(eMail.getMessageID());
-        eMail.setOrdner(eMail.getOrdner());
+        eMail.setContentOriginal(eMailGrenz.getContentOriginal());
+        eMail.setZustand(eMailGrenz.getZustand());
+        eMail.setMessageID(eMailGrenz.getMessageID());
+        eMail.setOrdner(eMailGrenz.getOrdner());
 
-        if(eMail.getFiles().size() > 0) {
-            ArrayList<File> fileList = new ArrayList<>();
-            for (FileGrenz fileGrenz : eMailGrenz.getFiles()) {
-                File file = getFile(fileGrenz);
-                fileList.add(file);
+        try{
+            if(eMail.getFiles().size() > 0) {
+                ArrayList<File> fileList = new ArrayList<>();
+                for (FileGrenz fileGrenz : eMailGrenz.getFiles()) {
+                    File file = getFile(fileGrenz);
+                    fileList.add(file);
+                }
+                eMail.setFiles(fileList);
             }
-            eMail.setFiles(fileList);
         }
+        catch (NullPointerException e){
+            System.out.println("NullPointerException wurde geworfen bei getEMail(): " + e.getMessage());
+        }
+
         return eMail;
     }
 
