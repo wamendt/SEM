@@ -106,7 +106,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                 messageBodyPart.setFileName(file.getName());
                 multipart.addBodyPart(messageBodyPart);
             } catch (MessagingException e) {
-                e.printStackTrace();
+                System.out.println("MessagingException wurde geworfen in IMailSteuerung, addAttachment(): " + e.getMessage());;
             }
         }
         // store file
@@ -120,7 +120,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
             String content = getTextFromMessage(message);
             email.setContentOriginal(content);
         } catch (Exception e) {
-            System.out.println("ByteArrayOutputStream wirft Exception: " + e.getMessage());
+            System.out.println("Exception wird in IMailSteuerung, getContentOriginal() geworfen: " + e.getMessage());
         }
         return email;
     }
@@ -132,7 +132,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
             try{
                 store = storeManager.setImapConnection(konto.getIMAPhost(), konto.getEmailAddress(), konto.getPassWort());
             }catch (NoSuchProviderException e){
-                System.out.println("StoreManager wirft Exception: " + e.getMessage());
+                System.out.println("StoreManager wirft Exception in IMailSteuerung, setStore(): : " + e.getMessage());
             }
         }
     }
@@ -153,10 +153,10 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
             }
         }
         catch (NullPointerException e){
-            System.out.println("NullPointerException wird geworfen: " + e.getMessage());
+            System.out.println("NullPointerException wird geworfen in IMailSteuerung, getAlleOrdnerNamen(): " + e.getMessage());
         }
         catch (MessagingException e) {
-            System.out.println("MessagingException wird geworfen: " + e.getMessage());
+            System.out.println("MessagingException wird geworfen in IMailSteuerung, getAlleOrdnerNamen(): " + e.getMessage());
         }
         return ordnerList;
     }
@@ -188,7 +188,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
             }
             folder.close(true);
         }catch (MessagingException e){
-            System.out.println("MessagingException wird geworfen: " + e.getMessage());
+            System.out.println("MessagingException wird geworfen in IMailSteuerung, markiereUndloescheMail(): " + e.getMessage());
         }
 
         return ret;
@@ -211,7 +211,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                 eMail.setZustand("geloescht");
             }
         }catch (MessagingException e){
-            System.out.println("MessagingException wurde geworfen: " + e.getMessage());
+            System.out.println("MessagingException wurde geworfen in IMailSteuerung, setZustand(): " + e.getMessage());
         }
         return eMail;
     }
@@ -221,89 +221,96 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
      */
     private String getTextFromMessage(Part p) throws
             MessagingException, IOException {
-        if (p.isMimeType("text/*")) {
-            String s = (String)p.getContent();
-            textIsHtml = p.isMimeType("text/html");
-            return s;
-        }
+        try {
+            if (p.isMimeType("text/*")) {
+                String s = (String) p.getContent();
+                textIsHtml = p.isMimeType("text/html");
+                return s;
+            }
 
-        if (p.isMimeType("multipart/alternative")) {
-            // prefer html text over plain text
-            Multipart mp = (Multipart)p.getContent();
-            String text = null;
-            for (int i = 0; i < mp.getCount(); i++) {
-                Part bp = mp.getBodyPart(i);
-                if (bp.isMimeType("text/plain")) {
-                    if (text == null)
-                        text = getTextFromMessage(bp);
-                    continue;
-                } else if (bp.isMimeType("text/html")) {
-                    String s = getTextFromMessage(bp);
+            if (p.isMimeType("multipart/alternative")) {
+                // prefer html text over plain text
+                Multipart mp = (Multipart) p.getContent();
+                String text = null;
+                for (int i = 0; i < mp.getCount(); i++) {
+                    Part bp = mp.getBodyPart(i);
+                    if (bp.isMimeType("text/plain")) {
+                        if (text == null)
+                            text = getTextFromMessage(bp);
+                        continue;
+                    } else if (bp.isMimeType("text/html")) {
+                        String s = getTextFromMessage(bp);
+                        if (s != null)
+                            return s;
+                    } else {
+                        return getTextFromMessage(bp);
+                    }
+                }
+                return text;
+            } else if (p.isMimeType("multipart/*")) {
+                Multipart mp = (Multipart) p.getContent();
+                for (int i = 0; i < mp.getCount(); i++) {
+                    String s = getTextFromMessage(mp.getBodyPart(i));
                     if (s != null)
                         return s;
-                } else {
-                    return getTextFromMessage(bp);
                 }
             }
-            return text;
-        } else if (p.isMimeType("multipart/*")) {
-            Multipart mp = (Multipart)p.getContent();
-            for (int i = 0; i < mp.getCount(); i++) {
-                String s = getTextFromMessage(mp.getBodyPart(i));
-                if (s != null)
-                    return s;
-            }
         }
-
+        catch(Exception e){
+                return "NachrichtInhalt konnte nicht gelesen werden, da MessageType: IMAPMessage!";
+            }
         return null;
     }
 
 
     //Methode wandelt Multipart-Messages in Plaintext um
-    private String getPlainTextFromMessage(Message message) throws Exception {
-        if (message.isMimeType("text/plain")) {
-            return message.getContent().toString();
-        }
-        else if (message.isMimeType("multipart/*")) {
-            String result = "";
-            MimeMultipart mimeMultipart = (MimeMultipart) message.getContent();
-
-            int count = mimeMultipart.getCount();
-
-            for (int i = 0; i < count; i++) {
-                BodyPart bodyPart = mimeMultipart.getBodyPart(i);
-
-                if (bodyPart.isMimeType("text/plain")) {
-                    result = result + "\n" + bodyPart.getContent();
-                    break;  //without break same text appears twice in my tests
-                }
-                else if (bodyPart.isMimeType("text/html")) {
-                    String html = (String) bodyPart.getContent();
-                    result = result.concat("\n" + Jsoup.parse(html).text());
-                }
+    private String getPlainTextFromMessage(Message message){
+        try{
+            message = (MimeMessage) message;
+            if (message.isMimeType("text/plain")) {
+                return message.getContent().toString();
             }
-            return result;
+            else if (message.isMimeType("multipart/*")) {
+                String result = "";
+                MimeMultipart mimeMultipart = (MimeMultipart) message.getContent();
+
+                int count = mimeMultipart.getCount();
+
+                for (int i = 0; i < count; i++) {
+                    BodyPart bodyPart = mimeMultipart.getBodyPart(i);
+
+                    if (bodyPart.isMimeType("text/plain")) {
+                        result = result + "\n" + bodyPart.getContent();
+                        break;  //without break same text appears twice in my tests
+                    }
+                    else if (bodyPart.isMimeType("text/html")) {
+                        String html = (String) bodyPart.getContent();
+                        result = result.concat("\n" + Jsoup.parse(html).text());
+                    }
+                }
+                return result;
+            }
         }
+        catch (Exception e){
+            return "NachrichtInhalt konnte nicht gelesen werden, da MessageType: IMAPMessage!";
+        }
+
         return "";
     }
 
 
     private EMail checkEMailAndSetToDB(Folder folder, Message message, ICRUDMail crudeMail, int i, long beginnSeconds, int messageCounter){
-        EMail eMail = null;
+        EMail eMail = new EMail();
         try {
             //Beginn Zeitmessung für die aktuelle Nachricht
             long startMillis = System.currentTimeMillis();
 
             //Existiert die E-Mail bereits in der DB?
-            if (crudeMail.getEMailByMessageIDUndOrdner(i, folder.getFullName()) == null) {
+            if (crudeMail.checkMessageInDB(i, message.getSubject(), message.getFrom()[0].toString(), folder.getFullName()) == null) {
                 eMail = new EMail();
 
                 //Betreff setzen
                 eMail.setBetref(message.getSubject());
-
-                //NachrichtenContent in PlainText umwandeln und HTML - Content entfernen
-                String mailContent = getPlainTextFromMessage(message);
-                eMail.setInhalt(mailContent);
 
                 //Anfangs wird noch kein Tag gesetzt
                 eMail.setTid(0);
@@ -345,6 +352,10 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                 //MessageNumber setzen
                 eMail.setMessageID(i);
 
+                //NachrichtenContent in PlainText umwandeln und HTML - Content entfernen
+                String mailContent = getPlainTextFromMessage(message);
+                eMail.setInhalt(mailContent);
+
                 //E-Mail in der Datenbank hinterlegen
                 crudeMail.createEMail(eMail);
 
@@ -373,16 +384,16 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
             }
         }
         catch (NoSuchProviderException e) {
-                System.out.println("StoreManager wirft Exception: " + e.getMessage());
+                System.out.println("StoreManager wirft Exception in IMailSteuerung, checkEMailAndSetToDB(): " + e.getMessage());
             }
         catch (FolderNotFoundException fe){
-                System.out.println("FolderNotFoundException wurde geworfen: " + fe.getMessage());
+                System.out.println("FolderNotFoundException wurde geworfen in IMailSteuerung, checkEMailAndSetToDB(): " + fe.getMessage());
             }
         catch (MessagingException e) {
-                System.out.println("MessagingException wurde geworfen: " + e.getMessage());
+                System.out.println("MessagingException wurde geworfen in IMailSteuerung, checkEMailAndSetToDB(): " + e.getMessage());
             }
         catch (Exception e) {
-                System.out.println("Exception wurde geworfen: " + e.getMessage());
+                System.out.println("Exception wurde geworfen in IMailSteuerung, checkEMailAndSetToDB(): " + e.getMessage());
             }
         return eMail;
     }
@@ -433,17 +444,17 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
             }
         }
         catch (NullPointerException e){
-            System.out.println("NullPointerException wurde geworfen!" + e.getMessage());
+            System.out.println("NullPointerException wurde in IMailSteuerung, loeschEMailVomServer() geworfen!" + e.getMessage());
         }
         catch (NoSuchProviderException e){
-            System.out.println("StoreManager wirft Exception: " + e.getMessage());
+            System.out.println("StoreManager wirft in IMailSteuerung, loeschEMailVomServer() Exception: " + e.getMessage());
         }
         catch (MessagingException e) {
-            System.out.println("MessagingException wird geworfen: " + e.getMessage());
+            System.out.println("MessagingException wird geworfenin IMailSteuerung, loeschEMailVomServer() : " + e.getMessage());
         } catch (SQLException e) {
-            System.out.println("SQLException wird geworfen: " + e.getMessage());
+            System.out.println("SQLException wird geworfenin IMailSteuerung, loeschEMailVomServer() : " + e.getMessage());
         } catch (IOException e) {
-            System.out.println("IOException wird geworfen: " + e.getMessage());
+            System.out.println("IOException wird geworfenin IMailSteuerung, loeschEMailVomServer() : " + e.getMessage());
         }
 
         return ret;
@@ -466,14 +477,14 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
             isCreated = newFolder.create(Folder.HOLDS_MESSAGES);
         }
         catch (NoSuchProviderException e){
-            System.out.println("StoreManager wirft Exception: " + e.getMessage());
+            System.out.println("StoreManager wirft in IMailSteuerung, erstelleEMailOrdner() Exception: " + e.getMessage());
         }
         catch (MessagingException e) {
             e.printStackTrace();
         }
         catch (Exception e)
         {
-            System.out.println("Fehler beim Erstellen des Ordners: " + e.getMessage());
+            System.out.println("Fehler beim Erstellen des Ordners in IMailSteuerung, erstelleEMailOrdner(): " + e.getMessage());
             e.printStackTrace();
             isCreated = false;
         }
@@ -522,17 +533,17 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
             folder.close(true);
         }
         catch (NullPointerException e){
-            System.out.println("NullPointerException wurde geworfen: " + e.getMessage());
+            System.out.println("NullPointerException wurde in IMailSteuerung, loescheEMailOrdner() geworfen: " + e.getMessage());
         }
         catch (NoSuchProviderException e){
-            System.out.println("StoreManager wirft Exception: " + e.getMessage());
+            System.out.println("StoreManager wirft Exception in IMailSteuerung, loescheEMailOrdner() : " + e.getMessage());
         }
         catch (MessagingException e) {
-            System.out.println("MessagingException wird geworfen: " + e.getMessage());
+            System.out.println("MessagingException wird geworfen in IMailSteuerung, loescheEMailOrdner() : " + e.getMessage());
         } catch (SQLException e) {
-            System.out.println("SQLException wird geworfen: " + e.getMessage());
+            System.out.println("SQLException wird geworfen in IMailSteuerung, loescheEMailOrdner() : " + e.getMessage());
         } catch (IOException e) {
-            System.out.println("IOException wird geworfen: " + e.getMessage());
+            System.out.println("IOException wird geworfen in IMailSteuerung, loescheEMailOrdner() : " + e.getMessage());
         }
 
         return ret;
@@ -577,7 +588,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                         checkEMailAndSetToDB(folder, message, crudeMail, i, beginnSeconds, messageCount);
                     }
                     catch (NullPointerException e){
-                        System.out.println("NullPointerException wurde geworfen: " + e.getMessage());
+                        System.out.println("NullPointerException wurde  in IMailSteuerung, importiereAllEMails() geworfen: " + e.getMessage());
                     }
                 }
                 folder.close(true);
@@ -585,16 +596,16 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
             ret = true;
         }
         catch (NoSuchProviderException e) {
-            System.out.println("StoreManager wirft Exception: " + e.getMessage());
+            System.out.println("StoreManager in IMailSteuerung, importiereAllEMails() wirft Exception: " + e.getMessage());
         }
         catch (FolderNotFoundException fe){
-            System.out.println("FolderNotFoundException wurde geworfen: " + fe.getMessage());
+            System.out.println("FolderNotFoundException wurde geworfen in IMailSteuerung, importiereAllEMails(): " + fe.getMessage());
         }
         catch (MessagingException e) {
-            System.out.println("MessagingException wurde geworfen: " + e.getMessage());
+            System.out.println("MessagingException wurde geworfen in IMailSteuerung, importiereAllEMails(): " + e.getMessage());
         }
         catch (Exception e) {
-            System.out.println("Exception wurde geworfen: " + e.getMessage());
+            System.out.println("Exception wurde geworfen in IMailSteuerung, importiereAllEMails(): " + e.getMessage());
         }
         return ret;
     }
@@ -636,23 +647,23 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                     }
                 }
                 catch (NullPointerException e){
-                    System.out.println("NullPointerException wurde geworfen: " + e.getMessage());
+                    System.out.println("NullPointerException wurde geworfen in IMailSteuerung, importiereAllEMailsvomOrdner(): " + e.getMessage());
                 }
             }
             folder.close(true);
 
         }
         catch (NoSuchProviderException e) {
-            System.out.println("StoreManager wirft Exception: " + e.getMessage());
+            System.out.println("StoreManager wirft Exception in IMailSteuerung, importiereAllEMailsvomOrdner(): " + e.getMessage());
         }
         catch (FolderNotFoundException fe){
-            System.out.println("FolderNotFoundException wurde geworfen: " + fe.getMessage());
+            System.out.println("FolderNotFoundException wurde geworfen in IMailSteuerung, importiereAllEMailsvomOrdner(): " + fe.getMessage());
         }
         catch (MessagingException e) {
-            System.out.println("MessagingException wurde geworfen: " + e.getMessage());
+            System.out.println("MessagingException wurde geworfen in IMailSteuerung, importiereAllEMailsvomOrdner(): " + e.getMessage());
         }
         catch (Exception e) {
-            System.out.println("Exception wurde geworfen: " + e.getMessage());
+            System.out.println("Exception wurde geworfen in IMailSteuerung, importiereAllEMailsvomOrdner(): " + e.getMessage());
         }
         return eMailArrayList;
     }
@@ -858,7 +869,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                     ret = true;
                 }
                 catch (MessagingException ex) {
-                    System.out.println("MessagingException wurde geworfen: " + ex.getMessage());
+                    System.out.println("MessagingException wurde geworfen in IMailSteuerung, speichereEMailImOrdner(): " + ex.getMessage());
                 }
             }
             else {
@@ -897,7 +908,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                     folders.add(folder);
                 }
                 catch (MessagingException e){
-                    System.out.println("MessagingException wurde geworfen: " + e.getMessage());
+                    System.out.println("MessagingException wurde geworfen in IMailSteuerung, holeFolderFuerListener(): " + e.getMessage());
                 }
             }
         }
@@ -914,7 +925,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
             folder = store.getFolder(name);
         }
         catch (MessagingException e){
-            System.out.println("MessagingException wurde geworfen: " + e.getMessage());
+            System.out.println("MessagingException wurde geworfen in IMailSteuerung, getOrdnerByName(): " + e.getMessage());
         }
         return folder;
     }
@@ -964,16 +975,16 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
             }
         }
         catch (NoSuchProviderException e){
-            System.out.println("NoSuchProviderException: " + e.getMessage());
+            System.out.println("NoSuchProviderException wurde geworfen in IMailSteuerung, sendeEmail(): " + e.getMessage());
         }
         catch (MessagingException e) {
-            System.out.println("MessagingException: " + e.getMessage());
+            System.out.println("MessagingException wurde geworfen in IMailSteuerung, sendeEmail(): " + e.getMessage());
         }
         catch (SQLException e) {
-            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLException wurde geworfen in IMailSteuerung, sendeEmail(): " + e.getMessage());
         }
         catch (IOException e) {
-            System.out.println("IOException: " + e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
+            System.out.println("IOException wurde geworfen in IMailSteuerung, sendeEmail(): " + e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
         }
         return ret;
     }
@@ -999,13 +1010,13 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
             }
         }
         catch (NullPointerException e){
-            System.out.println("NullPointerException wird geworfen: " + e.getMessage());
+            System.out.println("NullPointerException wird geworfen in IMailSteuerung, getEMailGrenz(): " + e.getMessage());
         }
         catch (SQLException e){
-            System.out.println("SQLException wird geworfen: " + e.getMessage());
+            System.out.println("SQLException wird geworfen in IMailSteuerung, getEMailGrenz(): " + e.getMessage());
         }
         catch (IOException e){
-            System.out.println("IOException wird geworfen: " + e.getMessage());
+            System.out.println("IOException wird geworfen in IMailSteuerung, getEMailGrenz(): " + e.getMessage());
         }
         eMailGrenz.setAbsender(eMail.getAbsender());
 
@@ -1034,7 +1045,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
             }
         }
         catch (NullPointerException e){
-            System.out.println("NullPointerException wurde geworfen: " + e.getMessage());
+            System.out.println("NullPointerException wurde geworfen in IMailSteuerung, getEMailGrenz(): " + e.getMessage());
         }
 
         return eMailGrenz;
@@ -1076,7 +1087,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
             }
         }
         catch (NullPointerException e){
-            System.out.println("NullPointerException wurde geworfen bei getEMail(): " + e.getMessage());
+            System.out.println("NullPointerException wurde geworfen in IMailSteuerung, getEMail(): " + e.getMessage());
         }
 
         return eMail;
@@ -1178,10 +1189,10 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
             eMailList = icrudMail.getAlleEMails();
         }
         catch (IOException e){
-            System.out.println("IOException wurde geworfen: " + e.getMessage());
+            System.out.println("IOException wurde geworfen in IMailSteuerung, holeAlleEMails(): " + e.getMessage());
         }
         catch (SQLException e){
-            System.out.println("SQLException wurde geworfen: " + e.getMessage());
+            System.out.println("SQLException wurde geworfen in IMailSteuerung, holeAlleEMails(): " + e.getMessage());
         }
         return eMailList;
     }
@@ -1195,9 +1206,9 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
         try{
             eMailArrayList = icrudMail.searchEMail(suchwort);
         } catch (SQLException e) {
-            System.out.println("SQLException wurde geworfen: " + e.getMessage());
+            System.out.println("SQLException wurde geworfen in IMailSteuerung, sucheEMail(): " + e.getMessage());
         } catch (IOException e) {
-            System.out.println("IOException wurde geworfen: " + e.getMessage());
+            System.out.println("IOException wurde geworfen in IMailSteuerung, sucheEMail(): " + e.getMessage());
         }
         return eMailArrayList;
     }
