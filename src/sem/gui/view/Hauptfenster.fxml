@@ -18,6 +18,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="900.0" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.controller.HauptfensterController">
@@ -87,12 +88,15 @@
                                  </opaqueInsets>
                                  <padding>
                                     <Insets right="20.0" />
-                                 </padding></Label>
+                                 </padding>
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font></Label>
                               <Label text="An:" GridPane.rowIndex="1">
                                  <padding>
                                     <Insets right="20.0" />
                                  </padding></Label>
-                              <Label fx:id="labelVon" GridPane.columnIndex="1" />
+                              <Label fx:id="labelVon" prefHeight="17.0" prefWidth="251.0" GridPane.columnIndex="1" />
                               <Label fx:id="labelAn" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <HBox alignment="CENTER_RIGHT" prefHeight="53.0" prefWidth="71.0" spacing="70.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                                  <children>
