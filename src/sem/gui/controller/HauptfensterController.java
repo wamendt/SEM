@@ -198,6 +198,7 @@ public class HauptfensterController implements Initializable{
         ArrayList<String> ordner = null;
         try {
             ordner = mailSteuerung.zeigeAlleOrdner(kontoSteuerung.getKonto(1));
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -208,30 +209,38 @@ public class HauptfensterController implements Initializable{
         try {
             treeItemroot = new TreeItem<>(new OrdnerTreeViewRootElementController(kontoSteuerung.getKonto(1),
                     listViewEmails,mailSteuerung,webViewEmail,labelVon,labelAn,labelDatum, labelBetreff));
+            treeviewOrdner.setRoot(treeItemroot);
+            treeItemroot.setExpanded(true);
+            int i = 0;
+            for(String o: ordner) {
+                TreeItem<Label> newItem = new TreeItem<>(new OrdnerTreeViewElementController(kontoSteuerung.getKonto(1),
+                        o, listViewEmails, mailSteuerung, webViewEmail, labelVon, labelAn, labelDatum, labelBetreff));
+                treeItemroot.getChildren().add(newItem);
+                if(o.equals("INBOX")) {
+                    TreeItem<Label> tempItem = treeItemroot.getChildren().get(0);
+                    treeItemroot.getChildren().set(0,newItem);
+                    treeItemroot.getChildren().set(i,tempItem);
+                    newItem.setExpanded(true);
+                }
+                i++;
+            }
+
+            MultipleSelectionModel msm = treeviewOrdner.getSelectionModel();
+            msm.select(1);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        for(String o: ordner){
-            try {
-                treeItemroot.getChildren().add(new TreeItem<>(new OrdnerTreeViewElementController(kontoSteuerung.getKonto(1),
-                        o,listViewEmails,mailSteuerung, webViewEmail, labelVon, labelAn, labelDatum, labelBetreff)));
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            treeviewOrdner.setRoot(treeItemroot);
 
-            }
-        }
-
-
-
-
-
-
+    }
 }
+
+
+
+
+
+
+
 

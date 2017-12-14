@@ -13,11 +13,12 @@ import java.util.List;
 import java.util.Map;
 
 public class Assistent2 {
-    private static final String MODEL_PATH = "resources/ptm.model";
-    private static final String PIPE_PATH = "resources/ptm.pipe";
-    private static final String STOPLIST_EN = "resources/stoplist_en.txt";
-    private static final String STOPLIST_DE = "resources/stoplist_de.txt";
-    private static final String STOPLIST_SONST = "resources/stoplist_sonstige.txt";
+
+    private static final String MODEL_PATH = "src/resources/ptm.model";
+    private static final String PIPE_PATH = "src/resources/ptm.pipe";
+    private static final String STOPLIST_EN = "src/resources/stoplist_en.txt";
+    private static final String STOPLIST_DE = "src/resources/stoplist_de.txt";
+    private static final String STOPLIST_SONST = "src/resources/stoplist_sonstige.txt";
     private static Assistent2 instance;
 
     private ParallelTopicModel model;
