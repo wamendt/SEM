@@ -56,7 +56,12 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
     }
 
     public EMail getEMailByMessageIDUndOrdner(int id, String ordner) throws IOException, SQLException {
-        ArrayList<EMail> eMails = query("SELECT * FROM email WHERE messageID = ?", id);
+        ArrayList<EMail> eMails = query("SELECT * FROM email WHERE messageID = ? AND betreff = ? AND absender = ? AND ordner = ?", id);
+        return eMails.size() > 0 ? eMails.get(0) : null;
+    }
+
+    public EMail checkMessageInDB(int id, String betreff, String absender, String ordner) throws IOException, SQLException {
+        ArrayList<EMail> eMails = query("SELECT * FROM email WHERE messageID = ? AND betreff = ? AND absender = ? AND ordner = ?", id, betreff, absender, ordner);
         return eMails.size() > 0 ? eMails.get(0) : null;
     }
 
@@ -101,8 +106,8 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
     @Override
     public boolean createEMailTable() throws IOException, SQLException {
         return create("CREATE TABLE IF NOT EXISTS email (mid INTEGER NOT NULL, betreff VARCHAR, inhalt TEXT, tid INTEGER, " +
-                        "absender VARCHAR, cc TEXT, bcc TEXT, empfaenger TEXT, contentOriginal TEXT, " +
-                        "zustand VARCHAR(50), ordner TEXT, messageID INTEGER);");
+                "absender VARCHAR, cc TEXT, bcc TEXT, empfaenger TEXT, contentOriginal TEXT, " +
+                "zustand VARCHAR(50), ordner TEXT, messageID INTEGER);");
     }
 
     @Override

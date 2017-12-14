@@ -18,7 +18,7 @@ import sem.fachlogik.assistentsteuerung.services.IAssistentSteuerung;
 import sem.fachlogik.grenzklassen.EMailGrenz;
 import sem.fachlogik.grenzklassen.KontoGrenz;
 import sem.fachlogik.grenzklassen.TagGrenz;
-import sem.fachlogik.kontosteuerung.impl.IKonstoSteuerungImpl;
+import sem.fachlogik.kontosteuerung.impl.IKontoSteuerungImpl;
 import sem.fachlogik.kontosteuerung.services.IKontoSteuerung;
 import sem.fachlogik.mailsteuerung.impl.IMailSteuerungImpl;
 import sem.fachlogik.mailsteuerung.services.IMailSteuerung;
@@ -58,7 +58,7 @@ public class HauptfensterController implements Initializable{
     private Label labelBetreff;
 
     private IMailSteuerung mailSteuerung = new IMailSteuerungImpl();
-    private IKontoSteuerung kontoSteuerung = new IKonstoSteuerungImpl();
+    private IKontoSteuerung kontoSteuerung = new IKontoSteuerungImpl();
     private IAssistentSteuerung assistentSteuerung = new IAssistentSteuerungImpl();
 
     @FXML
@@ -145,7 +145,11 @@ public class HauptfensterController implements Initializable{
 
     @FXML
     public void clickOnOrdner(javafx.event.ActionEvent event) throws IOException {
-        KontoGrenz kontoGrenz = kontoSteuerung.getKonto(1);
+        try {
+            KontoGrenz kontoGrenz = kontoSteuerung.getKonto(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         ICRUDMail crudMail = ICRUDManagerSingleton.getIcrudMailInstance();
        listViewEmails.getItems().clear();
         try {
@@ -192,15 +196,35 @@ public class HauptfensterController implements Initializable{
             e.printStackTrace();
         }
         //Ordnerstruktur
-        ArrayList<String> ordner = mailSteuerung.zeigeAlleOrdner(kontoSteuerung.getKonto(1));
+        ArrayList<String> ordner = null;
+        try {
+            ordner = mailSteuerung.zeigeAlleOrdner(kontoSteuerung.getKonto(1));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-        TreeItem <Label> treeItemroot = new TreeItem<>(new OrdnerTreeViewRootElementController(kontoSteuerung.getKonto(1),
-                listViewEmails,mailSteuerung,webViewEmail,labelVon,labelAn,labelDatum, labelBetreff));
+        TreeItem <Label> treeItemroot = null;
+        try {
+            treeItemroot = new TreeItem<>(new OrdnerTreeViewRootElementController(kontoSteuerung.getKonto(1),
+                    listViewEmails,mailSteuerung,webViewEmail,labelVon,labelAn,labelDatum, labelBetreff));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         for(String o: ordner){
+            try {
                 treeItemroot.getChildren().add(new TreeItem<>(new OrdnerTreeViewElementController(kontoSteuerung.getKonto(1),
                         o,listViewEmails,mailSteuerung, webViewEmail, labelVon, labelAn, labelDatum, labelBetreff)));
-                treeviewOrdner.setRoot(treeItemroot);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            treeviewOrdner.setRoot(treeItemroot);
 
             }
         }

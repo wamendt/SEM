@@ -1,6 +1,7 @@
 package sem.fachlogik.grenzklassen;
 
 public class KontoGrenz {
+    private int kid;
     private String userName;
     private String passWort;
     private String accountAt;
@@ -16,6 +17,10 @@ public class KontoGrenz {
     //Hier evtl weitere Kontruktoren, wenn nötig
 
     //Getter
+    public int getKid() {
+        return kid;
+    }
+
     public String getUserName() {
         return userName;
     }
@@ -46,6 +51,10 @@ public class KontoGrenz {
 
 
     //Setter
+    public void setKid(int kid) {
+        this.kid = kid;
+    }
+
     public void setUserName(String userName) {
         this.userName = userName;
     }

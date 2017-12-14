@@ -1,6 +1,8 @@
 package sem.datenhaltung.semmodel.entities;
 
 public class Konto {
+
+    private int kid;
     private String userName;
     private String passWort;
     private String accountAt;
@@ -9,13 +11,16 @@ public class Konto {
     private String emailAddress;
     private int port;
 
-
     //Konstruktor
     public Konto(){}
 
     //Hier evtl weitere Kontruktoren, wenn nötig
 
     //Getter
+    public int getKid() {
+        return kid;
+    }
+
     public String getUserName() {
         return userName;
     }
@@ -44,8 +49,11 @@ public class Konto {
         return port;
     }
 
-
     //Setter
+    public void setKid(int kid) {
+        this.kid = kid;
+    }
+
     public void setUserName(String userName) {
         this.userName = userName;
     }
