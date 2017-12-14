@@ -1,13 +1,13 @@
 
 .button_weiterleiten{
-    -fx-background-image: url("../../../../resources/bilder/weiterleiten.png");
+    -fx-background-image: url("../../../../resources/bilder/reply-email4.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 25;
     -fx-background-color: transparent;
     -fx-background-position: center;
 }
 .button_search{
-    -fx-background-image: url("../../../../resources/bilder/search.png");
+    -fx-background-image: url("../../../../resources/bilder/search1.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 25;
     -fx-background-color: transparent;
@@ -30,29 +30,32 @@
     -fx-background-position: center;
 
 }
+
 .button_neue{
-    -fx-background-image: url("../../../../resources/bilder/neue.png");
+    -fx-background-image: url("../../../../resources/bilder/envelope-with-pencil2.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 30;
     -fx-background-color: transparent;
     -fx-background-position: center;
 }
 .button_option {
-    -fx-background-image: url("../../../../resources/bilder/option.png");
+    -fx-background-image: url("../../../../resources/bilder/network.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 30;
     -fx-background-color: transparent;
     -fx-background-position: center;
 }
+
 .button_menu{
-    -fx-background-image: url("../../../../resources/bilder/menu.png");
+    -fx-background-image: url("../../../../resources/bilder/app.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 30;
     -fx-background-color: transparent;
     -fx-background-position: center;
 }
+
 .button_mailoption{
-    -fx-background-image: url("../../../../resources/bilder/success.png");
+    -fx-background-image: url("../../../../resources/bilder/app.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 30;
     -fx-background-color: transparent;

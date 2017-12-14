@@ -22,7 +22,6 @@ import sem.fachlogik.kontosteuerung.impl.IKontoSteuerungImpl;
 import sem.fachlogik.kontosteuerung.services.IKontoSteuerung;
 import sem.fachlogik.mailsteuerung.impl.IMailSteuerungImpl;
 import sem.fachlogik.mailsteuerung.services.IMailSteuerung;
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;

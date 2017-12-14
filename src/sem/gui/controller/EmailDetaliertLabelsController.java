@@ -13,9 +13,4 @@ public class EmailDetaliertLabelsController extends AnchorPane {
     @FXML
     private Label labelDatum;
     private EMail email;
-
-
-
-
-
 }
