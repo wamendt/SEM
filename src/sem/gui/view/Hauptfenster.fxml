@@ -46,7 +46,7 @@
                                  </contextMenu></Button>
                               <ScrollPane centerShape="false" layoutX="25.0" layoutY="50.0" prefHeight="202.0" prefWidth="230.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
                                  <content>
-                                    <FlowPane id="flowPaneTags" fx:id="flowPaneTags" alignment="TOP_CENTER" centerShape="false" columnHalignment="CENTER" hgap="20.0" maxWidth="237.0" prefHeight="200.0" prefWidth="237.0" vgap="20.0">
+                                    <FlowPane id="flowPaneTags" fx:id="flowPaneTags" alignment="TOP_CENTER" centerShape="false" columnHalignment="CENTER" hgap="20.0" maxWidth="237.0" prefHeight="223.0" prefWidth="237.0" vgap="20.0">
                                        <opaqueInsets>
                                           <Insets left="300.0" />
                                        </opaqueInsets>
