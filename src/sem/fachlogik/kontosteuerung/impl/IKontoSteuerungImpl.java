@@ -20,10 +20,10 @@ public class IKontoSteuerungImpl implements IKontoSteuerung{
         return konto;
     }
 
-    public boolean loggeKontoEin(KontoGrenz konto) throws IOException, SQLException{
+    public boolean loggeKontoEin(KontoGrenz konto) {
         return true;
     }
-    public boolean registriereKonto(KontoGrenz konto) throws IOException, SQLException{
+    public boolean registriereKonto(KontoGrenz konto) {
         return true;
     }
 
@@ -34,20 +34,20 @@ public class IKontoSteuerungImpl implements IKontoSteuerung{
     }
     */
 
-    public boolean leoscheKonto(KontoGrenz konto) throws IOException, SQLException{
+    public boolean leoscheKonto(KontoGrenz konto){
         return true;
     }
 
-    public boolean loggeAus(KontoGrenz konto) throws IOException, SQLException{
+    public boolean loggeAus(KontoGrenz konto) {
         return true;
     }
 
-    public ArrayList<KontoGrenz> getAlleKonten() throws IOException, SQLException{
+    public ArrayList<KontoGrenz> getAlleKonten() {
         ArrayList<KontoGrenz> alleKonten = new ArrayList<KontoGrenz>();
         return alleKonten;
     }
 
-    public boolean erstelleSignatur(KontoGrenz konto, String signatur) throws IOException, SQLException{
+    public boolean erstelleSignatur(KontoGrenz konto, String signatur) {
         return true;
     }
 
