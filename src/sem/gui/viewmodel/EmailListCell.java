@@ -21,6 +21,8 @@ public class EmailListCell extends ListCell<EMailGrenz> {
             setGraphic(controller.getRoot());
             controller.setLabelBetreff(item.getBetreff());
             controller.setLabelAbsender(item.getAbsender());
+        }else{
+            setGraphic(null);
         }
     }
 }

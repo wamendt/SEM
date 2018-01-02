@@ -5,11 +5,11 @@
 <?import javafx.scene.control.*?>
 
 
-<fx:root alignment="CENTER" text="Label" type="javafx.scene.control.Label" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<Label fx:controller="sem.gui.viewmodel.TagsController" fx:id="root" alignment="CENTER" text="Label"  xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <opaqueInsets>
       <Insets />
    </opaqueInsets>
    <padding>
       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
    </padding>
-</fx:root>
+</Label>

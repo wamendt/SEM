@@ -28,6 +28,16 @@ public class ControllerFactory {
         return loader.getController();
     }
 
+    public static TagsController createTagsController(){
+        FXMLLoader loader = new FXMLLoader(EmailListElementController.class.getResource("../view/fxml/TagElement.fxml"));
+        try {
+            loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return loader.getController();
+    }
+
     public static AssistentMenuController createAssistentMenuController(){
       FXMLLoader loader = new FXMLLoader(AssistentMenuController.class.getResource("../view/fxml/AssistentMenuFenster.fxml"));
       try {
@@ -47,4 +57,5 @@ public class ControllerFactory {
         }
         return loader.getController();
     }
+
 }

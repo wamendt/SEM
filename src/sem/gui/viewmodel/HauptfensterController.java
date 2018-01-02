@@ -8,11 +8,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
@@ -22,6 +24,7 @@ import sem.fachlogik.assistentsteuerung.impl.IAssistentSteuerungImpl;
 import sem.fachlogik.assistentsteuerung.services.IAssistentSteuerung;
 import sem.fachlogik.grenzklassen.EMailGrenz;
 
+import sem.fachlogik.grenzklassen.TagGrenz;
 import sem.fachlogik.kontosteuerung.impl.IKontoSteuerungImpl;
 import sem.fachlogik.kontosteuerung.services.IKontoSteuerung;
 import sem.fachlogik.mailsteuerung.impl.IMailSteuerungImpl;
@@ -53,23 +56,40 @@ public class HauptfensterController implements Initializable{
     private FlowPane flowPaneTags;
 
     @FXML
-    private WebView webViewEmail;
+    private AnchorPane paneEmailAnzeige;
 
     @FXML
-    private TreeView <String> treeViewOrdner;
+    private WebView webViewEmail;
 
     @FXML
     private Label labelAn, labelVon, labelDatum;
 
     @FXML
-    private TextField searchField;
+    private Label labelBetreff;
 
     @FXML
-    private Label labelBetreff;
+    private TreeView <String> treeViewOrdner;
+
+
+    @FXML
+    private TextField searchField;
+
+
 
     private IMailSteuerung mailSteuerung = new IMailSteuerungImpl();
     private IKontoSteuerung kontoSteuerung = new IKontoSteuerungImpl();
     private IAssistentSteuerung assistentSteuerung = new IAssistentSteuerungImpl();
+
+    private void initFlowPaneTags(){
+        ArrayList <TagGrenz> tags = assistentSteuerung.zeigeAlleTagsAn();
+        for (TagGrenz tag: tags){
+            TagsController controller = ControllerFactory.createTagsController();
+            controller.setLabel(tag.getName());
+            flowPaneTags.getChildren().add(controller.getRoot());
+        }
+
+
+    }
 
 
 
@@ -81,24 +101,25 @@ public class HauptfensterController implements Initializable{
         for (String s: ordner){
             konto.getChildren().add(new TreeItem<>(s));
         }
+        for(int i = 0; i < 50; i++){
+            konto.getChildren().add(new TreeItem<>(String.valueOf(i)));
+        }
         root.getChildren().add(konto);
         treeViewOrdner.setRoot(root);
         treeViewOrdner.setShowRoot(false);
         konto.setExpanded(true);
 
+        treeViewOrdner.getSelectionModel().select(ordner.indexOf("INBOX") + 1);
 
         treeViewOrdner.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<String>>() {
             @Override
             public void changed(ObservableValue<? extends TreeItem<String>> observable, TreeItem<String> oldValue, TreeItem<String> newValue) {
                 listViewEmails.getItems().clear();
-                webViewEmail.getEngine().loadContent("");
-                labelAn.setText("");
-                labelVon.setText("");
-                labelBetreff.setText("");
+                paneEmailAnzeige.setVisible(false);
+
                 String ordner = newValue.getValue();
                 ArrayList <EMailGrenz> emails = mailSteuerung.zeigeAlleEMailsAusOrdner(kontoSteuerung.getKonto(1),ordner);
-                ObservableList<EMailGrenz> eMailGrenzs = FXCollections.observableArrayList(emails);
-                listViewEmails.setItems(eMailGrenzs);
+                listViewEmails.getItems().addAll(emails);
             }
         });
     }
@@ -107,7 +128,8 @@ public class HauptfensterController implements Initializable{
     private void initEmailListView(){
         /*Alle Emails sollen beim Start geladen werden, dafuer werden Alle emails von der Mailsteuerung zu erst in
          * ein ObservableList getan damit javaFX damit weiter arbeiten kann*/
-        ArrayList<EMailGrenz> emails = mailSteuerung.zeigeAlleEMails(kontoSteuerung.getKonto(1));
+        ArrayList<EMailGrenz> emails = mailSteuerung.zeigeAlleEMailsAusOrdner(kontoSteuerung.getKonto(1),"INBOX");
+
         ObservableList<EMailGrenz> observableEmails = FXCollections.observableArrayList(emails);
 
         /*Anschliessend werden diese Emails zur listViewEmails hinzugefuegt*/
@@ -130,10 +152,13 @@ public class HauptfensterController implements Initializable{
             @Override
             public void changed(ObservableValue<? extends EMailGrenz> observable, EMailGrenz oldValue, EMailGrenz newValue) {
                 if(newValue != null) {
-                    webViewEmail.getEngine().loadContent(newValue.getContentOriginal());
-                    labelAn.setText(newValue.getEmpfaenger().get(0));
+                    paneEmailAnzeige.setVisible(true);
                     labelVon.setText(newValue.getAbsender());
                     labelBetreff.setText(newValue.getBetreff());
+                    labelAn.setText(newValue.getEmpfaenger().get(0));
+
+                    webViewEmail.getEngine().loadContent(newValue.getContentOriginal());
+
                 }
             }
         });
@@ -143,6 +168,9 @@ public class HauptfensterController implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initEmailListView();
+        initTreeViewOrdner();
+        initFlowPaneTags();
+        paneEmailAnzeige.setVisible(false);
     }
 
     @FXML
