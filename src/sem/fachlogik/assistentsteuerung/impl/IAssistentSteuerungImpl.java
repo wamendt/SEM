@@ -9,6 +9,7 @@ import sem.datenhaltung.semmodel.services.ICRUDTag;
 import sem.datenhaltung.semmodel.services.ICRUDWort;
 import sem.fachlogik.assistentsteuerung.core.Assistent2;
 import sem.fachlogik.assistentsteuerung.services.IAssistentSteuerung;
+import sem.fachlogik.grenzklassen.GrenzklassenKonvertierer;
 import sem.fachlogik.grenzklassen.TagGrenz;
 
 import java.io.*;
@@ -19,6 +20,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class IAssistentSteuerungImpl implements IAssistentSteuerung{
+
+
 
     @Override
     public void trainiereSEM(int numTopics, double alphasum, double beta) throws IOException, SQLException {
@@ -60,6 +63,7 @@ public class IAssistentSteuerungImpl implements IAssistentSteuerung{
                 icrudWort.createWort(w);
             }
         }
+
         for(int i = 0; i < emails.size(); i++){
             double[] topicverteilung = assistent.getTopicDistribution(i);
             double max = 0;
@@ -106,22 +110,11 @@ public class IAssistentSteuerungImpl implements IAssistentSteuerung{
     @Override
     public ArrayList<TagGrenz> zeigeAlleTagsAn() throws IOException, SQLException {
         ICRUDTag crudtag = ICRUDManagerSingleton.getIcrudTagInstance();
-        ICRUDWort crudwort = ICRUDManagerSingleton.getIcrudWordInstance();
         ArrayList<Tag> tags = crudtag.getAlleTags();
         ArrayList<TagGrenz> tagGrenzs = new ArrayList<>();
 
         for(Tag t : tags){
-            TagGrenz tagGrenz = new TagGrenz();
-            ArrayList<Wort> woerter = crudwort.getAlleWoerterMitTagId(t.getTid());
-
-            ArrayList<String> stringwoerter = new ArrayList<>();
-            for(Wort w : woerter){
-                stringwoerter.add(w.getWort());
-            }
-            tagGrenz.setWoerter(stringwoerter);
-            tagGrenz.setTid(t.getTid());
-            tagGrenz.setName(t.getName());
-            tagGrenzs.add(tagGrenz);
+           tagGrenzs.add(GrenzklassenKonvertierer.tagZuTagGrenz(t));
         }
         return tagGrenzs;
     }
