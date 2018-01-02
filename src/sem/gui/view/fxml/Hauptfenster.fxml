@@ -2,10 +2,8 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
@@ -21,7 +19,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="900.0" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.controller.HauptfensterController">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="900.0" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.viewmodel.HauptfensterController">
    <children>
       <SplitPane dividerPositions="0.23041894353369763, 0.4663023679417122" layoutX="55.0" layoutY="200.0" prefHeight="160.0" prefWidth="1100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
         <items>
@@ -31,19 +29,12 @@
                     <items>
                       <AnchorPane maxHeight="600.0" minHeight="300.0" minWidth="160.0" prefHeight="357.0" prefWidth="248.0">
                            <children>
-                              <TreeView fx:id="treeviewOrdner" layoutX="2.0" layoutY="13.0" prefHeight="237.0" prefWidth="222.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <TreeView fx:id="treeViewOrdner" layoutX="2.0" layoutY="13.0" prefHeight="237.0" prefWidth="222.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                            </children>
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                            <children>
-                              <Button id="button_option" fx:id="button_option" layoutX="202.0" layoutY="8.0" mnemonicParsing="false" onMouseEntered="#button_optionOnMouseEntered" onMouseExited="#button_optionOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_option" stylesheets="@buttonstylesheet.css">
-                                 <contextMenu>
-                                    <ContextMenu>
-                                      <items>
-                                        <MenuItem fx:id="assistentTrainierenMenu" mnemonicParsing="false" onAction="#assistentTrainierenMenuOnAction" text="Assistent Trainieren" />
-                                      </items>
-                                    </ContextMenu>
-                                 </contextMenu></Button>
+                              <Button id="buttonOption" fx:id="btnAssistent" layoutX="202.0" layoutY="8.0" mnemonicParsing="false" onAction="#btnAssistentOnAction" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_option" stylesheets="@../css/buttonstylesheet.css" />
                               <ScrollPane centerShape="false" layoutX="25.0" layoutY="50.0" prefHeight="202.0" prefWidth="230.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
                                  <content>
                                     <FlowPane id="flowPaneTags" fx:id="flowPaneTags" alignment="TOP_CENTER" centerShape="false" columnHalignment="CENTER" hgap="20.0" maxWidth="237.0" prefHeight="223.0" prefWidth="237.0" vgap="20.0">
@@ -103,7 +94,7 @@
                               <Label fx:id="labelAn" textFill="#b9b2b2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <HBox alignment="CENTER_RIGHT" prefHeight="37.0" prefWidth="144.0" spacing="70.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                                  <children>
-                                    <Button id="button_mailoption" fx:id="button_mailoption" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="button_mailoption" stylesheets="@buttonstylesheet.css" />
+                                    <Button id="buttonMailoption" fx:id="buttonMailoption" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="button_mailoption" stylesheets="@../css/buttonstylesheet.css" />
                                  </children>
                                  <GridPane.margin>
                                     <Insets right="10.0" />
@@ -125,19 +116,19 @@
       <ToolBar cache="true" layoutX="263.0" prefHeight="40.0" prefWidth="837.0" snapToPixel="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
             <Pane maxWidth="230.0" minWidth="5.0" prefHeight="20.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-            <Button id="button_search" fx:id="button_search" mnemonicParsing="false" onMouseEntered="#button_searchOnMouseEntered" onMouseExited="#button_searchOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_search" stylesheets="@buttonstylesheet.css" />
-            <TextField id="search_field" fx:id="search_field" onKeyPressed="#searchOnKeyPressed" prefHeight="30.0" prefWidth="200.0" style="-fx-border-radius: 10;" styleClass="search_field" stylesheets="@searchstylesheet.css">
+            <Button id="button_search" fx:id="buttonSearch" mnemonicParsing="false" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_search" stylesheets="@../css/buttonstylesheet.css" />
+            <TextField id="search_field" fx:id="searchField" prefHeight="30.0" prefWidth="200.0" style="-fx-border-radius: 10;" styleClass="search_field" stylesheets="@../css/searchstylesheet.css">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
             </TextField>
             <Pane prefHeight="20.0" prefWidth="30.0" />
-            <Button id="button_neue" fx:id="button_neue" mnemonicParsing="false" onMouseEntered="#button_neueOnMouseEntered" onMouseExited="#button_neueOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_neue" stylesheets="@buttonstylesheet.css" />
-            <Button id="button_weiterleiten" fx:id="button_weiterleiten" alignment="CENTER" mnemonicParsing="false" onMouseEntered="#button_weiterleitenOnMauseEntered" onMouseExited="#button_weiterleitenOnMouseEntered" prefHeight="30.0" prefWidth="30.0" styleClass="button_weiterleiten" stylesheets="@buttonstylesheet.css" />
-            <Button id="button_mailantworten" fx:id="button_mailantworten" mnemonicParsing="false" onMouseEntered="#button_mailantwortenOnMouseEntered" onMouseExited="#button_mailantwortenOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_mailantworten" stylesheets="@buttonstylesheet.css" />
-            <Button id="button_loeschen" fx:id="button_loeschen" mnemonicParsing="false" onMouseEntered="#button_loeschenOnMouseEntered" onMouseExited="#button_loeschenOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_loeschen" stylesheets="@buttonstylesheet.css" />
+            <Button id="button_neue" fx:id="buttonNeue" mnemonicParsing="false" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_neue" stylesheets="@../css/buttonstylesheet.css" />
+            <Button id="button_weiterleiten" fx:id="buttonWeiterleiten" alignment="CENTER" mnemonicParsing="false" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_weiterleiten" stylesheets="@../css/buttonstylesheet.css" />
+            <Button id="button_mailantworten" fx:id="buttonMailantworten" mnemonicParsing="false" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_mailantworten" stylesheets="@../css/buttonstylesheet.css" />
+            <Button id="button_loeschen" fx:id="buttonLoeschen" mnemonicParsing="false" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_loeschen" stylesheets="@../css/buttonstylesheet.css" />
             <Pane prefHeight="25.0" prefWidth="127.0" HBox.hgrow="ALWAYS" />
-            <Button id="button_menu" fx:id="button_menu" mnemonicParsing="false" onMouseEntered="#button_menuOnMouseEntered" onMouseExited="#button_menuOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_menu" stylesheets="@buttonstylesheet.css" />
+            <Button id="button_menu" fx:id="buttonMenu" mnemonicParsing="false" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_menu" stylesheets="@../css/buttonstylesheet.css" />
         </items>
       </ToolBar>
    </children>

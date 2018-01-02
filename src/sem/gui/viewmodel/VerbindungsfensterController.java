@@ -1,4 +1,4 @@
-package sem.gui.controller;
+package sem.gui.viewmodel;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,7 +25,7 @@ public class VerbindungsfensterController implements Initializable{
 
     @FXML
     public void btnConnectAction(ActionEvent event){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/Hauptfenster.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/fxml/Hauptfenster.fxml"));
         try {
             Parent root = (Parent) loader.load();
             Stage stage = new Stage();
