@@ -127,7 +127,7 @@
                </opaqueInsets>
             </TextField>
             <Pane prefHeight="20.0" prefWidth="30.0" />
-            <Button id="button_neue" fx:id="buttonNeue" mnemonicParsing="false" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_neue" stylesheets="@../css/buttonstylesheet.css">
+            <Button id="button_neue" fx:id="buttonNeue" mnemonicParsing="false" onAction="#btnNeueEmailOnAction" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_neue" stylesheets="@../css/buttonstylesheet.css">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor></Button>
