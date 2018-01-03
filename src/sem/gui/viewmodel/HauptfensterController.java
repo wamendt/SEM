@@ -41,13 +41,14 @@ public class HauptfensterController implements Initializable{
     private Parent root;
 
     @FXML
-    private Button buttonWeiterleiten, buttonSearch, buttonLoeschen, buttonMailantworten, buttonNeue;
+    private Button buttonWeiterleiten, buttonSearch, buttonLoeschen, buttonMailantworten;
 
     @FXML
-    private Button buttonMenu, buttonMailoption;
+    private Button buttonNeue;
 
     @FXML
-    private Button btnAssistent;
+    private Button buttonMenu;
+    
 
     @FXML
     private ListView<EMailGrenz> listViewEmails;
@@ -191,6 +192,15 @@ public class HauptfensterController implements Initializable{
         stage.setScene(scene);
         stage.show();
 
+    }
+
+    @FXML
+    private void btnNeueEmailOnAction (ActionEvent event){
+        VerfassungsfensterController controller = ControllerFactory.createVerfassungsfensterController();
+        Scene scene = new Scene(controller.getRoot());
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.show();
     }
 
     public Parent getRoot(){
