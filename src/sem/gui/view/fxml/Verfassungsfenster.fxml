@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.HTMLEditor?>
 
-<AnchorPane fx:id="root" maxHeight="607.0" maxWidth="685.0" prefHeight="607.0" prefWidth="685.0" style="-fx-background-color: lightgray;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.view.fxml.Verfassungsfenster">
+<AnchorPane fx:id="root" maxHeight="607.0" maxWidth="685.0" prefHeight="607.0" prefWidth="685.0" style="-fx-background-color: lightgray;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.viewmodel.VerfassungsfensterController">
    <children>
       <GridPane layoutX="104.0" layoutY="38.0" prefHeight="132.0" prefWidth="590.0" AnchorPane.bottomAnchor="330.0" AnchorPane.leftAnchor="55.0" AnchorPane.rightAnchor="55.0" AnchorPane.topAnchor="30.0">
         <columnConstraints>
