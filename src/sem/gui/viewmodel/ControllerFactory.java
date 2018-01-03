@@ -58,4 +58,13 @@ public class ControllerFactory {
         return loader.getController();
     }
 
+    public static VerfassungsfensterController createVerfassungsfensterController(){
+        FXMLLoader loader = new FXMLLoader(VerfassungsfensterController.class.getResource("../view/fxml/Verfassungsfenster.fxml"));
+        try{
+            loader.load();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return loader.getController();
+    }
 }
