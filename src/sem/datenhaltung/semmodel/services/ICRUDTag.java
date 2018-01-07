@@ -7,10 +7,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public interface ICRUDTag {
-    int createTag(Tag tag) throws IOException, SQLException;
-    Tag getTagById(int tid) throws IOException, SQLException ;
-    ArrayList<Tag> getAlleTags() throws IOException, SQLException ;
-    boolean deleteTag(int tid) throws IOException, SQLException ;
-    int deleteAlleTags() throws IOException, SQLException;
-    boolean updateTag(Tag tag) throws IOException, SQLException ;
+    int createTag(Tag tag);
+    Tag getTagById(int tid);
+    ArrayList<Tag> getAlleTags();
+    boolean deleteTag(int tid);
+    int deleteAlleTags();
+    boolean updateTag(Tag tag);
 }

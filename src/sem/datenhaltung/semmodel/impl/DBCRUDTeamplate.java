@@ -83,7 +83,7 @@ public abstract class DBCRUDTeamplate<T> {
      * @param sql ein SQL INSERT INTO Befehl.
      * @param objects die Objects die eingefuegt werden sollen, diese muessen in genau der selben Reihenfolge in der
      *                 Liste enthaten sein, wie die Fragezeichen im SQL String.
-     * @return den erzeugten Schluessel.
+     * @return den erzeugten Schluessel bei Erfolg, sonst -1.
      * @throws IOException
      * @throws SQLException
      */

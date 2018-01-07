@@ -7,10 +7,10 @@ import java.util.ArrayList;
 
 public interface ICRUDKonto{
 
-    int createKonto(Konto konto)throws IOException, SQLException;
-    boolean deleteKonto(int kid) throws IOException, SQLException ;
-    boolean updateKonto(Konto konto) throws IOException, SQLException ;
-    Konto getKontoById(int kid) throws IOException, SQLException;
-    ArrayList<Konto> getAlleKonto() throws IOException, SQLException ;
+    int createKonto(Konto konto);
+    boolean deleteKonto(int kid);
+    boolean updateKonto(Konto konto);
+    Konto getKontoById(int kid) ;
+    ArrayList<Konto> getAlleKonto() ;
 
 }

@@ -7,15 +7,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public interface ICRUDFile {
-    int createFile(File file) throws IOException, SQLException;
+    int createFile(File file);
 
-    File getFileById(int fid) throws IOException, SQLException;
+    File getFileById(int fid);
 
-    ArrayList<File> getAlleWoerter() throws IOException, SQLException ;
+    ArrayList<File> getAlleWoerter();
 
-    ArrayList<File> getAlleFilesMitEMailId(int mid) throws IOException, SQLException;
+    ArrayList<File> getAlleFilesMitEMailId(int mid);
 
-    boolean deleteFile(int fid) throws IOException, SQLException ;
+    boolean deleteFile(int fid);
 
-    boolean updateFile(File file) throws IOException, SQLException ;
+    boolean updateFile(File file);
 }

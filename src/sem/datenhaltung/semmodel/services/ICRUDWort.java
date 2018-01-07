@@ -7,11 +7,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public interface ICRUDWort {
-    int createWort(Wort wort) throws IOException, SQLException;
-    Wort getWortById(int wid) throws IOException, SQLException;
-    ArrayList<Wort> getAlleWoerter() throws IOException, SQLException;
-    ArrayList<Wort> getAlleWoerterMitTagId(int tid) throws IOException, SQLException;
-    boolean deleteWort(int wid) throws IOException, SQLException;
-    boolean deleteAlleWoerterMitTagId(int tid) throws IOException, SQLException;
-    boolean updateWort(Wort wort) throws IOException, SQLException;
+    int createWort(Wort wort);
+    Wort getWortById(int wid);
+    ArrayList<Wort> getAlleWoerter();
+    ArrayList<Wort> getAlleWoerterMitTagId(int tid);
+    boolean deleteWort(int wid) ;
+    boolean deleteAlleWoerterMitTagId(int tid);
+    boolean updateWort(Wort wort);
 }

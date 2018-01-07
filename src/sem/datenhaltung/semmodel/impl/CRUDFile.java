@@ -12,7 +12,7 @@ public class CRUDFile extends DBCRUDTeamplate<File> implements ICRUDFile{
 
 
     @Override
-    protected File makeObject(ResultSet rs) throws SQLException, IOException {
+    protected File makeObject(ResultSet rs) throws SQLException{
         File file = new File();
 
         file.setFid(rs.getInt(1));
@@ -23,39 +23,70 @@ public class CRUDFile extends DBCRUDTeamplate<File> implements ICRUDFile{
     }
 
     @Override
-    public int createFile(File file) throws IOException, SQLException {
+    public int createFile(File file){
         String sql = "INSERT INTO file (pfad, mid)" +
                 "VALUES (?, ?)";
-        return insertAndReturnKey(sql, file.getPfad(), file.getMid());
+        try {
+            return insertAndReturnKey(sql, file.getPfad(), file.getMid());
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
     @Override
-    public File getFileById(int fid) throws IOException, SQLException {
-        ArrayList<File> files = query("SELECT * FROM file WHERE fid=?", fid);
-        return files.size() > 0 ? files.get(0) : null;
+    public File getFileById(int fid){
+        ArrayList<File> files;
+        try {
+            files = query("SELECT * FROM file WHERE fid=?", fid);
+            return files.size() > 0 ? files.get(0) : null;
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
-    public ArrayList<File> getAlleWoerter() throws IOException, SQLException {
-        return query("SELECT * FROM file");
+    public ArrayList<File> getAlleWoerter() {
+        try {
+            return query("SELECT * FROM file");
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 
     @Override
-    public ArrayList<File> getAlleFilesMitEMailId(int mid) throws IOException, SQLException {
-        return query("SELECT * FROM file WHERE mid = ?", mid);
+    public ArrayList<File> getAlleFilesMitEMailId(int mid) {
+        try {
+            return query("SELECT * FROM file WHERE mid = ?", mid);
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
     }
 
     @Override
-    public boolean deleteFile(int fid) throws IOException, SQLException {
-        int ret = updateOrDelete("DELETE FROM file WHERE fid = ?", fid);
+    public boolean deleteFile(int fid) {
+        int ret = 0;
+        try {
+            ret = updateOrDelete("DELETE FROM file WHERE fid = ?", fid);
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
         return ret == 1;
     }
 
     @Override
-    public boolean updateFile(File file) throws IOException, SQLException {
-        int ret = updateOrDelete("UPDATE file" +
-                " pfad = ? , mid = ? WHERE fid = ?",
-                file.getPfad(), file.getMid(), file.getFid());
+    public boolean updateFile(File file)  {
+        int ret = 0;
+        try {
+            ret = updateOrDelete("UPDATE file" +
+                    " pfad = ? , mid = ? WHERE fid = ?",
+                    file.getPfad(), file.getMid(), file.getFid());
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
         return ret == 1;
     }
 
