@@ -58,6 +58,9 @@ public class AssistentController implements Initializable{
 
     private Thread assistentThread;
 
+    @FXML
+    private Label labelTagsWoerter;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Task assistentTask = new Task() {
@@ -90,7 +93,7 @@ public class AssistentController implements Initializable{
                     label.setContextMenu(new ContextMenu(item));
                     flowPaneWoerter.getChildren().add(label);
                 }
-
+                labelTagsWoerter.setVisible(true);
                 textFieldTagName.setText(newValue.getName());
             }
         });
@@ -103,6 +106,7 @@ public class AssistentController implements Initializable{
 
         root.prefWidthProperty().bind(((AnchorPane)parent).widthProperty());
         root.prefHeightProperty().bind(((AnchorPane)parent).heightProperty());
+        labelTagsWoerter.setVisible(false);
     }
 
     @FXML
