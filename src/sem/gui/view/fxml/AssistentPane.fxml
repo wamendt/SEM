@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -13,26 +15,64 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.viewmodel.menufenster.AssistentController">
+<AnchorPane fx:id="root" prefHeight="405.0" prefWidth="675.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.viewmodel.menufenster.AssistentController">
    <children>
-      <SplitPane dividerPositions="0.2140468227424749, 0.3862876254180602" layoutX="8.0" prefHeight="335.0" prefWidth="510.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <SplitPane dividerPositions="0.2139673105497771, 0.43684992570579495" layoutX="8.0" prefHeight="335.0" prefWidth="510.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
-            <AnchorPane prefHeight="398.0" prefWidth="127.0">
+            <AnchorPane maxWidth="200.0" prefHeight="398.0" prefWidth="150.0">
                <children>
-                  <ListView fx:id="listViewTags" layoutX="-53.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <ListView fx:id="listViewTags" layoutX="-53.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <styleClass>
+                        <String fx:value="mylistview" />
+                        <String fx:value="scroll-bar" />
+                        <String fx:value="rand" />
+                     </styleClass>
+                     <stylesheets>
+                        <URL value="@../css/scrollbarstylesheet.css" />
+                        <URL value="@../css/randstylesheet.css" />
+                     </stylesheets></ListView>
                </children></AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+          <AnchorPane maxWidth="220.0" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="180.0">
                <children>
-                  <ScrollPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <ScrollPane prefHeight="200.0" prefWidth="117.0" style="-fx-border-color: transparent; -fx-background-insets: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0">
                      <content>
-                        <FlowPane fx:id="flowPaneWoerter" prefHeight="395.0" prefWidth="93.0" />
+                        <FlowPane fx:id="flowPaneWoerter" prefHeight="395.0" prefWidth="139.0" style="-fx-border-color: transparent; -fx-background-insets: transparent;">
+                           <stylesheets>
+                              <URL value="@../css/scrollbarstylesheet.css" />
+                              <URL value="@../css/randstylesheet.css" />
+                           </stylesheets>
+                           <styleClass>
+                              <String fx:value="scroll-bar" />
+                              <String fx:value="rand" />
+                           </styleClass>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <padding>
+                              <Insets left="5.0" top="5.0" />
+                           </padding></FlowPane>
                      </content>
+                     <stylesheets>
+                        <URL value="@../css/randstylesheet.css" />
+                        <URL value="@../css/scrollbarstylesheet.css" />
+                     </stylesheets>
+                     <styleClass>
+                        <String fx:value="rand" />
+                        <String fx:value="scroll-bar" />
+                        <String fx:value="mylistview" />
+                     </styleClass>
                   </ScrollPane>
+                  <Label fx:id="labelTagsWoerter" alignment="TOP_LEFT" layoutY="5.0" text="Mit dem Tag verbundene Wörter" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
                </children></AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="398.0" prefWidth="253.0">
+          <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="398.0" prefWidth="403.0">
                <children>
-                  <GridPane layoutY="14.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="20.0">
+                  <GridPane layoutX="10.0" layoutY="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="155.00000762939453" minWidth="10.0" prefWidth="121.00002034505209" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="119.66664632161459" minWidth="10.0" prefWidth="119.66664632161459" />
@@ -54,6 +94,9 @@
                            <GridPane.margin>
                               <Insets right="10.0" />
                            </GridPane.margin>
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
                         </Label>
                         <Label text="Assistent Trainieren" GridPane.rowIndex="2">
                            <GridPane.margin>
@@ -62,6 +105,9 @@
                            <padding>
                               <Insets left="5.0" />
                            </padding>
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
                         </Label>
                         <Label text="Alpha-Summe:" GridPane.halignment="LEFT" GridPane.rowIndex="3">
                            <GridPane.margin>
@@ -95,13 +141,19 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
                         </Label>
-                        <TextField fx:id="textFieldTagName" GridPane.columnIndex="1" />
+                        <TextField fx:id="textFieldTagName" prefHeight="25.0" GridPane.columnIndex="1">
+                           <GridPane.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </GridPane.margin>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding></TextField>
                         <Button fx:id="btnTagNameAendern" mnemonicParsing="false" onAction="#btnTagNameAendernOnAction" text="Name ändern" GridPane.columnIndex="2" GridPane.halignment="LEFT">
                            <GridPane.margin>
                               <Insets left="10.0" />
                            </GridPane.margin>
                         </Button>
-                        <TextField fx:id="textFieldAlpha" alignment="CENTER_RIGHT" prefHeight="31.0" prefWidth="60.0" text="0.01" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <TextField fx:id="textFieldAlpha" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="60.0" text="0.01" GridPane.columnIndex="1" GridPane.rowIndex="3">
                            <GridPane.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </GridPane.margin>
@@ -109,7 +161,7 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
                         </TextField>
-                        <TextField fx:id="textFieldAnzahlTags" alignment="CENTER_RIGHT" prefHeight="31.0" prefWidth="60.0" text="20" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                        <TextField fx:id="textFieldAnzahlTags" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="60.0" text="20" GridPane.columnIndex="1" GridPane.rowIndex="5">
                            <GridPane.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </GridPane.margin>
@@ -117,7 +169,7 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
                         </TextField>
-                        <TextField fx:id="textFieldAnzahlIterationen" alignment="CENTER_RIGHT" prefHeight="31.0" prefWidth="60.0" text="1000" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                        <TextField fx:id="textFieldAnzahlIterationen" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="60.0" text="1000" GridPane.columnIndex="1" GridPane.rowIndex="6">
                            <GridPane.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </GridPane.margin>
@@ -125,7 +177,7 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
                         </TextField>
-                        <TextField fx:id="textFieldBeta" alignment="CENTER_RIGHT" prefHeight="31.0" prefWidth="60.0" text="0.01" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                        <TextField fx:id="textFieldBeta" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="60.0" text="0.01" GridPane.columnIndex="1" GridPane.rowIndex="4">
                            <GridPane.margin>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </GridPane.margin>
@@ -133,7 +185,7 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
                         </TextField>
-                        <Button fx:id="btnTrainieren" mnemonicParsing="false" onAction="#btnTrainierenOnAction" text="Trainieren" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                        <Button fx:id="btnTrainieren" mnemonicParsing="false" onAction="#btnTrainierenOnAction" text="Trainieren" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
                         <ProgressIndicator fx:id="progressIndicator" progress="0.0" GridPane.rowIndex="7" />
                      </children>
                   </GridPane>

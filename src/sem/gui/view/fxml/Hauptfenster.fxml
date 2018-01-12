@@ -124,16 +124,19 @@
                      </font>
                   </Label>
                   <Label fx:id="label2" alignment="CENTER" contentDisplay="CENTER" layoutY="51.0" text="Die Grafik zeigt die Zugehörigkeit zu einem bestimten Tag" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                  <VBox alignment="TOP_CENTER" layoutX="-0.3333333432674408" layoutY="336.0" prefHeight="237.0" prefWidth="379.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                  <VBox alignment="TOP_CENTER" layoutX="-0.3333333432674408" layoutY="336.0" prefHeight="254.0" prefWidth="379.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                      <children>
-                        <Label fx:id="labelTagWoerter" alignment="CENTER" contentDisplay="CENTER" text="Die zum Tag zugehörige Wörter:">
+                        <Label fx:id="labelTagWoerter" alignment="TOP_CENTER" contentDisplay="TOP" text="Die zum Tag zugehörige Wörter:" textAlignment="CENTER">
                            <padding>
                               <Insets bottom="10.0" top="10.0" />
                            </padding>
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
                         </Label>
-                        <ScrollPane prefHeight="228.0" prefWidth="379.0" style="-fx-border-color: transparent;">
+                        <ScrollPane prefHeight="201.0" prefWidth="379.0" style="-fx-background-insets: transparent;">
                           <content>
-                              <FlowPane fx:id="flowPaneWoerter" alignment="CENTER" hgap="20.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="191.0" prefWidth="373.0" vgap="20.0" />
+                              <FlowPane fx:id="flowPaneWoerter" alignment="CENTER" hgap="20.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="194.0" prefWidth="372.0" style="-fx-background-insets: transparent;" vgap="20.0" />
                           </content>
                            <stylesheets>
                               <URL value="@../css/scrollbarstylesheet.css" />
@@ -146,7 +149,7 @@
                         </ScrollPane>
                      </children>
                      <opaqueInsets>
-                        <Insets bottom="10.0" top="10.0" />
+                        <Insets bottom="10.0" />
                      </opaqueInsets>
                   </VBox>
                </children>

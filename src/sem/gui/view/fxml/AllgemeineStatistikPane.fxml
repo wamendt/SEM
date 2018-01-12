@@ -6,9 +6,9 @@
 <?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="root" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="617.0" prefWidth="345.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.viewmodel.menufenster.AllgemeineStatistikController">
+<AnchorPane fx:id="root" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="425.0" prefWidth="665.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.viewmodel.menufenster.AllgemeineStatistikController">
    <children>
-      <BarChart fx:id="grafAllgemeineStatistik" layoutX="-1.0" layoutY="-8.0" prefHeight="311.0" prefWidth="341.0">
+      <BarChart fx:id="grafAllgemeineStatistik" layoutX="-1.0" layoutY="-8.0" prefHeight="311.0" prefWidth="341.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>
@@ -16,6 +16,6 @@
           <NumberAxis side="LEFT" />
         </yAxis>
       </BarChart>
-      <PieChart fx:id="grafEmailStatistik" layoutX="46.0" layoutY="289.0" prefHeight="328.0" prefWidth="248.0" />
+      <PieChart fx:id="grafEmailStatistik" layoutX="390.0" layoutY="32.0" prefHeight="231.0" prefWidth="245.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
    </children>
 </AnchorPane>
