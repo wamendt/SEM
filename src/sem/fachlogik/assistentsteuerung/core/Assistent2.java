@@ -59,9 +59,7 @@ public class Assistent2 {
     public double[] getTopicDistribution(int instanceID){
         return model.getTopicProbabilities(instanceID);
     }
-    public void train(List<String> data){
 
-    }
 
     public void train(Map<String, List<String>> data){
         if (model == null){
@@ -79,7 +77,8 @@ public class Assistent2 {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        diagnostics = new TopicModelDiagnostics(model, 100);
+        diagnostics.toString();
     }
 
     public void evaluate(Map<String, List<String>> data){
