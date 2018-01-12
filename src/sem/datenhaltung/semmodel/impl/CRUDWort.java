@@ -79,7 +79,7 @@ public class CRUDWort extends DBCRUDTeamplate<Wort> implements ICRUDWort {
     public boolean deleteAlleWoerterMitTagId(int tid) {
         int ret = 0;
         try {
-            ret = updateOrDelete("DELETE FROME wort WHERE tid= ?", tid);
+            ret = updateOrDelete("DELETE FROM wort WHERE tid= ?", tid);
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }

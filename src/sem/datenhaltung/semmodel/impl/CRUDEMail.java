@@ -156,9 +156,9 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
         int ret = 0;
         try {
             ret = updateOrDelete("UPDATE email" +
-                            " SET betreff = ? , inhalt = ?, tid = ?, absender = ? " +
+                            " SET betreff = ? , inhalt = ?, tid = ?, absender = ? , instanceid = ?" +
                             "WHERE mid = ?", email.getBetreff(), email.getInhalt()
-                    ,email.getTid(), email.getAbsender(), email.getMid());
+                    ,email.getTid(), email.getAbsender(), email.getInstanceID(), email.getMid());
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }

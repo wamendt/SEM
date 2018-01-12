@@ -81,7 +81,7 @@ public class CRUDTag extends DBCRUDTeamplate<Tag> implements ICRUDTag{
         int ret;
         try {
             ret = updateOrDelete("UPDATE tag" +
-                            " name = ? WHERE tid = ?", tag.getName(), tag.getTid());
+                            " SET name = ? WHERE tid = ?", tag.getName(), tag.getTid());
             return 1 == ret;
         } catch (IOException | SQLException e) {
             e.printStackTrace();
