@@ -14,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.HTMLEditor?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="753.0" prefWidth="900.0" styleClass="rand" stylesheets="@../css/randstylesheet.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.viewmodel.verfassungsfenster.VerfassungsfensterController">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="647.0" prefWidth="824.0" styleClass="rand" stylesheets="@../css/randstylesheet.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.viewmodel.verfassungsfenster.VerfassungsfensterController">
    <children>
       <GridPane layoutX="66.0" layoutY="38.0" prefHeight="231.0" prefWidth="800.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="30.0">
         <columnConstraints>
@@ -57,11 +57,11 @@
             <TextField fx:id="txtEmpfaenger" prefHeight="25.0" prefWidth="423.0" styleClass="text-field" stylesheets="@../css/textfeldstylesheet.css" GridPane.columnIndex="1" />
             <TextField fx:id="txtBetreff" styleClass="text-field" stylesheets="@../css/textfeldstylesheet.css" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextField fx:id="txtCC" styleClass="text-field" stylesheets="@../css/textfeldstylesheet.css" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <TextField fx:id="txtBCC" styleClass="text-field" stylesheets="@../css/textfeldstylesheet.css" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <TextField fx:id="txtBCC" prefHeight="3.0" prefWidth="624.0" styleClass="text-field" stylesheets="@../css/textfeldstylesheet.css" GridPane.columnIndex="1" GridPane.rowIndex="6" />
          </children>
       </GridPane>
-      <HTMLEditor fx:id="emailInhalt" htmlText="&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body contenteditable=&quot;true&quot;&gt;&lt;/body&gt;&lt;/html&gt;" layoutX="50.0" layoutY="254.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="418.0" prefWidth="800.0" style="-fx-border-color: lightgrey;" styleClass="mylistview" stylesheets="@../css/scrollbarstylesheet.css" />
-      <HBox alignment="CENTER_LEFT" layoutX="56.0" layoutY="672.0" prefHeight="48.0" prefWidth="798.0">
+      <HTMLEditor fx:id="emailInhalt" htmlText="&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body contenteditable=&quot;true&quot;&gt;&lt;/body&gt;&lt;/html&gt;" layoutX="50.0" layoutY="254.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="309.0" prefWidth="702.0" style="-fx-border-color: lightgrey;" styleClass="mylistview" stylesheets="@../css/scrollbarstylesheet.css" />
+      <HBox alignment="CENTER_LEFT" layoutX="13.0" layoutY="570.0" prefHeight="48.0" prefWidth="798.0">
          <children>
             <Button id="button_attachment" fx:id="button_attachment" mnemonicParsing="false" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_attachment" stylesheets="@../css/buttonstylesheet.css" />
             <Button id="button_save" fx:id="button_save" mnemonicParsing="false" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="54.0" prefWidth="58.0" styleClass="button_save" stylesheets="@../css/buttonstylesheet.css">

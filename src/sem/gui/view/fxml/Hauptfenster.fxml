@@ -21,12 +21,13 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1700.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.viewmodel.hauptfenster.HauptfensterController">
+<AnchorPane fx:id="root" maxHeight="800.0" maxWidth="1500.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.viewmodel.hauptfenster.HauptfensterController">
    <children>
-      <SplitPane dividerPositions="0.23041894353369763, 0.4663023679417122, 0.5" layoutX="55.0" layoutY="200.0" prefHeight="160.0" prefWidth="1100.0" styleClass="split-pane-divider" stylesheets="@../css/deviderstylesheet.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
+      <SplitPane dividerPositions="0.23041894353369763, 0.4663023679417122, 0.5" layoutX="55.0" layoutY="200.0" styleClass="split-pane-divider" stylesheets="@../css/deviderstylesheet.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
         <items>
           <AnchorPane maxWidth="250.0" minHeight="560.0" minWidth="200.0" prefHeight="560.0" prefWidth="250.0">
                <children>
@@ -39,14 +40,14 @@
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="245.0" prefWidth="247.0">
                            <children>
-                              <ScrollPane centerShape="false" layoutX="25.0" prefHeight="250.0" prefWidth="247.0" styleClass="mylistview" stylesheets="@../css/scrollbarstylesheet.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <ScrollPane centerShape="false" styleClass="mylistview" stylesheets="@../css/scrollbarstylesheet.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <content>
-                                    <FlowPane id="flowPaneTags" fx:id="flowPaneTags" alignment="TOP_CENTER" centerShape="false" columnHalignment="CENTER" hgap="20.0" maxWidth="245.0" prefHeight="321.0" prefWidth="243.0" styleClass="mylistview" stylesheets="@../css/scrollbarstylesheet.css" vgap="20.0">
+                                    <FlowPane id="flowPaneTags" fx:id="flowPaneTags" alignment="CENTER" centerShape="false" columnHalignment="CENTER" hgap="15.0" prefHeight="241.0" prefWidth="213.0" prefWrapLength="0.0" styleClass="mylistview" stylesheets="@../css/scrollbarstylesheet.css" vgap="15.0">
                                        <opaqueInsets>
-                                          <Insets left="300.0" />
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </opaqueInsets>
                                        <padding>
-                                          <Insets left="10.0" right="10.0" />
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </padding>
                                     </FlowPane>
                                  </content>
@@ -57,9 +58,9 @@
                   </SplitPane>
                </children>
             </AnchorPane>
-            <AnchorPane maxWidth="400.0" minWidth="250.0" prefHeight="560.0" prefWidth="300.0">
+            <AnchorPane maxWidth="300.0" minWidth="150.0" prefWidth="160.0">
                <children>
-                  <ListView fx:id="listViewEmails" layoutX="14.0" layoutY="21.0" prefWidth="250.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <ListView fx:id="listViewEmails" prefHeight="558.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <stylesheets>
                         <URL value="@../css/scrollbarstylesheet.css" />
                         <URL value="@../css/randstylesheet.css" />
@@ -69,14 +70,14 @@
                         <String fx:value="rand" />
                      </styleClass></ListView>
                </children></AnchorPane>
-          <AnchorPane fx:id="paneEmailAnzeige" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="758.0" prefWidth="516.0" style="-fx-background-color: lightgray;">
+          <AnchorPane fx:id="paneEmailAnzeige" maxWidth="800.0" minWidth="300.0" prefHeight="558.0" prefWidth="355.0" style="-fx-background-color: lightgray;">
                <children>
                   <AnchorPane prefHeight="111.0" prefWidth="583.0" style="-fx-background-color: white;" styleClass="mylistview" stylesheets="@../css/scrollbarstylesheet.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <GridPane layoutX="8.0" layoutY="8.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <GridPane layoutX="8.0" layoutY="8.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <columnConstraints>
-                            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="181.33331298828125" minWidth="0.0" prefWidth="85.66664632161459" />
-                              <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" />
+                            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="62.666666666666664" minWidth="0.0" prefWidth="58.000040690104164" />
+                              <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="192.6666259765625" />
                           </columnConstraints>
                           <rowConstraints>
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -84,73 +85,71 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Label text="Von:">
+                              <Label prefHeight="20.0" prefWidth="33.0" text="Von:">
                                  <opaqueInsets>
                                     <Insets right="10.0" />
                                  </opaqueInsets>
-                                 <padding>
-                                    <Insets left="10.0" right="20.0" />
-                                 </padding>
                                  <font>
                                     <Font name="System Bold" size="14.0" />
-                                 </font></Label>
-                              <Label text="An:" textFill="#b9b2b2" GridPane.rowIndex="1">
-                                 <padding>
-                                    <Insets left="10.0" right="20.0" />
-                                 </padding></Label>
-                              <Label fx:id="labelVon" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="31.0" prefWidth="261.0" wrapText="true" GridPane.columnIndex="1">
+                                 </font>
+                                 <GridPane.margin>
+                                    <Insets left="10.0" right="5.0" />
+                                 </GridPane.margin></Label>
+                              <Label prefHeight="17.0" prefWidth="23.0" text="An:" textFill="#b9b2b2" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets left="10.0" right="5.0" />
+                                 </GridPane.margin></Label>
+                              <Label fx:id="labelVon" wrapText="true" GridPane.columnIndex="1">
                                  <font>
                                     <Font name="System Bold" size="14.0" />
                                  </font></Label>
                               <Label fx:id="labelAn" textFill="#b9b2b2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <Label text="Betreff:" GridPane.rowIndex="2">
-                                 <padding>
-                                    <Insets left="10.0" right="20.0" />
-                                 </padding></Label>
+                              <Label prefHeight="17.0" prefWidth="43.0" text="Betreff:" GridPane.rowIndex="2">
+                                 <GridPane.margin>
+                                    <Insets left="10.0" right="5.0" />
+                                 </GridPane.margin></Label>
                               <Label fx:id="labelBetreff" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                            </children>
                         </GridPane>
                      </children>
                   </AnchorPane>
-                  <Pane fx:id="paneOberschrift" layoutX="-7.0" layoutY="14.0" prefHeight="860.0" prefWidth="1050.0">
-                     <children>
-                        <Label layoutX="403.0" layoutY="348.0" text="Smart Email Manager" textFill="#616d7e">
-                           <font>
-                              <Font name="Forte" size="48.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </Pane>
-                  <WebView fx:id="webViewEmail" layoutX="69.0" layoutY="157.0" prefHeight="420.0" prefWidth="563.0" styleClass="mylistview" stylesheets="@../css/scrollbarstylesheet.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="115.0" />
+                  <WebView fx:id="webViewEmail" layoutY="111.0" prefHeight="-1.0" prefWidth="-1.0" styleClass="mylistview" stylesheets="@../css/scrollbarstylesheet.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="111.0" />
                </children></AnchorPane>
-            <AnchorPane fx:id="statistikPane" maxWidth="400.0">
+            <AnchorPane fx:id="statistikPane" maxWidth="400.0" SplitPane.resizableWithParent="false">
                <children>
-                  <PieChart fx:id="grafEmailStatistik" labelLineLength="15.0" layoutY="100.0" prefHeight="365.0" prefWidth="400.0" />
+                  <PieChart fx:id="grafEmailStatistik" labelLineLength="15.0" layoutY="78.0" prefHeight="237.0" prefWidth="300.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                   <Label alignment="CENTER" layoutX="40.0" layoutY="14.0" prefHeight="27.0" prefWidth="400.0" text="Email Statistik" textAlignment="CENTER" textFill="#616d7e" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="14.0">
                      <font>
                         <Font name="Forte" size="24.0" />
                      </font>
                   </Label>
-                  <Label fx:id="label2" alignment="CENTER" layoutY="40.0" prefHeight="75.0" prefWidth="360.0" text="Die Grafik zeigt die Zugehörigkeit zu einem bestimten Tag" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                  <ScrollPane layoutY="494.0" prefHeight="308.0" prefWidth="398.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0">
-                    <content>
-                      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0">
-                           <children>
-                              <FlowPane fx:id="flowPaneWoerter" hgap="20.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="20.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0" />
-                           </children>
-                        </AnchorPane>
-                    </content>
-                     <stylesheets>
-                        <URL value="@../css/scrollbarstylesheet.css" />
-                        <URL value="@../css/randstylesheet.css" />
-                     </stylesheets>
-                     <styleClass>
-                        <String fx:value="mylistview" />
-                        <String fx:value="rand" />
-                     </styleClass>
-                  </ScrollPane>
-                  <Label fx:id="labelTagWoerter" alignment="CENTER" layoutX="36.0" layoutY="498.0" text="Die zum Tag zugehörige Wörter:" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-               </children></AnchorPane>
+                  <Label fx:id="label2" alignment="CENTER" layoutY="51.0" text="Die Grafik zeigt die Zugehörigkeit zu einem bestimten Tag" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                  <VBox alignment="CENTER" layoutX="-0.3333333432674408" layoutY="336.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <children>
+                        <ScrollPane prefHeight="203.0" prefWidth="377.0">
+                          <content>
+                            <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0">
+                                 <children>
+                                    <FlowPane fx:id="flowPaneWoerter" hgap="20.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="20.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0" />
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                           <stylesheets>
+                              <URL value="@../css/scrollbarstylesheet.css" />
+                              <URL value="@../css/randstylesheet.css" />
+                           </stylesheets>
+                           <styleClass>
+                              <String fx:value="mylistview" />
+                              <String fx:value="rand" />
+                           </styleClass>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+                  <Label fx:id="labelTagWoerter" alignment="CENTER" contentDisplay="CENTER" layoutX="103.0" layoutY="326.0" text="Die zum Tag zugehörige Wörter:" />
+               </children>
+               <opaqueInsets>
+                  <Insets bottom="30.0" top="30.0" />
+               </opaqueInsets></AnchorPane>
         </items>
       </SplitPane>
       <ToolBar cache="true" layoutX="263.0" prefHeight="40.0" prefWidth="837.0" snapToPixel="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
