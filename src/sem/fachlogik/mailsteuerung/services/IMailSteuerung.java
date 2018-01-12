@@ -28,8 +28,8 @@ public interface IMailSteuerung {
 
 
     //E-Mails
-    ArrayList<EMailGrenz> zeigeAlleEMails(KontoGrenz kontoGrenz) throws NoSuchProviderException;
-    boolean weiseEinerEMailFlagZu(KontoGrenz kontoGrenz, String art, EMailGrenz eMailGrenz) throws MessagingException, IOException, SQLException;
+    ArrayList<EMailGrenz> zeigeAlleEMails(KontoGrenz kontoGrenz);
+    boolean weiseEinerEMailFlagZu(KontoGrenz kontoGrenz, String art, EMailGrenz eMailGrenz) ;
     boolean loescheEMailAusPapierkorb(KontoGrenz kontoGrenz, EMailGrenz eMailGrenz);
     EMailGrenz leseEMail(KontoGrenz kontoGrenz, EMailGrenz eMailGrenz);
     boolean speicherEMailEntwurf(KontoGrenz kontoGrenz, EMailGrenz eMailGrenz);

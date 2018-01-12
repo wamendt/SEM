@@ -1,6 +1,7 @@
 package sem.fachlogik.grenzklassen;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class EMailGrenz {
     private int mid;
@@ -16,6 +17,15 @@ public class EMailGrenz {
     private String ordner;
     private ArrayList<FileGrenz> files;
     private TagGrenz tag;
+    private int instanceID;
+
+    public int getInstanceID() {
+        return instanceID;
+    }
+
+    public void setInstanceID(int instanceID) {
+        this.instanceID = instanceID;
+    }
 
     public TagGrenz getTag() {
         return tag;
@@ -120,4 +130,5 @@ public class EMailGrenz {
     public void setOrdner(String ordner) {
         this.ordner = ordner;
     }
+
 }

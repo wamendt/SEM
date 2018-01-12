@@ -23,7 +23,6 @@ public class GrenzklassenKonvertierer {
     
     public static EMailGrenz eMailZuEMailGrenz(EMail email){
         EMailGrenz eMailGrenz = null;
-        try {
             Tag tag = ICRUDManagerSingleton.getIcrudTagInstance().getTagById(email.getTid());
             eMailGrenz = new EMailGrenz();
             eMailGrenz.setTag(GrenzklassenKonvertierer.tagZuTagGrenz(tag));
@@ -49,13 +48,6 @@ public class GrenzklassenKonvertierer {
             eMailGrenz.setZustand(email.getZustand());
             eMailGrenz.setMessageID(email.getMessageID());
 
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         return eMailGrenz;
     }
 
@@ -77,26 +69,25 @@ public class GrenzklassenKonvertierer {
     public static TagGrenz tagZuTagGrenz(Tag tag){
         ICRUDWort crudword = ICRUDManagerSingleton.getIcrudWordInstance();
         
-        TagGrenz tagGrenz = null;
-        try {
-            ArrayList<Wort> woerter = crudword.getAlleWoerterMitTagId(tag.getTid());
-            ArrayList<String> stringWoerter = new ArrayList<>();
-
-            tagGrenz = new TagGrenz();
-            for(Wort w : woerter){
-                stringWoerter.add(w.getWort());
-            }
-            tagGrenz.setWoerter(stringWoerter);
-            tagGrenz = new TagGrenz();
-            tagGrenz.setTid(tag.getTid());
-            tagGrenz.setName(tag.getName());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        TagGrenz tagGrenz = new TagGrenz();
+        ArrayList<Wort> woerter = crudword.getAlleWoerterMitTagId(tag.getTid());
+        ArrayList<String> stringWoerter = new ArrayList<>();
+        for(Wort w : woerter){
+            stringWoerter.add(w.getWort());
         }
+        tagGrenz.setWoerter(stringWoerter);
+        tagGrenz.setTid(tag.getTid());
+        tagGrenz.setName(tag.getName());
+
         return tagGrenz;
     }
-    
+
+    public static Tag tagGrenzZuTag(TagGrenz tagGrenz){
+        Tag tag = new Tag();
+        tag.setName(tagGrenz.getName());
+        tag.setTid(tagGrenz.getTid());
+
+        return tag;
+    }
  
 }

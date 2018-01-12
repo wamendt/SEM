@@ -451,10 +451,6 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
         }
         catch (MessagingException e) {
             System.out.println("MessagingException wird geworfenin IMailSteuerung, loeschEMailVomServer() : " + e.getMessage());
-        } catch (SQLException e) {
-            System.out.println("SQLException wird geworfenin IMailSteuerung, loeschEMailVomServer() : " + e.getMessage());
-        } catch (IOException e) {
-            System.out.println("IOException wird geworfenin IMailSteuerung, loeschEMailVomServer() : " + e.getMessage());
         }
 
         return ret;
@@ -540,10 +536,6 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
         }
         catch (MessagingException e) {
             System.out.println("MessagingException wird geworfen in IMailSteuerung, loescheEMailOrdner() : " + e.getMessage());
-        } catch (SQLException e) {
-            System.out.println("SQLException wird geworfen in IMailSteuerung, loescheEMailOrdner() : " + e.getMessage());
-        } catch (IOException e) {
-            System.out.println("IOException wird geworfen in IMailSteuerung, loescheEMailOrdner() : " + e.getMessage());
         }
 
         return ret;
@@ -980,12 +972,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
         catch (MessagingException e) {
             System.out.println("MessagingException wurde geworfen in IMailSteuerung, sendeEmail(): " + e.getMessage());
         }
-        catch (SQLException e) {
-            System.out.println("SQLException wurde geworfen in IMailSteuerung, sendeEmail(): " + e.getMessage());
-        }
-        catch (IOException e) {
-            System.out.println("IOException wurde geworfen in IMailSteuerung, sendeEmail(): " + e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
-        }
+
         return ret;
     }
 
@@ -998,7 +985,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
         eMailGrenz.setMid(eMail.getMid());
         eMailGrenz.setBetreff(eMail.getBetreff());
         eMailGrenz.setInhalt(eMail.getInhalt());
-
+        eMailGrenz.setInstanceID(eMail.getInstanceID());
         Tag tag;
         TagGrenz tagGrenz;
         try{
@@ -1012,12 +999,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
         catch (NullPointerException e){
             System.out.println("NullPointerException wird geworfen in IMailSteuerung, getEMailGrenz(): " + e.getMessage());
         }
-        catch (SQLException e){
-            System.out.println("SQLException wird geworfen in IMailSteuerung, getEMailGrenz(): " + e.getMessage());
-        }
-        catch (IOException e){
-            System.out.println("IOException wird geworfen in IMailSteuerung, getEMailGrenz(): " + e.getMessage());
-        }
+
         eMailGrenz.setAbsender(eMail.getAbsender());
 
         ArrayList<String> ccList = implodeAdresses(eMail.getCc());
@@ -1124,8 +1106,6 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
         TagGrenz tagGrenz = new TagGrenz();
         tagGrenz.setTid(tag.getTid());
         tagGrenz.setName(tag.getName());
-        tagGrenz.setNumIndex(tag.getNumIndex());
-        tagGrenz.setWoerter(tag.getWoerter());
         return tagGrenz;
     }
 
@@ -1134,8 +1114,6 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
         Tag tag = new Tag();
         tag.setTid(tagGrenz.getTid());
         tag.setName(tagGrenz.getName());
-        tag.setNumIndex(tagGrenz.getNumIndex());
-        tag.setWoerter(tagGrenz.getWoerter());
         return null;
     }
 
@@ -1185,15 +1163,9 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
     public ArrayList<EMail> holeAlleEMails(Konto konto) {
         ArrayList<EMail> eMailList = new ArrayList<>();
         ICRUDMail icrudMail = ICRUDManagerSingleton.getIcrudMailInstance();
-        try{
-            eMailList = icrudMail.getAlleEMails();
-        }
-        catch (IOException e){
-            System.out.println("IOException wurde geworfen in IMailSteuerung, holeAlleEMails(): " + e.getMessage());
-        }
-        catch (SQLException e){
-            System.out.println("SQLException wurde geworfen in IMailSteuerung, holeAlleEMails(): " + e.getMessage());
-        }
+
+        eMailList = icrudMail.getAlleEMails();
+
         return eMailList;
     }
 
@@ -1203,13 +1175,8 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
 
         ICRUDMail icrudMail = ICRUDManagerSingleton.getIcrudMailInstance();
 
-        try{
-            eMailArrayList = icrudMail.searchEMail(suchwort);
-        } catch (SQLException e) {
-            System.out.println("SQLException wurde geworfen in IMailSteuerung, sucheEMail(): " + e.getMessage());
-        } catch (IOException e) {
-            System.out.println("IOException wurde geworfen in IMailSteuerung, sucheEMail(): " + e.getMessage());
-        }
+        eMailArrayList = icrudMail.searchEMail(suchwort);
+
         return eMailArrayList;
     }
     // #################################################################################################################

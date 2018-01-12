@@ -2,8 +2,10 @@ package sem.fachlogik.mailsteuerung.impl;
 
 import sem.datenhaltung.semmodel.entities.EMail;
 import sem.datenhaltung.semmodel.entities.Konto;
+import sem.datenhaltung.semmodel.entities.Tag;
 import sem.datenhaltung.semmodel.services.ICRUDMail;
 import sem.datenhaltung.semmodel.services.ICRUDManagerSingleton;
+import sem.datenhaltung.semmodel.services.ICRUDTag;
 import sem.fachlogik.grenzklassen.EMailGrenz;
 import sem.fachlogik.grenzklassen.KontoGrenz;
 import sem.fachlogik.grenzklassen.TagGrenz;
@@ -142,6 +144,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
     // #################################################################################################################
     @Override
     public ArrayList<EMailGrenz> zeigeAlleEMails(KontoGrenz kontoGrenz) {
+
         ArrayList<EMailGrenz> eMailGrenzList = new ArrayList<>();
         if(kontoGrenz != null){
             ArrayList<EMail> eMailList;
@@ -165,6 +168,35 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             }
         }
         return eMailGrenzList;
+
+//        ICRUDMail crudmail = ICRUDManagerSingleton.getIcrudMailInstance();
+//        ICRUDTag crudTag = ICRUDManagerSingleton.getIcrudTagInstance();
+//        ArrayList<EMailGrenz> eMailGrenzs = new ArrayList<>();
+//        try {
+//            ArrayList<EMail> emails = crudmail.getAlleEMails();
+//
+//            for(EMail email : emails){
+//                EMailGrenz eMailGrenz = new EMailGrenz();
+//                eMailGrenz.setAbsender(email.getAbsender());
+//                //eMailGrenz.setBcc(email.getBcc());
+//                eMailGrenz.setContentOriginal(email.getContentOriginal());
+//                eMailGrenz.setInhalt(email.getInhalt());
+//                eMailGrenz.setOrdner(email.getOrdner());
+//                TagGrenz tagGrenz = new TagGrenz();
+//                Tag tag = crudTag.getTagById(email.getTid());
+//                tagGrenz.setName(tag.getName());
+//                tagGrenz.setTid(tag.getTid());
+//                tagGrenz.setWoerter(tag.getWoerter());
+//                tagGrenz.setNumIndex(tag.getNumIndex());
+//                eMailGrenz.setTag(tagGrenz);
+//                eMailGrenzs.add(eMailGrenz);
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return eMailGrenzs;
     }
 
     @Override
@@ -484,16 +516,11 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             if(tid > 0){
                 ArrayList<EMail> eMailList;
                 ICRUDMail icrudMail = ICRUDManagerSingleton.getIcrudMailInstance();
-                try {
-                    eMailList = icrudMail.getEMailByTag(tid);
-                    eMailGrenzList = convertEMailListToEMailGrenzList(eMailList);
-                }
-                catch (IOException e) {
-                    System.out.println("IOException wurde geworfen: " + e.getMessage());
-                }
-                catch (SQLException e) {
-                    System.out.println("SQLException wurde geworfen: " + e.getMessage());
-                }
+
+                eMailList = icrudMail.getEMailByTag(tid);
+                eMailGrenzList = convertEMailListToEMailGrenzList(eMailList);
+
+
             }
         }
         return eMailGrenzList;
