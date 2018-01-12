@@ -17,7 +17,7 @@
     <children>
         <HBox alignment="CENTER" layoutY="378.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
             <children>
-                <Button fx:id="btnConnect" alignment="CENTER" mnemonicParsing="false" onAction="#btnConnectAction" prefHeight="29.0" prefWidth="109.0" style="-fx-background-color: #616d7e;" styleClass="rand" stylesheets="@../css/randstylesheet.css" text="Verbinden" textFill="WHITE" HBox.hgrow="SOMETIMES">
+                <Button fx:id="btnConnect" alignment="CENTER" mnemonicParsing="false" onAction="#btnConnectAction" prefHeight="29.0" prefWidth="109.0" style="-fx-background-color: #616d7e;" stylesheets="@../css/randstylesheet.css" text="Verbinden" textFill="WHITE" HBox.hgrow="SOMETIMES">
                <font>
                   <Font size="15.0" />
                </font>
