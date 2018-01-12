@@ -1,0 +1,9 @@
+.released{
+    -fx-background-radius: 20;
+    -fx-background-color: white;
+}
+
+.clicked {
+    -fx-background-radius: 20;
+    -fx-background-color: lightgrey;
+}

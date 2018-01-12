@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 
-
-<Label fx:controller="sem.gui.viewmodel.TagsController" fx:id="root" alignment="CENTER" text="Label"  xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<Label fx:id="root" alignment="CENTER" onMouseClicked="#rootOnMouseClicked" onMouseEntered="#rootOnMouseEntered" onMouseExited="#rootOnMouseExited" prefHeight="29.0" prefWidth="76.0" styleClass="released" stylesheets="@../css/tagstylesheet.css" text="Label" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.viewmodel.hauptfenster.TagsController">
    <opaqueInsets>
       <Insets />
    </opaqueInsets>

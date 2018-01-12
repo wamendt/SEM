@@ -1,4 +1,4 @@
-package sem.gui.viewmodel;
+package sem.gui.viewmodel.menufenster;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -8,11 +8,12 @@ import javafx.scene.Parent;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
+import sem.gui.viewmodel.utils.ControllerFactory;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class AssistentMenuController implements Initializable{
+public class MenuController implements Initializable{
     @FXML
     private SplitPane root;
 
@@ -29,12 +30,19 @@ public class AssistentMenuController implements Initializable{
     }
 
     public void initMenuList(){
+
         listMenuAssistent.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 switch (listMenuAssistent.getSelectionModel().getSelectedIndices().get(0)){
                     case 0:
                         paneAuswahlausMenu.getChildren().setAll(ControllerFactory.createAllgemeineStatistikController().getRoot());
+                        break;
+                    case 2:
+                        AssistentController assistentController = ControllerFactory.createAssistentController();
+                        assistentController.setParent(paneAuswahlausMenu);
+                        assistentController.init();
+                        paneAuswahlausMenu.getChildren().setAll(assistentController.getRoot());
                         break;
                 }
             }

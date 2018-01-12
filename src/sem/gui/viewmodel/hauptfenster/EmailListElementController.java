@@ -1,11 +1,11 @@
-package sem.gui.viewmodel;
+package sem.gui.viewmodel.hauptfenster;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
+
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 
-import java.io.IOException;
+
 
 public class EmailListElementController {
 
@@ -15,7 +15,6 @@ public class EmailListElementController {
     private Label labelAbsender;
     @FXML
     private Label labelBetreff;
-
 
 
 

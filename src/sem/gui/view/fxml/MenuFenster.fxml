@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
-<?import javafx.collections.FXCollections?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<SplitPane fx:id="root" dividerPositions="0.29797979797979796" prefHeight="566.0" prefWidth="945.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.viewmodel.AssistentMenuController">
+<SplitPane fx:id="root" dividerPositions="0.17079889807162535" prefHeight="834.0" prefWidth="1278.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.viewmodel.menufenster.MenuController">
   <items>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
          <children>
@@ -15,13 +14,12 @@
                     <FXCollections fx:factory="observableArrayList">
                         <String fx:value="Allgemeine Statistik" />
                         <String fx:value="EMail Statistik" />
-                        <String fx:value="Assistent trainieren" />
-                    
+                        <String fx:value="Assistent" />
                     </FXCollections>
                 </items>
             </ListView>
          </children>
       </AnchorPane>
-    <AnchorPane fx:id="paneAuswahlausMenu" minHeight="0.0" minWidth="0.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="160.0" prefWidth="100.0" />
+    <AnchorPane fx:id="paneAuswahlausMenu" minHeight="0.0" minWidth="0.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="790.0" prefWidth="1000.0" />
   </items>
 </SplitPane>

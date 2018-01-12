@@ -1,10 +1,11 @@
-package sem.gui.viewmodel;
+package sem.gui.viewmodel.menufenster;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 
 import java.net.URL;
@@ -16,6 +17,9 @@ public class AllgemeineStatistikController implements Initializable{
 
     @FXML
     private Parent root;
+
+    @FXML
+    private PieChart grafEmailStatistik;
 
 
 
@@ -30,6 +34,9 @@ public class AllgemeineStatistikController implements Initializable{
         series.getData().add(new XYChart.Data<>("data2",5));
 
         grafAllgemeineStatistik.getData().add(series);
+
+        grafEmailStatistik.getData().add(new PieChart.Data("Tag1",0.9));
+        grafEmailStatistik.getData().add(new PieChart.Data("Tag2",0.4));
     }
 
     public Parent getRoot (){

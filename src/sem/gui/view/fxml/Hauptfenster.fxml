@@ -4,6 +4,7 @@
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -11,6 +12,7 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -22,9 +24,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.viewmodel.HauptfensterController">
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1700.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.viewmodel.hauptfenster.HauptfensterController">
    <children>
-      <SplitPane dividerPositions="0.23041894353369763, 0.4663023679417122" layoutX="55.0" layoutY="200.0" prefHeight="160.0" prefWidth="1100.0" styleClass="split-pane-divider" stylesheets="@../css/deviderstylesheet.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
+      <SplitPane dividerPositions="0.23041894353369763, 0.4663023679417122, 0.5" layoutX="55.0" layoutY="200.0" prefHeight="160.0" prefWidth="1100.0" styleClass="split-pane-divider" stylesheets="@../css/deviderstylesheet.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
         <items>
           <AnchorPane maxWidth="250.0" minHeight="560.0" minWidth="200.0" prefHeight="560.0" prefWidth="250.0">
                <children>
@@ -67,9 +69,9 @@
                         <String fx:value="rand" />
                      </styleClass></ListView>
                </children></AnchorPane>
-          <AnchorPane fx:id="paneEmailAnzeige" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: lightgray;">
+          <AnchorPane fx:id="paneEmailAnzeige" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="758.0" prefWidth="516.0" style="-fx-background-color: lightgray;">
                <children>
-                  <AnchorPane prefHeight="111.0" prefWidth="583.0" style="-fx-background-color: white;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <AnchorPane prefHeight="111.0" prefWidth="583.0" style="-fx-background-color: white;" styleClass="mylistview" stylesheets="@../css/scrollbarstylesheet.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <GridPane layoutX="8.0" layoutY="8.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <columnConstraints>
@@ -110,18 +112,58 @@
                         </GridPane>
                      </children>
                   </AnchorPane>
-                  <WebView fx:id="webViewEmail" layoutX="69.0" layoutY="157.0" prefHeight="420.0" prefWidth="563.0" stylesheets="@../css/scrollbarstylesheet.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="115.0" />
+                  <Pane fx:id="paneOberschrift" layoutX="-7.0" layoutY="14.0" prefHeight="860.0" prefWidth="1050.0">
+                     <children>
+                        <Label layoutX="403.0" layoutY="348.0" text="Smart Email Manager" textFill="#616d7e">
+                           <font>
+                              <Font name="Forte" size="48.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </Pane>
+                  <WebView fx:id="webViewEmail" layoutX="69.0" layoutY="157.0" prefHeight="420.0" prefWidth="563.0" styleClass="mylistview" stylesheets="@../css/scrollbarstylesheet.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="115.0" />
+               </children></AnchorPane>
+            <AnchorPane fx:id="statistikPane" maxWidth="400.0">
+               <children>
+                  <PieChart fx:id="grafEmailStatistik" labelLineLength="15.0" layoutY="100.0" prefHeight="365.0" prefWidth="400.0" />
+                  <Label alignment="CENTER" layoutX="40.0" layoutY="14.0" prefHeight="27.0" prefWidth="400.0" text="Email Statistik" textAlignment="CENTER" textFill="#616d7e" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="14.0">
+                     <font>
+                        <Font name="Forte" size="24.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="label2" alignment="CENTER" layoutY="40.0" prefHeight="75.0" prefWidth="360.0" text="Die Grafik zeigt die Zugehörigkeit zu einem bestimten Tag" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                  <ScrollPane layoutY="494.0" prefHeight="308.0" prefWidth="398.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0">
+                    <content>
+                      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0">
+                           <children>
+                              <FlowPane fx:id="flowPaneWoerter" hgap="20.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="20.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                     <stylesheets>
+                        <URL value="@../css/scrollbarstylesheet.css" />
+                        <URL value="@../css/randstylesheet.css" />
+                     </stylesheets>
+                     <styleClass>
+                        <String fx:value="mylistview" />
+                        <String fx:value="rand" />
+                     </styleClass>
+                  </ScrollPane>
+                  <Label fx:id="labelTagWoerter" alignment="CENTER" layoutX="36.0" layoutY="498.0" text="Die zum Tag zugehörige Wörter:" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                </children></AnchorPane>
         </items>
       </SplitPane>
       <ToolBar cache="true" layoutX="263.0" prefHeight="40.0" prefWidth="837.0" snapToPixel="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
             <Pane maxWidth="230.0" minWidth="5.0" prefHeight="20.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-            <Button id="button_search" fx:id="buttonSearch" mnemonicParsing="false" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_search" stylesheets="@../css/buttonstylesheet.css">
+            <Button id="button_search" fx:id="buttonSearch" mnemonicParsing="false" onAction="#btnSearchOnAction" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_search" stylesheets="@../css/buttonstylesheet.css">
                <cursor>
                   <Cursor fx:constant="HAND" />
-               </cursor></Button>
-            <TextField id="search_field" fx:id="searchField" prefHeight="30.0" prefWidth="200.0" style="-fx-border-radius: 10;" styleClass="search_field" stylesheets="@../css/searchstylesheet.css">
+               </cursor>
+               <tooltip>
+                  <Tooltip text="Suche" />
+               </tooltip></Button>
+            <TextField id="search_field" fx:id="searchField" onKeyPressed="#searchFieldOnKeyPressed" prefHeight="30.0" prefWidth="200.0" style="-fx-border-radius: 20;" styleClass="search_field" stylesheets="@../css/searchstylesheet.css">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
@@ -130,24 +172,39 @@
             <Button id="button_neue" fx:id="buttonNeue" mnemonicParsing="false" onAction="#btnNeueEmailOnAction" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_neue" stylesheets="@../css/buttonstylesheet.css">
                <cursor>
                   <Cursor fx:constant="HAND" />
-               </cursor></Button>
-            <Button id="button_weiterleiten" fx:id="buttonWeiterleiten" alignment="CENTER" mnemonicParsing="false" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_weiterleiten" stylesheets="@../css/buttonstylesheet.css">
+               </cursor>
+               <tooltip>
+                  <Tooltip text="Neue Email" />
+               </tooltip></Button>
+            <Button id="button_weiterleiten" fx:id="buttonWeiterleiten" alignment="CENTER" mnemonicParsing="false" onAction="#btnWeiterleitenOnAction" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_weiterleiten" stylesheets="@../css/buttonstylesheet.css">
                <cursor>
                   <Cursor fx:constant="HAND" />
-               </cursor></Button>
-            <Button id="button_mailantworten" fx:id="buttonMailantworten" mnemonicParsing="false" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_mailantworten" stylesheets="@../css/buttonstylesheet.css">
+               </cursor>
+               <tooltip>
+                  <Tooltip text="Email weiterleiten" />
+               </tooltip></Button>
+            <Button id="button_mailantworten" fx:id="buttonMailantworten" mnemonicParsing="false" onAction="#btnAntwortenOnAction" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_mailantworten" stylesheets="@../css/buttonstylesheet.css">
                <cursor>
                   <Cursor fx:constant="HAND" />
-               </cursor></Button>
-            <Button id="button_loeschen" fx:id="buttonLoeschen" mnemonicParsing="false" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_loeschen" stylesheets="@../css/buttonstylesheet.css">
+               </cursor>
+               <tooltip>
+                  <Tooltip text="Auf Email antworten" />
+               </tooltip></Button>
+            <Button id="button_loeschen" fx:id="buttonLoeschen" mnemonicParsing="false" onAction="#btnLoeschenOnAction" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_loeschen" stylesheets="@../css/buttonstylesheet.css">
                <cursor>
                   <Cursor fx:constant="HAND" />
-               </cursor></Button>
+               </cursor>
+               <tooltip>
+                  <Tooltip text="Email löschen" />
+               </tooltip></Button>
             <Pane prefHeight="25.0" prefWidth="127.0" HBox.hgrow="ALWAYS" />
             <Button id="button_menu" fx:id="buttonMenu" mnemonicParsing="false" onAction="#btnAssistentOnAction" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_menu" stylesheets="@../css/buttonstylesheet.css">
                <cursor>
                   <Cursor fx:constant="HAND" />
-               </cursor></Button>
+               </cursor>
+               <tooltip>
+                  <Tooltip text="Optionen" />
+               </tooltip></Button>
         </items>
       </ToolBar>
    </children>

@@ -1,8 +1,9 @@
-package sem.gui.viewmodel;
+package sem.gui.viewmodel.hauptfenster;
 
 
 import javafx.scene.control.ListCell;
 import sem.fachlogik.grenzklassen.EMailGrenz;
+import sem.gui.viewmodel.utils.ControllerFactory;
 
 /**
  * Klasse die eine Zelle in der EmailListe repraesentiert.
@@ -11,13 +12,11 @@ import sem.fachlogik.grenzklassen.EMailGrenz;
  */
 public class EmailListCell extends ListCell<EMailGrenz> {
 
-
     @Override
     protected void updateItem(EMailGrenz item, boolean empty){
         super.updateItem(item, empty);
         EmailListElementController controller = ControllerFactory.createEmailListElement();
         if(item != null) {
-            System.out.println(item.getBetreff());
             setGraphic(controller.getRoot());
             controller.setLabelBetreff(item.getBetreff());
             controller.setLabelAbsender(item.getAbsender());

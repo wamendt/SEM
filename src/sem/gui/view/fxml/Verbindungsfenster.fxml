@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -12,7 +18,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="479.0" maxWidth="650.0" style="-fx-background-color: lightgray;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.viewmodel.VerbindungsfensterController">
+<AnchorPane fx:id="root" maxHeight="479.0" maxWidth="650.0" style="-fx-background-color: lightgray;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.viewmodel.verbindungsfenster.VerbindungsfensterController">
     <children>
         <HBox alignment="CENTER" layoutX="374.0" layoutY="504.6666564941406" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="504.6666564941406">
             <children>
@@ -55,9 +61,9 @@
                         <Label text="Benutzername" textFill="#123456" GridPane.rowIndex="5" />
                         <Label text="Passwort" textFill="#123456" GridPane.rowIndex="6" />
                         <TextField GridPane.rowIndex="2" />
-                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <TextField styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <PasswordField styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                     </children>
                     <opaqueInsets>
                         <Insets />

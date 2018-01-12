@@ -1,4 +1,4 @@
-package sem.gui.viewmodel;
+package sem.gui.viewmodel.verbindungsfenster;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -7,7 +7,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import sem.gui.viewmodel.hauptfenster.HauptfensterController;
+import sem.gui.viewmodel.utils.ControllerFactory;
 
 import java.io.IOException;
 import java.net.URL;
@@ -18,6 +21,13 @@ public class VerbindungsfensterController implements Initializable{
     @FXML
     private Button btnConnect;
 
+    @FXML
+    private AnchorPane root;
+
+    public AnchorPane getRoot() {
+        return root;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -25,17 +35,13 @@ public class VerbindungsfensterController implements Initializable{
 
     @FXML
     public void btnConnectAction(ActionEvent event){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/fxml/Hauptfenster.fxml"));
-        try {
-            Parent root = (Parent) loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("Smart Email Manager");
-            stage.setScene(new Scene(root));
-            stage.show();
-            btnConnect.getScene().getWindow().hide();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        HauptfensterController controller = ControllerFactory.createHauptfenster();
+        Stage stage = new Stage();
+        stage.setTitle("Smart Email Manager");
+        stage.setScene(new Scene(controller.getRoot()));
+        stage.show();
+        btnConnect.getScene().getWindow().hide();
+
     }
 
 
