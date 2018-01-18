@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class EMail {
     private int mid;
-    private int instanceID; //benoetigt fuer die verwaltung der tags
     private String betreff;
     private String inhalt;
     private int tid;
@@ -26,13 +25,6 @@ public class EMail {
 
     //Getter und Setter
 
-    public int getInstanceID() {
-        return instanceID;
-    }
-
-    public void setInstanceID(int instanceID) {
-        this.instanceID = instanceID;
-    }
 
     public void setBetreff(String betreff) {
         this.betreff = betreff;

@@ -20,7 +20,7 @@ public class CRUDTagVerteilung extends DBCRUDTeamplate<TagVerteilung> implements
         TagVerteilung tagVerteilung = new TagVerteilung();
         tagVerteilung.setTvid(rs.getInt(1));
         tagVerteilung.setVerteilung(rs.getDouble(2));
-        tagVerteilung.setVerteilung(rs.getInt(3));
+        tagVerteilung.setMid(rs.getInt(3));
         return tagVerteilung;
     }
 

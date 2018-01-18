@@ -26,17 +26,16 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
         email.setZustand(rs.getString("zustand"));
         email.setMessageID(rs.getInt("messageID"));
         email.setOrdner(rs.getString("ordner"));
-        email.setInstanceID(rs.getInt("instanceid"));
         return email;
     }
 
     @Override
     public int createEMail(EMail email) {
-        String sql = "INSERT INTO email (instanceid, betreff ,inhalt , tid, absender, cc, bcc, empfaenger, contentOriginal, zustand, messageID, ordner)" +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO email ( betreff ,inhalt , tid, absender, cc, bcc, empfaenger, contentOriginal, zustand, messageID, ordner)" +
+                "VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
-            int id = insertAndReturnKey(sql,email.getInstanceID(), email.getBetreff(), email.getInhalt(), email.getTid(), email.getAbsender(),
+            int id = insertAndReturnKey(sql, email.getBetreff(), email.getInhalt(), email.getTid(), email.getAbsender(),
                     email.getCc(), email.getBcc(), email.getEmpfaenger(), email.getContentOriginal(), email.getZustand(),
                     email.getMessageID(), email.getOrdner());
             email.setMid(id);
@@ -147,9 +146,9 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
         int ret = 0;
         try {
             ret = updateOrDelete("UPDATE email" +
-                            " SET betreff = ? , inhalt = ?, tid = ?, absender = ? , instanceid = ?" +
+                            " SET betreff = ? , inhalt = ?, tid = ?, absender = ? " +
                             "WHERE mid = ?", email.getBetreff(), email.getInhalt()
-                    ,email.getTid(), email.getAbsender(), email.getInstanceID(), email.getMid());
+                    ,email.getTid(), email.getAbsender(), email.getMid());
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
