@@ -1,5 +1,6 @@
 package sem.fachlogik.assistentsteuerung.services;
 
+import sem.fachlogik.grenzklassen.EMailGrenz;
 import sem.fachlogik.grenzklassen.TagGrenz;
 
 import java.io.IOException;
@@ -13,7 +14,7 @@ public interface IAssistentSteuerung {
      * Diese Funktion setzt vorraus der der Assistent bereits trainiert worden ist, und die Emails in der Db
      * analysoiert worden sind.
      */
-    double[] getTagVerteilung(int instanceId);
+    double[] getTagVerteilung(EMailGrenz email);
 
     TagGrenz getTagById(int id);
 
@@ -25,13 +26,6 @@ public interface IAssistentSteuerung {
      * ausgewaehlt. Diese Methode erstellt ein komplett neues Model.
      */
     void trainiereSEM(int anzahlTags, double alphasum, double beta, int anzahlIterationen);
-
-
-
-    /**
-     * Trainiert ein vorhandenes Modell, mit den Instanzen aus der DB.
-     */
-    void trainiereVorhandenSEM() throws IOException, SQLException;
 
     /**
      * Holt alle Tags aus der Datenbank und konvertiert diese in eine Liste aus

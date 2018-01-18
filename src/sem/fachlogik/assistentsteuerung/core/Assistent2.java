@@ -4,11 +4,14 @@ import cc.mallet.pipe.*;
 import cc.mallet.pipe.iterator.ArrayIterator;
 import cc.mallet.topics.MarginalProbEstimator;
 import cc.mallet.topics.ParallelTopicModel;
+import cc.mallet.topics.TopicInferencer;
 import cc.mallet.topics.TopicModelDiagnostics;
+import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +28,8 @@ public class Assistent2 {
     private SerialPipes pipe;
     private InstanceList instances;
     private TopicModelDiagnostics diagnostics;
+
+    private int maxCount;
 
     private Assistent2(){}
 
@@ -68,6 +73,7 @@ public class Assistent2 {
 
         instances = new InstanceList(pipe);
         for(String s: data.keySet()){
+            maxCount += data.get(s).size();
             instances.addThruPipe(new ArrayIterator(data.get(s), s));
         }
 
@@ -78,19 +84,14 @@ public class Assistent2 {
             e.printStackTrace();
         }
         diagnostics = new TopicModelDiagnostics(model, 100);
-        diagnostics.toString();
+
     }
 
-    public void evaluate(Map<String, List<String>> data){
-        instances = new InstanceList(pipe);
-        for(String s: data.keySet()){
-            instances.addThruPipe(new ArrayIterator(data.get(s),s));
-        }
-
-        MarginalProbEstimator estimator = model.getProbEstimator();
-        estimator.setPrintWords(true);
-        double loglike = estimator.evaluateLeftToRight(instances,10,true,System.out);
-        System.out.println(loglike + " ***");
+    public double[] evaluate(String data){
+        TopicInferencer inferencer = model.getInferencer();
+        InstanceList instanceList = new InstanceList(pipe);
+        instanceList.addThruPipe(new Instance(data, "inhalt", null, null));
+        return inferencer.getSampledDistribution(instanceList.get(0), 1000,1, 5);
     }
 
     /*Methoden zum Serializieren*/

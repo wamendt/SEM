@@ -2,13 +2,12 @@ package sem.fachlogik.assistentsteuerung.impl;
 
 import sem.datenhaltung.semmodel.entities.EMail;
 import sem.datenhaltung.semmodel.entities.Tag;
+import sem.datenhaltung.semmodel.entities.TagVerteilung;
 import sem.datenhaltung.semmodel.entities.Wort;
-import sem.datenhaltung.semmodel.services.ICRUDMail;
-import sem.datenhaltung.semmodel.services.ICRUDManagerSingleton;
-import sem.datenhaltung.semmodel.services.ICRUDTag;
-import sem.datenhaltung.semmodel.services.ICRUDWort;
+import sem.datenhaltung.semmodel.services.*;
 import sem.fachlogik.assistentsteuerung.core.Assistent2;
 import sem.fachlogik.assistentsteuerung.services.IAssistentSteuerung;
+import sem.fachlogik.grenzklassen.EMailGrenz;
 import sem.fachlogik.grenzklassen.GrenzklassenKonvertierer;
 import sem.fachlogik.grenzklassen.TagGrenz;
 
@@ -23,19 +22,27 @@ public class IAssistentSteuerungImpl implements IAssistentSteuerung{
 
 
     @Override
-    public double[] getTagVerteilung(int instanceId){
-        return Assistent2.getInstance().getTopicDistribution(instanceId);
+    public double[] getTagVerteilung(EMailGrenz email){
+        ICRUDTagVerteilung icrudTagVerteilung = ICRUDManagerSingleton.getIcrudTagVerteilungInstance();
+        ArrayList<TagVerteilung> verteilungen = icrudTagVerteilung.getTagVerteilungByEmailId(email.getMid());
+        double[] verteilung = new double[verteilungen.size()];
+        for(int i = 0; i < verteilung.length; i++){
+            verteilung[i] = verteilungen.get(i).getVerteilung();
+        }
+        return verteilung;
     }
 
     @Override
     public int getAnzahlTags(){
         return Assistent2.getInstance().getNumTopics();
     }
+
     @Override
     public TagGrenz getTagById(int id){
         Tag tag = ICRUDManagerSingleton.getIcrudTagInstance().getTagById(id);
         return tag != null? GrenzklassenKonvertierer.tagZuTagGrenz(tag) : null;
     }
+
     @Override
     public void trainiereSEM(int numTopics, double alphasum, double beta, int numItarations) {
         Assistent2 assistent = Assistent2.getInstance();
@@ -53,12 +60,9 @@ public class IAssistentSteuerungImpl implements IAssistentSteuerung{
         for(int i = 0; i < emails.size(); i++){
             EMail e = emails.get(i);
             emailtrain.add(e.getInhalt());
-            e.setInstanceID(i);
         }
         data.put("inhalt", emailtrain);
         assistent.train(data);
-
-        ArrayList<Tag> tags = new ArrayList<>();
 
         ICRUDWort icrudWort = ICRUDManagerSingleton.getIcrudWordInstance();
 
@@ -67,9 +71,6 @@ public class IAssistentSteuerungImpl implements IAssistentSteuerung{
             Tag tag = new Tag();
             tag.setName((String)topwords[i][0]);
             int tid = icrudTag.createTag(tag);
-            tag.setTid(tid);
-            tags.add(tag);
-
             Object[] topicTopWords  = topwords[i];
             for(Object s : topicTopWords){
                 Wort w = new Wort();
@@ -79,12 +80,16 @@ public class IAssistentSteuerungImpl implements IAssistentSteuerung{
             }
         }
 
+        ICRUDTagVerteilung icrudTagVerteilung = ICRUDManagerSingleton.getIcrudTagVerteilungInstance();
+        icrudTagVerteilung.deleteAlleTagVerteilungen();
         for(int i = 0; i < emails.size(); i++){
             double[] topicverteilung = assistent.getTopicDistribution(i);
             double max = 0;
             int j = 0;
             int k = 0;
             for(double d : topicverteilung){
+                TagVerteilung tagVerteilung = new TagVerteilung(d, emails.get(i).getMid());
+                icrudTagVerteilung.createTagVerteilung(tagVerteilung);
                 if(d > max){
                     max = d;
                     k = j;
@@ -98,35 +103,9 @@ public class IAssistentSteuerungImpl implements IAssistentSteuerung{
     }
 
     @Override
-    public void trainiereVorhandenSEM() throws IOException, SQLException {
-        throw new UnsupportedOperationException("TODO");
-//        Assistent2 assistent = Assistent2.getInstance();
-//        assistent.loadModel();
-//
-//        ICRUDMail crudmail = ICRUDManagerSingleton.getIcrudMailInstance();
-//        ArrayList<EMail> emails = crudmail.getAlleEMails();
-//        List<String> emailtrain = new ArrayList<>();
-//        List<String> emailtest = new ArrayList<>();
-//        Map<String, List<String>> data = new TreeMap<>();
-//
-//        int i = 0;
-//        for(EMail e : emails){
-//            if(i%10 == 0){
-//                emailtest.add(e.getInhalt());
-//            }else{
-//                emailtrain.add(e.getInhalt());
-//            }
-//        }
-//        data.put("inhalt", emailtrain);
-//        assistent.evaluate(data);
-//        assistent.saveModel();
-    }
-
-    @Override
     public ArrayList<TagGrenz> zeigeAlleTagsAn(){
         ICRUDTag crudtag = ICRUDManagerSingleton.getIcrudTagInstance();
-        ArrayList<Tag> tags = null;
-        tags = crudtag.getAlleTags();
+        ArrayList<Tag> tags = crudtag.getAlleTags();
 
         ArrayList<TagGrenz> tagGrenzs = new ArrayList<>();
 
