@@ -11,6 +11,6 @@ public interface ICRUDKonto{
     boolean deleteKonto(int kid);
     boolean updateKonto(Konto konto);
     Konto getKontoById(int kid) ;
-    ArrayList<Konto> getAlleKonto() ;
+    ArrayList<Konto> getAlleKonten() ;
 
 }

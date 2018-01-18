@@ -11,10 +11,18 @@ public class ICRUDManagerSingleton {
 
     private static ICRUDFile icrudFileInstance;
 
+    private static ICRUDTagVerteilung icrudTagVerteilung;
 
     private static ICRUDMail icrudMailInstance;
 
     private ICRUDManagerSingleton(){}
+
+    public static ICRUDTagVerteilung getIcrudTagVerteilungInstance(){
+        if(icrudTagVerteilung == null){
+            icrudTagVerteilung = new CRUDTagVerteilung();
+        }
+        return icrudTagVerteilung;
+    }
 
     public static ICRUDWort getIcrudWordInstance(){
         if(icrudWortInstance == null){

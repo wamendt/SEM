@@ -1,5 +1,8 @@
 package sem.datenhaltung.semmodel.database;
 
+import org.sqlite.SQLiteConfig;
+import org.sqlite.SQLiteOpenMode;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,19 +15,20 @@ public class DBConnectionManager {
     private DBConnectionManager() {
     }
 
-    public static Connection getConnection() throws SQLException, IOException {
+    public static Connection getConnection() throws SQLException {
         if(connection == null){
-            connection = DriverManager.getConnection(URL);
+            SQLiteConfig config = new SQLiteConfig();
+            config.setOpenMode(SQLiteOpenMode.FULLMUTEX);
+            connection = DriverManager.getConnection(URL, config.toProperties());
+
         }
         return connection;
     }
 
     public static void closeConnection() throws SQLException {
-        boolean ret = false;
         if(connection != null) {
             connection.close();
             connection = null;
-            ret = true;
         }
     }
 }

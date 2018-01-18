@@ -1,6 +1,7 @@
 package sem.datenhaltung.semmodel.impl;
 
 import sem.datenhaltung.semmodel.entities.Konto;
+import sem.datenhaltung.semmodel.entities.Tag;
 import sem.datenhaltung.semmodel.services.ICRUDKonto;
 
 import java.io.IOException;
@@ -31,8 +32,10 @@ public class CRUDKonto extends DBCRUDTeamplate<Konto> implements ICRUDKonto {
         String sql = "INSERT INTO konto (UserName, EmailAddress, AccountAt, " +
                 "IMAPhost, PassWort, Port, SMTPhost)" + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
-            return insertAndReturnKey(sql, konto.getUserName(), konto.getEmailAddress(), konto.getAccountAt(),
+            int id = insertAndReturnKey(sql, konto.getUserName(), konto.getEmailAddress(), konto.getAccountAt(),
                     konto.getIMAPhost(), konto.getPassWort(), konto.getPort(), konto.getSMTPhost());
+            konto.setKid(id);
+            return id;
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
@@ -41,24 +44,51 @@ public class CRUDKonto extends DBCRUDTeamplate<Konto> implements ICRUDKonto {
 
     @Override
     public boolean deleteKonto(int kid){
-        return true;
+        int ret = 0;
+        try {
+            ret = updateOrDelete("DELETE FROM konto WHERE kid = ?", kid);
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
+        return ret == 1;
     }
 
     @Override
     public boolean updateKonto(Konto konto){
-        return true;
+        int ret;
+        try {
+            ret = updateOrDelete("UPDATE konto" +
+                    " SET userName = ?, passwort = ?, accountat = ?, imaphos = ?, smtphost = ?," +
+                    "emailaddress = ?, port = ? WHERE kid = ?", konto.getUserName(), konto.getPassWort(),
+                    konto.getAccountAt(), konto.getIMAPhost(), konto.getSMTPhost(), konto.getEmailAddress(),
+                    konto.getPort(), konto.getKid());
+            return 1 == ret;
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
     public Konto getKontoById(int kid){
-        Konto k = new Konto();
-        return k;
+        ArrayList<Konto> kontos;
+        try {
+            kontos = query("SELECT * FROM konto WHERE kid=?", kid);
+            return kontos.size() > 0 ? kontos.get(0) : null;
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
-    public ArrayList<Konto> getAlleKonto(){
-        ArrayList<Konto> alleKonten= new ArrayList<Konto>();
-        return alleKonten;
+    public ArrayList<Konto> getAlleKonten(){
+        try {
+            return query("SELECT * FROM konto");
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList();
     }
 
 }

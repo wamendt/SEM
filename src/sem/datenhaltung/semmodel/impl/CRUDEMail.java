@@ -36,9 +36,11 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
-            return insertAndReturnKey(sql,email.getInstanceID(), email.getBetreff(), email.getInhalt(), email.getTid(), email.getAbsender(),
+            int id = insertAndReturnKey(sql,email.getInstanceID(), email.getBetreff(), email.getInhalt(), email.getTid(), email.getAbsender(),
                     email.getCc(), email.getBcc(), email.getEmpfaenger(), email.getContentOriginal(), email.getZustand(),
                     email.getMessageID(), email.getOrdner());
+            email.setMid(id);
+            return id;
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
@@ -50,17 +52,6 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
         ArrayList<EMail> eMails;
         try {
             eMails = query("SELECT * FROM email WHERE mid = ?", mid);
-            return eMails.size() > 0 ? eMails.get(0) : null;
-        } catch (SQLException | IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-    @Override
-    public EMail getEMailbyInstanceID(int instanceID){
-        ArrayList<EMail> eMails;
-        try {
-            eMails = query("SELECT e FROM email WHERE instnaceid = ?", instanceID);
             return eMails.size() > 0 ? eMails.get(0) : null;
         } catch (SQLException | IOException e) {
             e.printStackTrace();

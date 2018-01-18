@@ -24,7 +24,9 @@ public class CRUDTag extends DBCRUDTeamplate<Tag> implements ICRUDTag{
         String sql = "INSERT INTO tag (name)" +
                 "VALUES (?)";
         try {
-            return insertAndReturnKey(sql, tag.getName());
+            int id = insertAndReturnKey(sql, tag.getName());
+            tag.setTid(id);
+            return id;
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }

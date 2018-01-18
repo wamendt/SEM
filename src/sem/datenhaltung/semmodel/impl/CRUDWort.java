@@ -25,7 +25,9 @@ public class CRUDWort extends DBCRUDTeamplate<Wort> implements ICRUDWort {
         String sql = "INSERT INTO wort (wort, tid)" +
                 "VALUES (?, ?)";
         try {
-            return insertAndReturnKey(sql, wort.getWort(), wort.getTid());
+            int id =  insertAndReturnKey(sql, wort.getWort(), wort.getTid());
+            wort.setWid(id);
+            return id;
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 public interface ICRUDMail {
     int createEMail(EMail email);
     EMail getEMailById(int mid);
-    EMail getEMailbyInstanceID(int instanceID);
     ArrayList<EMail> getEMailByOrdner(String name);
     ArrayList<EMail> getEMailByTag(int tid);
     ArrayList<EMail> getAlleEMails();

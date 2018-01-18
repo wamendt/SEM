@@ -14,11 +14,9 @@ public class CRUDFile extends DBCRUDTeamplate<File> implements ICRUDFile{
     @Override
     protected File makeObject(ResultSet rs) throws SQLException{
         File file = new File();
-
         file.setFid(rs.getInt(1));
         file.setPfad(rs.getString(2));
         file.setMId(rs.getInt(3));
-
         return file;
     }
 
@@ -26,8 +24,11 @@ public class CRUDFile extends DBCRUDTeamplate<File> implements ICRUDFile{
     public int createFile(File file){
         String sql = "INSERT INTO file (pfad, mid)" +
                 "VALUES (?, ?)";
+
         try {
-            return insertAndReturnKey(sql, file.getPfad(), file.getMid());
+            int id =  insertAndReturnKey(sql, file.getPfad(), file.getMid());
+            file.setMId(id);
+            return id;
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }

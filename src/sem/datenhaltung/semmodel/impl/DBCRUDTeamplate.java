@@ -64,17 +64,22 @@ public abstract class DBCRUDTeamplate<T> {
      */
     protected int updateOrDelete(String sql, Object... objects)throws IOException, SQLException {
         Connection connection = null;
-        connection = DBConnectionManager.getConnection();
-        Statement stmt = connection.createStatement();
-        stmt.execute("PRAGMA foreign_keys=ON");
-        PreparedStatement statement = connection.prepareStatement(sql);
-        if(objects != null) {
-            for (int i = 1; i <= objects.length; i++) {
-                statement.setObject(i, objects[i - 1]);
+        int ret = -1;
+        try {
+            connection = DBConnectionManager.getConnection();
+            Statement stmt = connection.createStatement();
+            stmt.execute("PRAGMA foreign_keys=ON");
+            PreparedStatement statement = connection.prepareStatement(sql);
+            if (objects != null) {
+                for (int i = 1; i <= objects.length; i++) {
+                    statement.setObject(i, objects[i - 1]);
+                }
             }
+            ret = statement.executeUpdate();
+        }finally {
+            DBConnectionManager.closeConnection();
+
         }
-        int ret = statement.executeUpdate();
-        DBConnectionManager.closeConnection();
         return ret;
     }
 
@@ -90,19 +95,22 @@ public abstract class DBCRUDTeamplate<T> {
     protected int insertAndReturnKey(String sql, Object... objects) throws IOException, SQLException {
         int key = -1;
         Connection connection = null;
-        connection = DBConnectionManager.getConnection();
-        PreparedStatement statement = connection.prepareStatement(sql);
-        if(objects != null) {
-            for (int i = 1; i <= objects.length; i++) {
-                statement.setObject(i, objects[i-1]);
+        try {
+            connection = DBConnectionManager.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
+            if (objects != null) {
+                for (int i = 1; i <= objects.length; i++) {
+                    statement.setObject(i, objects[i - 1]);
+                }
             }
+            statement.executeUpdate();
+            ResultSet resultSet = statement.getGeneratedKeys();
+            if (resultSet.next()) {
+                key = resultSet.getInt(1);
+            }
+        }finally {
+            DBConnectionManager.closeConnection();
         }
-        statement.executeUpdate();
-        ResultSet resultSet = statement.getGeneratedKeys();
-        if(resultSet.next()){
-            key = resultSet.getInt(1);
-        }
-        DBConnectionManager.closeConnection();
         return key;
     }
 
