@@ -13,10 +13,10 @@ public class IKontoSteuerungImpl implements IKontoSteuerung{
     @Override
     public KontoGrenz getKonto(int id) {
         KontoGrenz konto = new KontoGrenz();
-        konto.setEmailAddress("h4x9r@bk.ru");
-        konto.setIMAPhost("imap.mail.ru");
-        konto.setSMTPhost("smtp.mail.ru");
-        konto.setPassWort("bmw318i");
+        konto.setEmailAddress("w.amendt@gmx.de");
+        konto.setIMAPhost("imap.gmx.net");
+        konto.setSMTPhost("mail.gmx.net");
+        konto.setPassWort("Packard1");
         return konto;
     }
 

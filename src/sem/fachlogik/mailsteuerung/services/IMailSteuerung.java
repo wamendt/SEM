@@ -31,7 +31,6 @@ public interface IMailSteuerung {
     ArrayList<EMailGrenz> zeigeAlleEMails(KontoGrenz kontoGrenz);
     boolean weiseEinerEMailFlagZu(KontoGrenz kontoGrenz, String art, EMailGrenz eMailGrenz) ;
     boolean loescheEMailAusPapierkorb(KontoGrenz kontoGrenz, EMailGrenz eMailGrenz);
-    EMailGrenz leseEMail(KontoGrenz kontoGrenz, EMailGrenz eMailGrenz);
     boolean speicherEMailEntwurf(KontoGrenz kontoGrenz, EMailGrenz eMailGrenz);
     boolean verschiebeEMail(KontoGrenz kontoGrenz, EMailGrenz eMailGrenz, String vonOrdner, String zuOrdner);
     boolean sendeEMail(KontoGrenz kontoGrenz, EMailGrenz eMailGrenz);

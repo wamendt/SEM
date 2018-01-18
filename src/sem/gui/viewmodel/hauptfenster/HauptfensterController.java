@@ -36,10 +36,12 @@ import sem.fachlogik.kontosteuerung.impl.IKontoSteuerungImpl;
 import sem.fachlogik.kontosteuerung.services.IKontoSteuerung;
 import sem.fachlogik.mailsteuerung.impl.IMailSteuerungImpl;
 import sem.fachlogik.mailsteuerung.services.IMailSteuerung;
+import sem.fachlogik.mailsteuerung.utils.services.IMailService;
 import sem.gui.viewmodel.utils.ControllerFactory;
 import sem.gui.viewmodel.menufenster.MenuController;
 import sem.gui.viewmodel.verfassungsfenster.VerfassungsfensterController;
 
+import javax.sound.sampled.Line;
 import java.net.URL;
 
 import java.util.ArrayList;
@@ -242,11 +244,17 @@ public class HauptfensterController implements Initializable, TagClickedListener
         VerfassungsfensterController controller = createVerfassungsfenster();
         EMailGrenz email = listViewEmails.getSelectionModel().getSelectedItem();
 
+        StringBuilder sb = new StringBuilder();
+        sb.append("<br><br><br> ________________________________________________________________________________ <br>" +
+                "<html dir=\"ltr\"><head></head><body contenteditable=\"true\"><p><font face=\"Lucida Grande\" size=\"2\" " +
+                "color=\"#989898\"><b>Bisheriger Nachrichtenverlauf: </b><br><br>");
+        sb.append("</font></p></body></html>");
+        sb.append(email.getContentOriginal());
+        controller.getEmailInhalt().setHtmlText(sb.toString());
         controller.getTxtEmpfaenger().setText(email.getAbsender());
-        controller.getEmailInhalt().setHtmlText(email.getContentOriginal());
         controller.getTxtBetreff().setText("RE: " + email.getBetreff());
 
-        StringBuilder sb = new StringBuilder();
+        sb = new StringBuilder();
         for(String cc : email.getCc()){
             if(!cc.isEmpty())
                 sb.append(cc + " ; ");

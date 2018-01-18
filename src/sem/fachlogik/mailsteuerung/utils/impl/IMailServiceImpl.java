@@ -1,5 +1,6 @@
 package sem.fachlogik.mailsteuerung.utils.impl;
 
+import com.sun.org.apache.xml.internal.serializer.ToHTMLStream;
 import sem.datenhaltung.semmodel.entities.Tag;
 import sem.datenhaltung.semmodel.services.ICRUDTag;
 import sem.fachlogik.grenzklassen.EMailGrenz;
@@ -30,6 +31,8 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
 import java.io.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import sem.datenhaltung.semmodel.services.ICRUDMail;
@@ -96,19 +99,26 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
 
 
     private Multipart addAttachment(EMail eMail, Multipart multipart){
-        for(File file : eMail.getFiles()) {
-            //File holen und in DataSource zuweisen
-            BodyPart messageBodyPart = new MimeBodyPart();
-            String filePath = file.getPfad();
-            DataSource source = new FileDataSource(filePath);
-            try {
-                messageBodyPart.setDataHandler(new DataHandler(source));
-                messageBodyPart.setFileName(file.getName());
-                multipart.addBodyPart(messageBodyPart);
-            } catch (MessagingException e) {
-                System.out.println("MessagingException wurde geworfen in IMailSteuerung, addAttachment(): " + e.getMessage());;
+        try{
+            if(eMail.getFiles() != null){
+                for(File file : eMail.getFiles()) {
+                    //File holen und in DataSource zuweisen
+                    BodyPart messageBodyPart = new MimeBodyPart();
+                    String filePath = file.getPfad();
+                    DataSource source = new FileDataSource(filePath);
+                    try {
+                        messageBodyPart.setDataHandler(new DataHandler(source));
+                        messageBodyPart.setFileName(file.getName());
+                        multipart.addBodyPart(messageBodyPart);
+                    } catch (MessagingException e) {
+                        System.out.println("MessagingException wurde geworfen in IMailSteuerung, addAttachment(): " + e.getMessage());;
+                    }
+                }
             }
+        }catch(NullPointerException e){
+            System.out.println("NullpointerException wurde geworfen beim Einfügen von Anhängen: " + e.getMessage());
         }
+
         // store file
         //message.writeTo(new FileOutputStream(new File("c:/mail.eml")));
         return multipart;
@@ -288,13 +298,38 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                         result = result.concat("\n" + Jsoup.parse(html).text());
                     }
                 }
+                if(result.isEmpty()){
+                    MimeMessage message1 = (MimeMessage) message;
+                    try {
+                        System.out.println("MIMEMessage: " + message1.getContent().toString() + " Type: " + message1.getContentType());
+                        System.out.println("ImapMessages: ");
+
+                        MimeMultipart part = (MimeMultipart)message.getContent();
+
+                        for (int i = 0; i < part.getCount(); i++) {
+                            MimeBodyPart bodyPart = (MimeBodyPart) part.getBodyPart(i);
+                            System.out.println("bodyParty(" + i + "): " + bodyPart.getContent().toString());
+
+                            if (bodyPart.isMimeType("text/plain")) {
+                                result = result + "\n" + bodyPart.getContent();
+                                break;  //without break same text appears twice in my tests
+                            }
+                            else if (bodyPart.isMimeType("text/html")) {
+                                String html = (String) bodyPart.getContent();
+                                result = result.concat("\n" + Jsoup.parse(html).text());
+                            }
+                        }
+                    } catch (IOException | MessagingException e1) {
+                        e1.printStackTrace();
+                    }
+                    System.out.println(result);
+                }
                 return result;
             }
         }
         catch (Exception e){
-            return "NachrichtInhalt konnte nicht gelesen werden, da MessageType: IMAPMessage!";
+            return "";
         }
-
         return "";
     }
 
@@ -316,7 +351,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                 eMail.setTid(0);
 
                 //Absender setzen
-                eMail.setAbsender(message.getFrom()[0].toString());
+                eMail.setAbsender(extractEmailAddress(message.getFrom()[0].toString()));
 
                 //CC setzen
                 if (InternetAddress.toString(message.getRecipients(Message.RecipientType.CC)) != null) {
@@ -396,6 +431,35 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                 System.out.println("Exception wurde geworfen in IMailSteuerung, checkEMailAndSetToDB(): " + e.getMessage());
             }
         return eMail;
+    }
+
+
+    /*Liefert im Erfolgsfall die reine und gültige E-Mail Adresse zurück, ansonsten einen leeren String*/
+    private String extractEmailAddress(String address){
+        String extractedAddress = "";
+        StringBuilder stringBuilder = new StringBuilder();
+        if (!address.isEmpty()){
+            boolean addressStarted = false;
+            for (int i = 0; i < address.length(); i++){
+                if(address.charAt(i) == '<'){
+                    addressStarted = true;
+                }
+                else if (addressStarted && address.charAt(i) == '>'){
+                    addressStarted = false;
+                    break;
+                }
+                else if(addressStarted && address.charAt(i) != '<' && address.charAt(i) != '>'){
+                    stringBuilder.append(address.charAt(i));
+                }
+            }
+            String tmp = stringBuilder.toString();
+            CharSequence cs1 = "@";
+            CharSequence cs2 = ".";
+            if(tmp.contains(cs1) && tmp.contains(cs2)){
+                extractedAddress = tmp;
+            }
+        }
+        return extractedAddress;
     }
 
     // #################################################################################################################
@@ -944,7 +1008,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
             BodyPart messageBodyPart = new MimeBodyPart();
 
             //Content füllen
-            messageBodyPart.setText(email.getInhalt());
+            messageBodyPart.setContent(email.getInhalt(), "text/html");
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(messageBodyPart);
 
@@ -974,189 +1038,6 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
         }
 
         return ret;
-    }
-
-    // #################################################################################################################
-    // #################################################   Setter   ####################################################
-    // #################################################################################################################
-    @Override
-    public EMailGrenz getEMailGrenz(EMail eMail) {
-        EMailGrenz eMailGrenz = new EMailGrenz();
-        eMailGrenz.setMid(eMail.getMid());
-        eMailGrenz.setBetreff(eMail.getBetreff());
-        eMailGrenz.setInhalt(eMail.getInhalt());
-        eMailGrenz.setInstanceID(eMail.getInstanceID());
-        Tag tag;
-        TagGrenz tagGrenz;
-        try{
-            ICRUDTag icrudTag = ICRUDManagerSingleton.getIcrudTagInstance();
-            tag = icrudTag.getTagById(eMail.getTid());
-            if(tag != null){
-                tagGrenz = getTagGrenz(tag);
-                eMailGrenz.setTag(tagGrenz);
-            }
-        }
-        catch (NullPointerException e){
-            System.out.println("NullPointerException wird geworfen in IMailSteuerung, getEMailGrenz(): " + e.getMessage());
-        }
-
-        eMailGrenz.setAbsender(eMail.getAbsender());
-
-        ArrayList<String> ccList = implodeAdresses(eMail.getCc());
-        eMailGrenz.setCc(ccList);
-
-        ArrayList<String> bccList = implodeAdresses(eMail.getBcc());
-        eMailGrenz.setBcc(bccList);
-
-        ArrayList<String> empfaengerList = implodeAdresses(eMail.getEmpfaenger());
-        eMailGrenz.setEmpfaenger(empfaengerList);
-
-        eMailGrenz.setContentOriginal(eMail.getContentOriginal());
-        eMailGrenz.setZustand(eMail.getZustand());
-        eMailGrenz.setMessageID(eMail.getMessageID());
-        eMailGrenz.setOrdner(eMail.getOrdner());
-
-        try{
-            if(eMail.getFiles().size() > 0) {
-                ArrayList<FileGrenz> fileList = new ArrayList<>();
-                for (File file : eMail.getFiles()) {
-                    FileGrenz fileGrenz = getFileGrenz(file);
-                    fileList.add(fileGrenz);
-                }
-                eMailGrenz.setFiles(fileList);
-            }
-        }
-        catch (NullPointerException e){
-            System.out.println("NullPointerException wurde geworfen in IMailSteuerung, getEMailGrenz(): " + e.getMessage());
-        }
-
-        return eMailGrenz;
-    }
-
-    @Override
-    public EMail getEMail(EMailGrenz eMailGrenz) {
-        EMail eMail = new EMail();
-        eMail.setMid(eMailGrenz.getMid());
-        eMail.setBetref(eMailGrenz.getBetreff());
-        eMail.setInhalt(eMailGrenz.getInhalt());
-        if(eMailGrenz.getTag() != null){
-            eMail.setTid(eMailGrenz.getTag().getTid());
-        }
-        eMail.setAbsender(eMailGrenz.getAbsender());
-
-        String ccList = explodeAdresses(eMailGrenz.getCc());
-        eMail.setCc(ccList);
-
-        String bccList = explodeAdresses(eMailGrenz.getBcc());
-        eMail.setBcc(bccList);
-
-        String empfaengerList = explodeAdresses(eMailGrenz.getEmpfaenger());
-        eMail.setEmpfaenger(empfaengerList);
-
-        eMail.setContentOriginal(eMailGrenz.getContentOriginal());
-        eMail.setZustand(eMailGrenz.getZustand());
-        eMail.setMessageID(eMailGrenz.getMessageID());
-        eMail.setOrdner(eMailGrenz.getOrdner());
-
-        try{
-            if(eMail.getFiles().size() > 0) {
-                ArrayList<File> fileList = new ArrayList<>();
-                for (FileGrenz fileGrenz : eMailGrenz.getFiles()) {
-                    File file = getFile(fileGrenz);
-                    fileList.add(file);
-                }
-                eMail.setFiles(fileList);
-            }
-        }
-        catch (NullPointerException e){
-            System.out.println("NullPointerException wurde geworfen in IMailSteuerung, getEMail(): " + e.getMessage());
-        }
-
-        return eMail;
-    }
-
-    @Override
-    public KontoGrenz getKontoGrenz(Konto konto) {
-        KontoGrenz kontoGrenz = new KontoGrenz();
-        kontoGrenz.setUserName(konto.getUserName());
-        kontoGrenz.setPassWort(konto.getPassWort());
-        kontoGrenz.setAccountAt(konto.getAccountAt());
-        kontoGrenz.setIMAPhost(konto.getIMAPhost());
-        kontoGrenz.setSMTPhost(konto.getSMTPhost());
-        kontoGrenz.setEmailAddress(konto.getEmailAddress());
-        kontoGrenz.setPort(konto.getPort());
-        return kontoGrenz;
-    }
-
-    @Override
-    public Konto getKonto(KontoGrenz kontoGrenz) {
-        Konto konto = new Konto();
-        konto.setUserName(kontoGrenz.getUserName());
-        konto.setPassWort(kontoGrenz.getPassWort());
-        konto.setAccountAt(kontoGrenz.getAccountAt());
-        konto.setIMAPhost(kontoGrenz.getIMAPhost());
-        konto.setSMTPhost(kontoGrenz.getSMTPhost());
-        konto.setEmailAddress(kontoGrenz.getEmailAddress());
-        konto.setPort(kontoGrenz.getPort());
-        return konto;
-    }
-
-    @Override
-    public TagGrenz getTagGrenz(Tag tag) {
-        TagGrenz tagGrenz = new TagGrenz();
-        tagGrenz.setTid(tag.getTid());
-        tagGrenz.setName(tag.getName());
-        return tagGrenz;
-    }
-
-    @Override
-    public Tag getTag(TagGrenz tagGrenz) {
-        Tag tag = new Tag();
-        tag.setTid(tagGrenz.getTid());
-        tag.setName(tagGrenz.getName());
-        return null;
-    }
-
-    @Override
-    public FileGrenz getFileGrenz(File file) {
-        FileGrenz fileGrenz = new FileGrenz();
-        fileGrenz.setFid(file.getFid());
-        fileGrenz.setMId(file.getMid());
-        fileGrenz.setPfad(file.getPfad());
-        fileGrenz.setName(file.getName());
-        return fileGrenz;
-    }
-
-    @Override
-    public File getFile(FileGrenz fileGrenz) {
-        File file = new File();
-        file.setFid(fileGrenz.getFid());
-        file.setMId(fileGrenz.getMid());
-        file.setPfad(fileGrenz.getPfad());
-        file.setName(fileGrenz.getName());
-        return file;
-    }
-
-    @Override
-    public String explodeAdresses(ArrayList<String> adresses) {
-        String adressString = "";
-        if(adresses.size() > 0){
-            for (String adress: adresses){
-                adressString = adressString.concat(adress + ";");
-            }
-        }
-        return adressString;
-    }
-
-    @Override
-    public ArrayList<String> implodeAdresses(String adresses) {
-        ArrayList<String> adressList = null;
-        if(adresses != null){
-            String[] adressArray = adresses.split(";");
-            adressList = new ArrayList<>();
-            adressList.addAll(Arrays.asList(adressArray));
-        }
-        return adressList;
     }
 
     @Override

@@ -102,11 +102,9 @@ public class VerfassungsfensterController implements Initializable{
         email.setBcc(bccList);
 
         email.setInhalt(emailInhalt.getHtmlText());
-    email.setFiles(new ArrayList<>());
+        email.setFiles(new ArrayList<>());
         IMailSteuerung mailSteuerung = new IMailSteuerungImpl();
         mailSteuerung.sendeEMail(new IKontoSteuerungImpl().getKonto(1),email);
-
-
 
     }
 }

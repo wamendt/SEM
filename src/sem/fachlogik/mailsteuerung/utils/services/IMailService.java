@@ -38,16 +38,4 @@ public interface IMailService {
 
     //Listener
     ArrayList<Folder> holeFolderFuerListener(Konto konto) throws MessagingException;
-
-    //Setter
-    EMailGrenz getEMailGrenz(EMail eMail) throws IOException, SQLException;
-    EMail getEMail(EMailGrenz eMailGrenz);
-    KontoGrenz getKontoGrenz(Konto konto);
-    Konto getKonto(KontoGrenz kontoGrenz);
-    TagGrenz getTagGrenz(Tag tag);
-    Tag getTag(TagGrenz tagGrenz);
-    FileGrenz getFileGrenz(File file);
-    File getFile(FileGrenz fileGrenz);
-    String explodeAdresses(ArrayList<String> adresses);
-    ArrayList<String> implodeAdresses(String adresses);
 }
