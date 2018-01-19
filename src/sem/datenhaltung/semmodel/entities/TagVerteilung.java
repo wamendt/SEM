@@ -1,5 +1,9 @@
 package sem.datenhaltung.semmodel.entities;
 
+/**
+ * TagVerteilung Enttiy Klasse,
+ * representiert einen Statistischen wert, zu wie viel prozent eine email (mid) diesem Tag zugeordnet wurde.
+ */
 public class TagVerteilung {
     private int tvid;
     private double verteilung;

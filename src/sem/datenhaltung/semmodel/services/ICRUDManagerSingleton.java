@@ -15,7 +15,16 @@ public class ICRUDManagerSingleton {
 
     private static ICRUDMail icrudMailInstance;
 
+    private static ICRUDKonto icrudKontoInstance;
+
     private ICRUDManagerSingleton(){}
+
+    public static ICRUDKonto getIcrudKontoInstance(){
+        if(icrudKontoInstance == null){
+            icrudKontoInstance = new CRUDKonto();
+        }
+        return icrudKontoInstance;
+    }
 
     public static ICRUDTagVerteilung getIcrudTagVerteilungInstance(){
         if(icrudTagVerteilung == null){

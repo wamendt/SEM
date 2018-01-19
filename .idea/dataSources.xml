@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="SEMDB.sqlite" uuid="2aa5aa6d-4cfd-4427-af84-2a0f9424b96c">
+    <data-source source="LOCAL" name="SEMDB" uuid="71737dc7-23cb-42f9-b44d-0073359696f9">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
+      <imported>true</imported>
+      <remarks>SQLite</remarks>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/SEMDB.sqlite</jdbc-url>
-      <driver-properties>
-        <property name="enable_load_extension" value="true" />
-      </driver-properties>
-    </data-source>
-    <data-source source="LOCAL" name="SEMDB.sqlite [2]" uuid="d2dfbcc2-6288-44d9-b801-1d4bdab22bca">
-      <driver-ref>sqlite.xerial</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/SEMDB.sqlite</jdbc-url>
+      <jdbc-url>jdbc:sqlite:C:\Users\maksim.hvatov\Workspace\IDEAProjects\SEM\SEMDB.sqlite</jdbc-url>
       <driver-properties>
         <property name="enable_load_extension" value="true" />
       </driver-properties>

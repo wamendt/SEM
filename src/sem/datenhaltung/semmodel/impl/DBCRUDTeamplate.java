@@ -19,6 +19,10 @@ import java.util.ArrayList;
 
 public abstract class DBCRUDTeamplate<T> {
 
+    protected static final String SQL_SELECT_FROM_WHERE = "SELECT * FROM %s WHERE %s = ?";
+    protected static final String SQL_SELECT_FROM = "SELECT * FROM %s ";
+    protected static final String SQL_DELETE_FROM_WHERE = "DELETE FROM %s WHERE %s = ? ";
+
     /**
      * Erstelt ein entspraechendes Entity Objekt
      * @param rs das Anfrage Ergebnis
@@ -108,6 +112,8 @@ public abstract class DBCRUDTeamplate<T> {
             if (resultSet.next()) {
                 key = resultSet.getInt(1);
             }
+            statement.clearParameters();
+            statement.close();
         }finally {
             DBConnectionManager.closeConnection();
         }
@@ -133,6 +139,8 @@ public abstract class DBCRUDTeamplate<T> {
         if (resultSet.next()){
             object = makeObject(resultSet);
         }
+        preparedStatement.clearParameters();
+        preparedStatement.close();
         DBConnectionManager.closeConnection();
         return object;
     }
@@ -142,6 +150,8 @@ public abstract class DBCRUDTeamplate<T> {
         Connection connection = DBConnectionManager.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         boolean ret = preparedStatement.execute();
+        preparedStatement.clearParameters();
+        preparedStatement.close();
         DBConnectionManager.closeConnection();
         return ret;
     }

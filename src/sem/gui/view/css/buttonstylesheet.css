@@ -1,4 +1,5 @@
 
+
 .button_weiterleiten{
     -fx-background-image: url("../../../../resources/bilder/reply-email4.png");
     -fx-background-repeat: no-repeat;
@@ -72,14 +73,14 @@
     -fx-background-image: url("../../../../resources/bilder/paper-plane1.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 30;
-    -fx-background-color: lightgray;
+    -fx-background-color: transparent;
     -fx-background-position: center;
 }
 .button_attachment{
     -fx-background-image: url("../../../../resources/bilder/attachment.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 30;
-    -fx-background-color: lightgray;
+    -fx-background-color: transparent;
     -fx-background-position: center;
 
 }
@@ -87,7 +88,7 @@
     -fx-background-image: url("../../../../resources/bilder/envelope.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 30;
-    -fx-background-color: lightgray;
+    -fx-background-color: transparent;
     -fx-background-position: center;
 
 }
@@ -95,7 +96,7 @@
     -fx-background-image: url("../../../../resources/bilder/close.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 30;
-    -fx-background-color: lightgray;
+    -fx-background-color: transparent;
     -fx-background-position: center;
 
 }

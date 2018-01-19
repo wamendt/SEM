@@ -18,6 +18,7 @@ public class EmailListElementController {
 
 
 
+
     public void setLabelAbsender(String absender){
         labelAbsender.setText(absender);
     }

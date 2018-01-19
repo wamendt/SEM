@@ -1,5 +1,6 @@
 package sem.gui.viewmodel.menufenster;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -56,21 +57,8 @@ public class AssistentController implements Initializable{
     @FXML
     private ProgressIndicator progressIndicator;
 
-    private Thread assistentThread;
-
-    @FXML
-    private Label labelTagsWoerter;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Task assistentTask = new Task() {
-
-            @Override
-            protected Object call() throws Exception {
-                return null;
-            }
-        };
-        assistentThread = new Thread(assistentTask);
 
         listViewTags.setCellFactory(new Callback<ListView<TagGrenz>, ListCell<TagGrenz>>() {
             @Override
@@ -82,20 +70,24 @@ public class AssistentController implements Initializable{
         listViewTags.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TagGrenz>() {
             @Override
             public void changed(ObservableValue<? extends TagGrenz> observable, TagGrenz oldValue, TagGrenz newValue) {
-                flowPaneWoerter.getChildren().clear();
-                for(String s : newValue.getWoerter()){
-                    Label label = new Label(s);
-                    MenuItem item = new MenuItem("Zur Stopliste hinzufügen");
-                    item.setOnAction(event -> {
-                        new IAssistentSteuerungImpl().wortZurStoplisteHinzufuegen(label.getText(), newValue.getTid());
-                        flowPaneWoerter.getChildren().remove(label);
-                    });
-                    label.setContextMenu(new ContextMenu(item));
-                    flowPaneWoerter.getChildren().add(label);
+                if(newValue != null){
+                    flowPaneWoerter.getChildren().clear();
+                    for(String s : newValue.getWoerter()){
+                        Label label = new Label(s);
+                        MenuItem item = new MenuItem("Zur Stopliste hinzufügen");
+                        item.setOnAction(event -> {
+                            new IAssistentSteuerungImpl().wortZurStoplisteHinzufuegen(label.getText(), newValue.getTid());
+                            flowPaneWoerter.getChildren().remove(label);
+                            newValue.getWoerter().remove(s);
+                        });
+                        label.setContextMenu(new ContextMenu(item));
+                        flowPaneWoerter.getChildren().add(label);
+                    }
+
+                    textFieldTagName.setText(newValue.getName());
                 }
-                labelTagsWoerter.setVisible(true);
-                textFieldTagName.setText(newValue.getName());
             }
+
         });
         listViewTags.setItems(FXCollections.observableArrayList(new IAssistentSteuerungImpl().zeigeAlleTagsAn()));
     }
@@ -106,7 +98,6 @@ public class AssistentController implements Initializable{
 
         root.prefWidthProperty().bind(((AnchorPane)parent).widthProperty());
         root.prefHeightProperty().bind(((AnchorPane)parent).heightProperty());
-        labelTagsWoerter.setVisible(false);
     }
 
     @FXML
@@ -129,9 +120,26 @@ public class AssistentController implements Initializable{
             double alphasum = Double.parseDouble(textFieldAlpha.getText());
             double beta = Double.parseDouble(textFieldBeta.getText());
             int numIterations = Integer.parseInt(textFieldAnzahlIterationen.getText());
-            new IAssistentSteuerungImpl().trainiereSEM(anzahlTags, alphasum, beta, numIterations);
-            ControllerFactory.getHauptfensterController().initFlowPaneTags();
-            listViewTags.setItems(FXCollections.observableArrayList(new IAssistentSteuerungImpl().zeigeAlleTagsAn()));
+            Task task = new Task() {
+                @Override
+                protected Object call() throws Exception {
+                    btnTrainieren.setDisable(true);
+                    new IAssistentSteuerungImpl().trainiereSEM(anzahlTags, alphasum, beta, numIterations);
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            ControllerFactory.getHauptfensterController().initFlowPaneTags();
+                            listViewTags.setItems(FXCollections.observableArrayList(new IAssistentSteuerungImpl().zeigeAlleTagsAn()));
+                        }
+                    });
+                    updateProgress(1, 1);
+                    btnTrainieren.setDisable(false);
+                    return null;
+                }
+            };
+            progressIndicator.progressProperty().bind(task.progressProperty());
+            new Thread(task).start();
+
         }catch(NumberFormatException e){
 
         }

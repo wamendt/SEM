@@ -1,5 +1,9 @@
 package sem.fachlogik.kontosteuerung.impl;
 
+import sem.datenhaltung.semmodel.entities.Konto;
+import sem.datenhaltung.semmodel.services.ICRUDKonto;
+import sem.datenhaltung.semmodel.services.ICRUDManagerSingleton;
+import sem.fachlogik.grenzklassen.GrenzklassenKonvertierer;
 import sem.fachlogik.grenzklassen.KontoGrenz;
 import sem.fachlogik.kontosteuerung.services.IKontoSteuerung;
 
@@ -12,35 +16,24 @@ public class IKontoSteuerungImpl implements IKontoSteuerung{
 
     @Override
     public KontoGrenz getKonto(int id) {
-        KontoGrenz konto = new KontoGrenz();
-        konto.setEmailAddress("w.amendt@gmx.de");
-        konto.setIMAPhost("imap.gmx.net");
-        konto.setSMTPhost("mail.gmx.net");
-        konto.setPassWort("Packard1");
-        return konto;
+        ICRUDKonto icrudKonto = ICRUDManagerSingleton.getIcrudKontoInstance();
+        Konto konto = icrudKonto.getKontoById(id);
+        KontoGrenz kontoGrenz = null;
+        if(konto != null){
+            kontoGrenz = GrenzklassenKonvertierer.KontoZuKontoGrenz(konto);
+        }
+        return kontoGrenz;
     }
 
-    public boolean loggeKontoEin(KontoGrenz konto) {
-        return true;
-    }
+
     public boolean registriereKonto(KontoGrenz konto) {
         return true;
     }
-
-    /*
-    // Dasselbe Konto zurück??
-    public KontoGrenz getKonto(KontoGrenz konto) throws IOException, SQLException{
-        return konto;
-    }
-    */
 
     public boolean leoscheKonto(KontoGrenz konto){
         return true;
     }
 
-    public boolean loggeAus(KontoGrenz konto) {
-        return true;
-    }
 
     public ArrayList<KontoGrenz> getAlleKonten() {
         ArrayList<KontoGrenz> alleKonten = new ArrayList<KontoGrenz>();

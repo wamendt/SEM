@@ -7,11 +7,20 @@ import javax.mail.event.MessageCountEvent;
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.imap.IMAPStore;
 import sem.datenhaltung.semmodel.entities.Konto;
+import sem.fachlogik.grenzklassen.EMailGrenz;
+import sem.fachlogik.mailsteuerung.event.MsgReceivedEvent;
+
+import java.util.ArrayList;
 
 public class MessageCountListenManager {
     private IMAPStore store;
     private static Konto konto;
 
+    private ArrayList<MsgReceivedListener> msgReceivedListeners = new ArrayList<>();
+
+    public void addMsgReceivedListener(MsgReceivedListener listener){
+        msgReceivedListeners.add(listener);
+    }
     public MessageCountListenManager(Store store, Konto konto){
         this.store = (IMAPStore) store;
         MessageCountListenManager.konto = konto;
@@ -33,6 +42,9 @@ public class MessageCountListenManager {
                     for (Message message : messages) {
                         try {
                             System.out.println("\nMessageCount: " + count + "\nMail Subject:- " + message.getSubject() + "\nMessageNumber: " + message.getMessageNumber());
+                            for(MsgReceivedListener l : msgReceivedListeners){
+                                l.messageAngekommen(new MsgReceivedEvent(this, new EMailGrenz()));
+                            }
                         } catch (MessagingException e) {
                             e.printStackTrace();
                         }

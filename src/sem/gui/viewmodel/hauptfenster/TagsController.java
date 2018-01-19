@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import sem.fachlogik.grenzklassen.TagGrenz;
+import sem.gui.viewmodel.utils.TagClickedListener;
 
 public class TagsController {
 

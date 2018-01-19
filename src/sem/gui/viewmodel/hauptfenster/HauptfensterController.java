@@ -34,11 +34,16 @@ import sem.fachlogik.grenzklassen.EMailGrenz;
 import sem.fachlogik.grenzklassen.TagGrenz;
 import sem.fachlogik.kontosteuerung.impl.IKontoSteuerungImpl;
 import sem.fachlogik.kontosteuerung.services.IKontoSteuerung;
+import sem.fachlogik.mailsteuerung.event.MsgReceivedEvent;
+import sem.fachlogik.mailsteuerung.event.MsgRemovedEvent;
 import sem.fachlogik.mailsteuerung.impl.IMailSteuerungImpl;
+import sem.fachlogik.mailsteuerung.listener.MsgReceivedListener;
+import sem.fachlogik.mailsteuerung.listener.MsgRemovedListener;
 import sem.fachlogik.mailsteuerung.services.IMailSteuerung;
 import sem.fachlogik.mailsteuerung.utils.services.IMailService;
 import sem.gui.viewmodel.utils.ControllerFactory;
 import sem.gui.viewmodel.menufenster.MenuController;
+import sem.gui.viewmodel.utils.TagClickedListener;
 import sem.gui.viewmodel.verfassungsfenster.VerfassungsfensterController;
 
 import javax.sound.sampled.Line;
@@ -49,7 +54,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class HauptfensterController implements Initializable, TagClickedListener {
+public class HauptfensterController implements Initializable, TagClickedListener, MsgReceivedListener, MsgRemovedListener {
 
     @FXML
     private Parent root;
@@ -150,7 +155,7 @@ public class HauptfensterController implements Initializable, TagClickedListener
 
     private void initEmailListView(){
         ArrayList<EMailGrenz> emails = mailSteuerung.zeigeAlleEMailsAusOrdner(kontoSteuerung.getKonto(1),"INBOX");
-
+        //ArrayList<EMailGrenz> emails = mailSteuerung.importEMails(kontoSteuerung.getKonto(1));
         ObservableList<EMailGrenz> observableEmails = FXCollections.observableArrayList(emails);
 
         listViewEmails.setItems(observableEmails);
@@ -179,10 +184,8 @@ public class HauptfensterController implements Initializable, TagClickedListener
                     flowPaneWoerter.setVisible(false);
                     labelTagWoerter.setVisible(false);
 
-                    double[] tagVerteilung = assistentSteuerung.getTagVerteilung(newValue.getInstanceID());
-
-                    for(int i = 0; i < assistentSteuerung.getAnzahlTags(); i++){
-                        System.out.println(tagVerteilung[i]);
+                    double[] tagVerteilung = assistentSteuerung.getTagVerteilung(newValue);
+                    for(int i = 0; i < tagVerteilung.length; i++){
                         final int j = i;
                         if(tagVerteilung[i] > 0.001) {
                             PieChart.Data data = new PieChart.Data(assistentSteuerung.getTagById(i + 1).getName(), tagVerteilung[i]);
@@ -213,6 +216,9 @@ public class HauptfensterController implements Initializable, TagClickedListener
         buttonLoeschen.setDisable(true);
         buttonWeiterleiten.setDisable(true);
         statistikPane.setVisible(false);
+        mailSteuerung.addMsgReceivedListener(this);
+        mailSteuerung.addMsgRemovedListener(this);
+
     }
 
     @FXML
@@ -375,6 +381,18 @@ public class HauptfensterController implements Initializable, TagClickedListener
 
     }
 
+    @Override
+    public void messageAngekommen(MsgReceivedEvent msgReceivedEvent) {
+        if(treeViewOrdner.getSelectionModel().getSelectedItem().getValue().equals("INBOX")){
+            listViewEmails.getItems().add(msgReceivedEvent.geteMailGrenz());
+        }
+        System.out.println(msgReceivedEvent.geteMailGrenz().getBetreff());
+    }
+
+    @Override
+    public void messageGeloescht(MsgRemovedEvent msgRemovedEvent) {
+
+    }
 }
 
 

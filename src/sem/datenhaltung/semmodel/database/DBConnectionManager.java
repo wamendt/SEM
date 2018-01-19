@@ -3,11 +3,16 @@ package sem.datenhaltung.semmodel.database;
 import org.sqlite.SQLiteConfig;
 import org.sqlite.SQLiteOpenMode;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Klasse die Eine Verbindung mit der Datenbank bereitstellt. Bietet ZugriffsMethoden fuer das Connection Objekt,
+ * mit dem dann Sql Statements ausgefuehrt werden koennen.
+ */
 public class DBConnectionManager {
     private static final String URL = "jdbc:sqlite:SEMDB.sqlite";  //"jdbc:sqlite:SEMDB" + username + ".sqlite"
     private static Connection connection;
@@ -31,4 +36,5 @@ public class DBConnectionManager {
             connection = null;
         }
     }
+
 }

@@ -2,6 +2,9 @@ package sem.datenhaltung.semmodel.entities;
 
 import java.util.ArrayList;
 
+/**
+ * Email Enetity Klasse
+ */
 public class EMail {
     private int mid;
     private String betreff;

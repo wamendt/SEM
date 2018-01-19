@@ -1,5 +1,8 @@
 package sem.datenhaltung.semmodel.entities;
 
+/**
+ * File Entity-Klasse
+ */
 public class File {
     private int fid;
     private String pfad;

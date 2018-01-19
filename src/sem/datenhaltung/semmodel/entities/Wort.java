@@ -1,5 +1,8 @@
 package sem.datenhaltung.semmodel.entities;
 
+/**
+ * Wort Entity Klasse, repraesentiert ein Wort das mit einem Tag (tid) verknuepft ist.
+ */
 public class Wort {
     private int wid;
     private String wort;

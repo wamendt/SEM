@@ -23,7 +23,6 @@ public class GrenzklassenKonvertierer {
         KontoGrenz kontoGrenz = new KontoGrenz();
         kontoGrenz.setUserName(konto.getUserName());
         kontoGrenz.setPassWort(konto.getPassWort());
-        kontoGrenz.setAccountAt(konto.getAccountAt());
         kontoGrenz.setIMAPhost(konto.getIMAPhost());
         kontoGrenz.setSMTPhost(konto.getSMTPhost());
         kontoGrenz.setEmailAddress(konto.getEmailAddress());
@@ -36,7 +35,6 @@ public class GrenzklassenKonvertierer {
         Konto konto = new Konto();
         konto.setUserName(kontoGrenz.getUserName());
         konto.setPassWort(kontoGrenz.getPassWort());
-        konto.setAccountAt(kontoGrenz.getAccountAt());
         konto.setIMAPhost(kontoGrenz.getIMAPhost());
         konto.setSMTPhost(kontoGrenz.getSMTPhost());
         konto.setEmailAddress(kontoGrenz.getEmailAddress());

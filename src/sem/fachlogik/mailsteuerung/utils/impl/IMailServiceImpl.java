@@ -1,12 +1,5 @@
 package sem.fachlogik.mailsteuerung.utils.impl;
 
-import com.sun.org.apache.xml.internal.serializer.ToHTMLStream;
-import sem.datenhaltung.semmodel.entities.Tag;
-import sem.datenhaltung.semmodel.services.ICRUDTag;
-import sem.fachlogik.grenzklassen.EMailGrenz;
-import sem.fachlogik.grenzklassen.FileGrenz;
-import sem.fachlogik.grenzklassen.KontoGrenz;
-import sem.fachlogik.grenzklassen.TagGrenz;
 import sem.fachlogik.mailsteuerung.event.MsgReceivedEvent;
 import sem.fachlogik.mailsteuerung.listener.MsgReceivedListener;
 import sem.fachlogik.mailsteuerung.listener.MsgRemovedListener;
@@ -26,13 +19,10 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.*;
 import javax.activation.DataSource;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
 import java.io.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import sem.datenhaltung.semmodel.services.ICRUDMail;
@@ -587,7 +577,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
 
                 //E-Mail lokal löschen
                 ICRUDMail icrudMail = ICRUDManagerSingleton.getIcrudMailInstance();
-                ret = icrudMail.deleteEMailByFolder(folder.getFullName());
+                ret = icrudMail.deleteEMailVomOrdner(folder.getFullName());
             }
 
             folder.close(true);

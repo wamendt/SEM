@@ -76,7 +76,7 @@ public class VerfassungsfensterController implements Initializable{
 
     @FXML
     public void btnSendenOnAction(ActionEvent event){
-        System.out.println(new IKontoSteuerungImpl().getKonto(1).getEmailAddress());
+
 
         EMailGrenz email = new EMailGrenz();
         email.setBetreff(txtBetreff.getText());

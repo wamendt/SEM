@@ -1,7 +1,9 @@
 package sem.datenhaltung.semmodel.entities;
 
-import java.util.ArrayList;
 
+/**
+ * Tag Entity Klasse, Representiert eine Kategorie zu der die Emails zugeordnet worden sind.
+ */
 public class Tag {
     private int tid;
     private String name;

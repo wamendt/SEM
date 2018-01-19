@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.HTMLEditor?>
@@ -61,7 +62,7 @@
          </children>
       </GridPane>
       <HTMLEditor fx:id="emailInhalt" htmlText="&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body contenteditable=&quot;true&quot;&gt;&lt;/body&gt;&lt;/html&gt;" layoutX="50.0" layoutY="254.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="309.0" prefWidth="702.0" style="-fx-border-color: lightgrey;" styleClass="mylistview" stylesheets="@../css/scrollbarstylesheet.css" />
-      <HBox alignment="CENTER_LEFT" layoutX="13.0" layoutY="570.0" prefHeight="48.0" prefWidth="798.0">
+      <HBox alignment="CENTER_LEFT" layoutX="54.0" layoutY="570.0" prefHeight="48.0" prefWidth="702.0">
          <children>
             <Button id="button_attachment" fx:id="button_attachment" mnemonicParsing="false" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_attachment" stylesheets="@../css/buttonstylesheet.css" />
             <Button id="button_save" fx:id="button_save" mnemonicParsing="false" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="54.0" prefWidth="58.0" styleClass="button_save" stylesheets="@../css/buttonstylesheet.css">
@@ -79,6 +80,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
+            <Pane prefHeight="48.0" prefWidth="408.0" HBox.hgrow="ALWAYS" />
             <Button id="button_sent1" fx:id="button_send" mnemonicParsing="false" onAction="#btnSendenOnAction" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_sent1" stylesheets="@../css/buttonstylesheet.css">
                <cursor>
                   <Cursor fx:constant="HAND" />

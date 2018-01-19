@@ -41,7 +41,10 @@ public class Assistent2 {
 
     /*Methoden zur Konfiguration*/
     public int getNumTopics(){
-        return model.getNumTopics();
+        if(model != null)
+            return model.getNumTopics();
+        else
+            return 0;
     }
     public void setNumTopics(int topics){
         model.setNumTopics(topics);
