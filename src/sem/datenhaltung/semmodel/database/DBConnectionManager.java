@@ -32,8 +32,8 @@ public class DBConnectionManager {
 
     public static void closeConnection() throws SQLException {
         if(connection != null) {
-            connection.close();
-            connection = null;
+            //connection.close();
+            //connection = null;
         }
     }
 

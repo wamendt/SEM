@@ -24,12 +24,12 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
     private static final String COLUMN_EMPFAENGER = "empfaenger";
     private static final String COLUMN_CONTENTORIGNAL = "contentoriginal";
     private static final String COLUMN_ZUSTAND = "zustand";
-    private static final String COLUMN_MESSAGEID = "massageid";
+    private static final String COLUMN_MESSAGEID = "messageid";
     private static final String COLUMN_ORDNER = "ordner";
 
     private static final String SQL_INSERT_EMAIL = "INSERT INTO email ( betreff ,inhalt , tid, absender, cc, bcc," +
-            " empfaenger, contentOriginal, zustand, messageID, ordner) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    private static final String SQL_CHECK_DB = "SELECT * FROM email WHERE massageid = ? AND betreff = ? AND absender = ?";
+            " empfaenger, contentOriginal, zustand, messageid, ordner) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String SQL_CHECK_DB = "SELECT * FROM email WHERE messageid = ? AND betreff = ? AND absender = ?";
     private static final String SQL_SEARCH_EMAIL = "SELECT * FROM email WHERE betreff LIKE ? OR inhalt LIKE ? OR absender LIKE ? ";
     private static final String SQL_UPDATE_EMAIL = "UPDATE email SET betreff = ? , inhalt = ?, tid = ?, absender = ? WHERE mid = ?";
 
@@ -38,7 +38,7 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
     protected EMail makeObject(ResultSet rs) throws SQLException{
         EMail email = new EMail();
         email.setMid(rs.getInt(COLUMN_MID));
-        email.setBetref(rs.getString(COLUMN_BETREFF));
+        email.setBetreff(rs.getString(COLUMN_BETREFF));
         email.setInhalt(rs.getString(COLUMN_INHALT));
         email.setTid(rs.getInt(COLUMN_TID));
         email.setAbsender(rs.getString(COLUMN_ABSENDER));

@@ -15,7 +15,7 @@ public class CRUDKonto extends DBCRUDTeamplate<Konto> implements ICRUDKonto {
     private static final String COLUMN_USERNAME = "username";
     private static final String COLUMN_PASSWORT = "passwort";
     private static final String COLUMN_IMAPHOST = "imaphost";
-    private static final String COLUMN_SMTPHOST = "smpthost";
+    private static final String COLUMN_SMTPHOST = "smtphost";
     private static final String COLUMN_EMAILADDRESS = "emailaddress";
     private static final String COLUMN_PORT = "port";
     private static final String COLUMN_SIGNATUR = "signatur";
