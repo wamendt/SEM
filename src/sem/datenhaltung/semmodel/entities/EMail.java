@@ -61,9 +61,6 @@ public class EMail {
         return betreff;
     }
 
-    public void setBetref(String betreff) {
-        this.betreff = betreff;
-    }
 
     public String getInhalt() {
         return inhalt;
