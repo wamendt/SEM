@@ -32,6 +32,7 @@ public class DBConnectionManager {
 
     public static void closeConnection() throws SQLException {
         if(connection != null) {
+            //Scheint SQLLite spezifisch zu sein, dass mann auch mit nur einer verbindung zurecht kommt.
             //connection.close();
             //connection = null;
         }

@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class CRUDRegel extends DBCRUDTeamplate<Regel> implements ICRUDRegel {
+
     /**
      * Erstelt ein entspraechendes Entity Objekt
      *
@@ -17,7 +18,9 @@ public class CRUDRegel extends DBCRUDTeamplate<Regel> implements ICRUDRegel {
      */
     @Override
     protected Regel makeObject(ResultSet rs) throws SQLException, IOException {
-        return null;
+       Regel regel = new Regel();
+       regel.setActive(rs.getInt("isactive") == 1);
+       return regel;
     }
 
     @Override

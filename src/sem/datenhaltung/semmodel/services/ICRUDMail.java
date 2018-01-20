@@ -64,7 +64,7 @@ public interface ICRUDMail {
 
     /**
      * Ueberprueft ob eine Email bereits in der Datenbank erxestiert, um dies zu machen, wird die id, der
-     * betreff, der absender und der ordner , der Email zur ueberpruefung benoetigt.
+     * betreff, der absender und der ordner zur ueberpruefung benoetigt.
      * @param id
      * @param betreff
      * @param absender
@@ -76,9 +76,9 @@ public interface ICRUDMail {
     /**
      * Loescht alle EMails aus einem bestimmten Ordner.
      * @param ordner der Ordner aus dem die Emails gleoescht werden sollen.
-     * @return true bei erfolg, sonst false.
+     * @return die anzahl der geloeschten Objekte
      */
-    boolean deleteEMailVomOrdner(String ordner) ;
+    int deleteEMailVomOrdner(String ordner) ;
 
     /**
      * Sucht nach einer Email mit dem Suchtwort suchwort, dabei wird ueberprueft ob das suchwort, im inhalt,
