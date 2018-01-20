@@ -31,7 +31,8 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
             " empfaenger, contentOriginal, zustand, messageid, ordner) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_CHECK_DB = "SELECT * FROM email WHERE messageid = ? AND betreff = ? AND absender = ?";
     private static final String SQL_SEARCH_EMAIL = "SELECT * FROM email WHERE betreff LIKE ? OR inhalt LIKE ? OR absender LIKE ? ";
-    private static final String SQL_UPDATE_EMAIL = "UPDATE email SET betreff = ? , inhalt = ?, tid = ?, absender = ? WHERE mid = ?";
+    private static final String SQL_UPDATE_EMAIL = "UPDATE email SET betreff = ? , inhalt = ?, tid = ?, absender = ?," +
+            " cc = ?, bcc = ?, empfaenger = ?, contentoriginal = ?, zustand = ?, ordner = ?, messageid = ? WHERE mid = ?";
 
 
     @Override
@@ -99,11 +100,11 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
     }
 
 
-
+    /*Wozu dann noch der Ordner*/
     public EMail checkMessageInDB(int id, String betreff, String absender, String ordner) {
         ArrayList<EMail> eMails;
         try {
-            eMails = query(SQL_CHECK_DB, id, betreff, absender, ordner);
+            eMails = query(SQL_CHECK_DB, id, betreff, absender);
             return eMails.size() > 0 ? eMails.get(0) : null;
         } catch (SQLException | IOException e) {
             e.printStackTrace();
@@ -135,7 +136,8 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
     @Override
     public ArrayList<EMail> searchEMail(String suchwort){
         try {
-            return query(SQL_SEARCH_EMAIL, "%" + suchwort + "%", "%" + suchwort + "%");
+            suchwort = "%" + suchwort + "%";
+            return query(SQL_SEARCH_EMAIL, suchwort, suchwort , suchwort);
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
@@ -147,7 +149,8 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
         int ret = 0;
         try {
             ret = updateOrDelete(SQL_UPDATE_EMAIL, email.getBetreff(), email.getInhalt()
-                    ,email.getTid(), email.getAbsender(), email.getMid());
+                    ,email.getTid(), email.getAbsender(), email.getCc(), email.getBcc(), email.getEmpfaenger(),
+                    email.getContentOriginal(), email.getZustand(), email.getOrdner(), email.getMessageID(), email.getMid());
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
@@ -155,14 +158,14 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
     }
 
     @Override
-    public boolean deleteEMailVomOrdner(String ordner) {
+    public int deleteEMailVomOrdner(String ordner) {
         int ret = 0;
         try {
             ret = updateOrDelete(String.format(SQL_DELETE_FROM_WHERE, TABLE_NAME, COLUMN_ORDNER), ordner);
         } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
-        return ret == 1;
+        return ret;
     }
 
     /*BRAUCHT MAN DIE METHODE ??*/

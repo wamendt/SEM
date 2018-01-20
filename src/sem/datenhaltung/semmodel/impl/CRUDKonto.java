@@ -22,7 +22,7 @@ public class CRUDKonto extends DBCRUDTeamplate<Konto> implements ICRUDKonto {
 
     private static final String SQL_INSERT_KONTO = "INSERT INTO konto (UserName, EmailAddress, " +
             "IMAPhost, PassWort, Port, SMTPhost, signatur)" + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-    private static final String SQL_UPDATE_KONTO = "UPDATE konto SET userName = ?, passwort = ?, imaphos = ?, smtphost = ?," +
+    private static final String SQL_UPDATE_KONTO = "UPDATE konto SET userName = ?, passwort = ?, imaphost = ?, smtphost = ?," +
             "emailaddress = ?, port = ?, signatur = ? WHERE kid = ?";
 
     @Override
