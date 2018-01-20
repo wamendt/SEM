@@ -85,7 +85,7 @@ public class GrenzklassenKonvertierer {
     public static EMail EMailGrenzZuEMail(EMailGrenz eMailGrenz){
         EMail eMail = new EMail();
         eMail.setMid(eMailGrenz.getMid());
-        eMail.setBetref(eMailGrenz.getBetreff());
+        eMail.setBetreff(eMailGrenz.getBetreff());
         eMail.setInhalt(eMailGrenz.getInhalt());
         if(eMailGrenz.getTag() != null){
             eMail.setTid(eMailGrenz.getTag().getTid());
