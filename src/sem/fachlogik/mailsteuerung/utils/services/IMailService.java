@@ -2,13 +2,7 @@ package sem.fachlogik.mailsteuerung.utils.services;
 
 
 import sem.datenhaltung.semmodel.entities.EMail;
-import sem.datenhaltung.semmodel.entities.File;
 import sem.datenhaltung.semmodel.entities.Konto;
-import sem.datenhaltung.semmodel.entities.Tag;
-import sem.fachlogik.grenzklassen.EMailGrenz;
-import sem.fachlogik.grenzklassen.FileGrenz;
-import sem.fachlogik.grenzklassen.KontoGrenz;
-import sem.fachlogik.grenzklassen.TagGrenz;
 
 import javax.mail.Folder;
 import javax.mail.MessagingException;

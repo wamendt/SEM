@@ -2,10 +2,8 @@ package sem.fachlogik.mailsteuerung.impl;
 
 import sem.datenhaltung.semmodel.entities.EMail;
 import sem.datenhaltung.semmodel.entities.Konto;
-import sem.datenhaltung.semmodel.entities.Tag;
 import sem.datenhaltung.semmodel.services.ICRUDMail;
 import sem.datenhaltung.semmodel.services.ICRUDManagerSingleton;
-import sem.datenhaltung.semmodel.services.ICRUDTag;
 import sem.fachlogik.grenzklassen.EMailGrenz;
 import sem.fachlogik.grenzklassen.GrenzklassenKonvertierer;
 import sem.fachlogik.grenzklassen.KontoGrenz;
@@ -424,7 +422,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
         if(kontoGrenz != null && !ordnerName.equals("")){
             ArrayList<EMail> eMailList;
             ICRUDMail icrudMail = ICRUDManagerSingleton.getIcrudMailInstance();
-            eMailList = icrudMail.getEMailByOrdner(ordnerName);
+            eMailList = icrudMail.getEMailByOrdner(kontoGrenz.getKid(), ordnerName);
             if(eMailList.size() > 0){
                 //Service anlegen
                 IMailService iMailService = IMailServiceImpl.getMailService();

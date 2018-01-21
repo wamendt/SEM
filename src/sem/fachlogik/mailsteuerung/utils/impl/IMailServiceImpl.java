@@ -1,12 +1,15 @@
 package sem.fachlogik.mailsteuerung.utils.impl;
 
+import sem.datenhaltung.semmodel.entities.EMail;
+import sem.datenhaltung.semmodel.entities.File;
+import sem.datenhaltung.semmodel.entities.Konto;
+import sem.datenhaltung.semmodel.services.ICRUDMail;
+import sem.datenhaltung.semmodel.services.ICRUDManagerSingleton;
 import sem.fachlogik.mailsteuerung.event.MsgReceivedEvent;
 import sem.fachlogik.mailsteuerung.listener.MsgReceivedListener;
 import sem.fachlogik.mailsteuerung.listener.MsgRemovedListener;
 import sem.fachlogik.mailsteuerung.utils.services.IMailService;
 import sem.fachlogik.mailsteuerung.utils.mailConnection.MailStoreManager;
-import sem.datenhaltung.semmodel.entities.EMail;
-import sem.datenhaltung.semmodel.entities.Konto;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -25,9 +28,6 @@ import java.util.ArrayList;
 import java.io.*;
 
 import org.jsoup.Jsoup;
-import sem.datenhaltung.semmodel.services.ICRUDMail;
-import sem.datenhaltung.semmodel.services.ICRUDManagerSingleton;
-import sem.datenhaltung.semmodel.entities.File;
 
 public class IMailServiceImpl implements IMailService, MessageCountListener {
 
@@ -335,7 +335,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                 eMail = new EMail();
 
                 //Betreff setzen
-                eMail.setBetref(message.getSubject());
+                eMail.setBetreff(message.getSubject());
 
                 //Anfangs wird noch kein Tag gesetzt
                 eMail.setTid(0);
@@ -577,7 +577,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
 
                 //E-Mail lokal löschen
                 ICRUDMail icrudMail = ICRUDManagerSingleton.getIcrudMailInstance();
-                ret = icrudMail.deleteEMailVomOrdner(folder.getFullName());
+                ret = icrudMail.deleteEMailVomOrdner(konto.getKid(), folder.getFullName()) > 0;
             }
 
             folder.close(true);
