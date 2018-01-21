@@ -45,7 +45,7 @@ public class MenuController implements Initializable{
                         paneAuswahlausMenu.getChildren().setAll(assistentController.getRoot());
                         break;
                     case 3:
-                        KontoController kontoController = ControllerFactory.createKontoController();
+                        KontoEinstellungenController kontoController = ControllerFactory.createKontoEinstellungenController();
                         kontoController.setParent(paneAuswahlausMenu);
                         kontoController.init();
                         paneAuswahlausMenu.getChildren().setAll(kontoController.getRoot());

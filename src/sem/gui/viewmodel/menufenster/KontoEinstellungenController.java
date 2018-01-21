@@ -14,7 +14,7 @@ import sem.gui.viewmodel.verbindungsfenster.VerbindungsfensterController;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class KontoController implements Initializable {
+public class KontoEinstellungenController implements Initializable {
 
     private Parent parent ;
 
@@ -53,9 +53,32 @@ public class KontoController implements Initializable {
         this.parent = parent;
     }
 
+    public Parent getParent() {
+        return parent;
+    }
+
     @FXML
     private void btnKontoVerknuepfenOnAction(ActionEvent event){
         VerbindungsfensterController controller = ControllerFactory.createVerbindungsfensterController();
+        Scene scene = new Scene(controller.getRoot());
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.show();
+        stage.setResizable(false);
+    }
+
+    @FXML
+    private void btnRegelHinzufuegenOnAction(ActionEvent event){
+        NeueRegelController controller = ControllerFactory.createNeueRegelController();
+        Scene scene = new Scene(controller.getRoot());
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.show();
+        stage.setResizable(false);
+    }
+    @FXML
+    private void  btnKontoLoeschenOnAction(ActionEvent event){
+        KontoLoeschenController controller = ControllerFactory.createKontoLoeschenController();
         Scene scene = new Scene(controller.getRoot());
         Stage stage = new Stage();
         stage.setScene(scene);

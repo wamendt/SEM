@@ -40,17 +40,14 @@ import sem.fachlogik.mailsteuerung.impl.IMailSteuerungImpl;
 import sem.fachlogik.mailsteuerung.listener.MsgReceivedListener;
 import sem.fachlogik.mailsteuerung.listener.MsgRemovedListener;
 import sem.fachlogik.mailsteuerung.services.IMailSteuerung;
-import sem.fachlogik.mailsteuerung.utils.services.IMailService;
 import sem.gui.viewmodel.utils.ControllerFactory;
 import sem.gui.viewmodel.menufenster.MenuController;
 import sem.gui.viewmodel.utils.TagClickedListener;
 import sem.gui.viewmodel.verfassungsfenster.VerfassungsfensterController;
 
-import javax.sound.sampled.Line;
 import java.net.URL;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -233,7 +230,7 @@ public class HauptfensterController implements Initializable, TagClickedListener
 
     @FXML
     private void btnAssistentOnAction(ActionEvent event){
-        MenuController controller = ControllerFactory.creatMenuController();
+        MenuController controller = ControllerFactory.createMenuController();
         Scene scene = new Scene(controller.getRoot());
         Stage stage = new Stage();
         stage.setScene(scene);

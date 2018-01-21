@@ -4,10 +4,7 @@ import javafx.fxml.FXMLLoader;
 import sem.gui.viewmodel.hauptfenster.EmailListElementController;
 import sem.gui.viewmodel.hauptfenster.HauptfensterController;
 import sem.gui.viewmodel.hauptfenster.TagsController;
-import sem.gui.viewmodel.menufenster.AllgemeineStatistikController;
-import sem.gui.viewmodel.menufenster.AssistentController;
-import sem.gui.viewmodel.menufenster.KontoController;
-import sem.gui.viewmodel.menufenster.MenuController;
+import sem.gui.viewmodel.menufenster.*;
 import sem.gui.viewmodel.verbindungsfenster.VerbindungsfensterController;
 import sem.gui.viewmodel.verfassungsfenster.VerfassungsfensterController;
 
@@ -53,7 +50,7 @@ public class ControllerFactory {
         return loader.getController();
     }
 
-    public static MenuController creatMenuController(){
+    public static MenuController createMenuController(){
       FXMLLoader loader = new FXMLLoader(MenuController.class.getResource("../../view/fxml/MenuFenster.fxml"));
       try {
           loader.load();
@@ -94,7 +91,7 @@ public class ControllerFactory {
     }
 
     public static AssistentController createAssistentController(){
-        FXMLLoader loader = new FXMLLoader(VerbindungsfensterController.class.getResource("../../view/fxml/AssistentPane.fxml"));
+        FXMLLoader loader = new FXMLLoader(AssistentController.class.getResource("../../view/fxml/AssistentPane.fxml"));
         try{
             loader.load();
         }catch (IOException e){
@@ -102,8 +99,26 @@ public class ControllerFactory {
         }
         return loader.getController();
     }
-    public static KontoController createKontoController(){
-        FXMLLoader loader = new FXMLLoader(KontoController.class.getResource("../../view/fxml/KontoPane.fxml"));
+    public static KontoEinstellungenController createKontoEinstellungenController(){
+        FXMLLoader loader = new FXMLLoader(KontoEinstellungenController.class.getResource("../../view/fxml/KontoEinstellungenPane.fxml"));
+        try{
+            loader.load();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return loader.getController();
+    }
+    public static NeueRegelController createNeueRegelController(){
+        FXMLLoader loader = new FXMLLoader(NeueRegelController.class.getResource("../../view/fxml/NeueRegelFenster.fxml"));
+        try{
+            loader.load();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return loader.getController();
+    }
+    public static KontoLoeschenController createKontoLoeschenController(){
+        FXMLLoader loader = new FXMLLoader(KontoLoeschenController.class.getResource("../../view/fxml/KontoLoeschenFenster.fxml"));
         try{
             loader.load();
         }catch (IOException e){

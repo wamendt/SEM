@@ -33,7 +33,7 @@
 }
 
 .button_neue{
-    -fx-background-image: url("../../../../resources/bilder/edit3.png");
+    -fx-background-image: url("../../../../resources/bilder/edit2.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 30;
     -fx-background-color: transparent;
@@ -92,14 +92,7 @@
     -fx-background-position: center;
 
 }
-.button_cancel{
-    -fx-background-image: url("../../../../resources/bilder/cancel.png");
-    -fx-background-repeat: no-repeat;
-    -fx-background-size: 30;
-    -fx-background-color: transparent;
-    -fx-background-position: center;
 
-}
 
 
 
