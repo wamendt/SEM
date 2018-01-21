@@ -26,6 +26,11 @@ public interface ICRUDKonto{
     boolean deleteKonto(int kid);
 
     /**
+     * Loescht alle konten aus der Datenbank
+     * @return die Anzahl geloeschter Kontos
+     */
+    int loescheAlleKonten();
+    /**
      * Fuehrt ein Update bei einem Bestehenden Konto durch
      * @param konto das zu Updaatende Konto, mit einem PrimaryKey der in der Datenbank bereits vorhanden ist
      * @return true bei erfolg, sonst false
@@ -38,6 +43,13 @@ public interface ICRUDKonto{
      * @return Das gesuchte Konto bei erfolg, sonst null
      */
     Konto getKontoById(int kid) ;
+
+    /**
+     * Holt ein Konto mit angegebenen Usernamen aus der Datenbank
+     * @param username der username des Kontos
+     * @return das gesuchte Konto bei erfolg, sonst null
+     */
+    Konto getKontoByUsername(String username);
 
     /**
      * Liefert eine Liste aller Konten aus der Datenbank

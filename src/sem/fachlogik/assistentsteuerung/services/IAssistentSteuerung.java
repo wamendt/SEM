@@ -7,6 +7,10 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * Schnitstelle fuer die AssistentKomponente
+ * Bietet Methoden an fuer die Verwaltung von Tags sowie zum Trainieren der Kuenstlichen Intelligenz
+ */
 public interface IAssistentSteuerung {
 
     /**
@@ -16,8 +20,17 @@ public interface IAssistentSteuerung {
      */
     double[] getTagVerteilung(EMailGrenz email);
 
+    /**
+     * Holt einen Tag von der Datenbank
+     * @param id der PrimaryKey des Tags
+     * @return den gefunden Tag bei erfolg , sonst null
+     */
     TagGrenz getTagById(int id);
 
+    /**
+     * Gibt die Anzahl der vorhanden Tags zurueck
+     * @return
+     */
     int getAnzahlTags();
 
     /**
@@ -36,6 +49,11 @@ public interface IAssistentSteuerung {
      */
     ArrayList<TagGrenz> zeigeAlleTagsAn();
 
+    /**
+     * macht ein Update auf ein Tagobjekt
+     * @param tag der zu updatende Tag
+     * @return true bei erfolg, sonst false
+     */
     boolean updateTagGrenz(TagGrenz tag);
 
     /**
@@ -45,6 +63,5 @@ public interface IAssistentSteuerung {
      */
     void wortZurStoplisteHinzufuegen(String wort, int tid);
 
-    void wortVonStoplisteEntfernen(String wort);
 
 }

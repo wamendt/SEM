@@ -28,6 +28,7 @@ public interface IMailSteuerung {
 
 
     //E-Mails
+    int loescheAlleEMails();
     ArrayList<EMailGrenz> zeigeAlleEMails(KontoGrenz kontoGrenz);
     boolean weiseEinerEMailFlagZu(KontoGrenz kontoGrenz, String art, EMailGrenz eMailGrenz) ;
     boolean loescheEMailAusPapierkorb(KontoGrenz kontoGrenz, EMailGrenz eMailGrenz);

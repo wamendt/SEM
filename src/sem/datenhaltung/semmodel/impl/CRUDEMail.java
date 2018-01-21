@@ -136,6 +136,17 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail {
     }
 
     @Override
+    public int deleteAlleEMails() {
+        int ret = 0;
+        try{
+            ret = updateOrDelete(String.format(SQL_DELETE_FROM, TABLE_NAME));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
+    @Override
     public ArrayList<EMail> searchEMail(String suchwort){
         try {
             suchwort = "%" + suchwort + "%";

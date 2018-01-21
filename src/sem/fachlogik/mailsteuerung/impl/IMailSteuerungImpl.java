@@ -126,6 +126,11 @@ public class IMailSteuerungImpl implements IMailSteuerung{
         }
         return ordnerList;
     }
+
+    @Override
+    public int loescheAlleEMails() {
+        return ICRUDManagerSingleton.getIcrudMailInstance().deleteAlleEMails();
+    }
     // #################################################################################################################
     // ################################################   /Ordner   ####################################################
     // #################################################################################################################

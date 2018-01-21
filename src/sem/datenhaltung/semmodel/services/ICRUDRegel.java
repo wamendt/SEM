@@ -32,6 +32,7 @@ public interface ICRUDRegel {
      */
     boolean updateRegel(Regel regel);
 
+
     /**
      * Holt eine Regel mit dem PrimaryKey id aus der Datenbank
      * @param rid der PrimaryKey der Regel
