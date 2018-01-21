@@ -5,21 +5,19 @@ import sem.datenhaltung.semmodel.entities.Regel;
 import java.util.ArrayList;
 
 public class KontoGrenz {
+
     private int kid;
     private String userName;
     private String passWort;
-    private String accountAt;
     private String iMAPhost;
     private String sMTPhost;
-    private String emailAddress;
     private int port;
+    private ArrayList<Regel> regeln;
 
-    //Konstruktor
+
     public KontoGrenz(){}
 
-    //Hier evtl weitere Kontruktoren, wenn nötig
 
-    //Getter
     public int getKid() {
         return kid;
     }
@@ -32,9 +30,6 @@ public class KontoGrenz {
         return passWort;
     }
 
-    public String getAccountAt() {
-        return accountAt;
-    }
 
     public String getIMAPhost() {
         return iMAPhost;
@@ -44,16 +39,11 @@ public class KontoGrenz {
         return sMTPhost;
     }
 
-    public String getEmailAddress() {
-        return emailAddress;
-    }
 
     public int getPort() {
         return port;
     }
 
-
-    //Setter
     public void setKid(int kid) {
         this.kid = kid;
     }
@@ -66,10 +56,6 @@ public class KontoGrenz {
         this.passWort = passWort;
     }
 
-    public void setAccountAt(String accountAt) {
-        this.accountAt = accountAt;
-    }
-
     public void setIMAPhost(String iMAPhost) {
         this.iMAPhost = iMAPhost;
     }
@@ -78,9 +64,6 @@ public class KontoGrenz {
         this.sMTPhost = sMTPhost;
     }
 
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
-    }
 
     public void setPort(int port) {
         this.port = port;

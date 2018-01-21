@@ -130,7 +130,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
     private void setStore(Konto konto){
         if(store == null){
             try{
-                store = storeManager.setImapConnection(konto.getIMAPhost(), konto.getEmailAddress(), konto.getPassWort());
+                store = storeManager.setImapConnection(konto.getIMAPhost(), konto.getUserName(), konto.getPassWort());
             }catch (NoSuchProviderException e){
                 System.out.println("StoreManager wirft Exception in IMailSteuerung, setStore(): : " + e.getMessage());
             }
@@ -982,7 +982,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
         boolean ret = false;
 
         try {
-            Session session = storeManager.setSmtpConnection(konto.getSMTPhost(), konto.getEmailAddress(), konto.getPassWort());
+            Session session = storeManager.setSmtpConnection(konto.getSMTPhost(), konto.getUserName(), konto.getPassWort());
 
             String[] empfaengerList = email.getEmpfaenger().split(";");
 
