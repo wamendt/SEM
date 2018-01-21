@@ -2,10 +2,6 @@ package sem.datenhaltung.semmodel.impl;
 
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
-import sem.datenhaltung.semmodel.entities.EMail;
-import sem.datenhaltung.semmodel.entities.Tag;
-import sem.datenhaltung.semmodel.services.ICRUDMail;
-import sem.datenhaltung.semmodel.services.ICRUDManagerSingleton;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -25,6 +21,7 @@ class CRUDEMailTest extends CRUDTest {
         Assert.assertEquals(expected.getContentOriginal(), actual.getContentOriginal());
         Assert.assertEquals(expected.getZustand(), actual.getZustand());
         Assert.assertEquals(expected.getOrdner(), actual.getOrdner());
+        Assert.assertEquals(expected.getKid(), actual.getKid());
     }
 
     /**
@@ -33,7 +30,7 @@ class CRUDEMailTest extends CRUDTest {
     @Test
     void createEMail_00() {
         Tag testTag = createAndInsertTag();
-        EMail email = createEMailObject(testTag.getTid());
+        EMail email = createEMailObject(testTag.getTid(),0);
         int id = classUnderTest.createEMail(email);
         EMail testMail = getEMailVonDb(id);
         checkEmail(email, testMail);
@@ -45,7 +42,7 @@ class CRUDEMailTest extends CRUDTest {
      */
     @Test
     void getEMailById_00() {
-        EMail eMail = createEMailObject(0);
+        EMail eMail = createEMailObject(0, 0);
         insertEmail(eMail);
 
         EMail testEMail = classUnderTest.getEMailById(eMail.getMid());
@@ -59,7 +56,7 @@ class CRUDEMailTest extends CRUDTest {
      */
     @Test
     void getEMailById_01(){
-        EMail eMail = createEMailObject(0);
+        EMail eMail = createEMailObject(0,0);
         insertEmail(eMail);
         deleteEMailVonDb(eMail.getMid());
         EMail testemail = classUnderTest.getEMailById(eMail.getMid());
@@ -72,9 +69,12 @@ class CRUDEMailTest extends CRUDTest {
      */
     @Test
     void getEMailByOrdner_00() {
-        EMail eMail1 = createEMailObject(0);
+        Konto konto = createKontoObject();
+        insertKonto(konto);
+        EMail eMail1 = createEMailObject(0, konto.getKid());
         insertEmail(eMail1);
-        ArrayList<EMail> testListe = classUnderTest.getEMailByOrdner(eMail1.getOrdner());
+
+        ArrayList<EMail> testListe = classUnderTest.getEMailByOrdner(konto.getKid(), eMail1.getOrdner());
         Assert.assertEquals(1, testListe.size());
         checkEmail(testListe.get(0), eMail1);
     }
@@ -85,7 +85,8 @@ class CRUDEMailTest extends CRUDTest {
      */
     @Test
     void getEMailByOrdner_01(){
-        ArrayList<EMail> testliste = classUnderTest.getEMailByOrdner("TEST ORDNER");
+
+        ArrayList<EMail> testliste = classUnderTest.getEMailByOrdner(0,"TEST ORDNER");
 
         Assert.assertEquals(true, testliste.isEmpty());
     }
@@ -98,7 +99,7 @@ class CRUDEMailTest extends CRUDTest {
     @Test
     void getEMailByTag_00() {
         Tag tag = createAndInsertTag();
-        EMail eMail = createEMailObject(tag.getTid());
+        EMail eMail = createEMailObject(tag.getTid(), 0);
         insertEmail(eMail);
         ArrayList<EMail> testlist = classUnderTest.getEMailByTag(tag.getTid());
         Assert.assertEquals(1, testlist.size());
@@ -112,7 +113,7 @@ class CRUDEMailTest extends CRUDTest {
     @Test
     void getEMailByTag_01() {
         Tag tag = createAndInsertTag();
-        EMail eMail = createEMailObject(tag.getTid() + 1);//FKey der garantiert noch nicht exesistiert.
+        EMail eMail = createEMailObject(tag.getTid() + 1, 0);//FKey der garantiert noch nicht exesistiert.
         insertEmail(eMail);
         ArrayList<EMail> testlist = classUnderTest.getEMailByTag(tag.getTid());
         Assert.assertEquals(0, testlist.size());
@@ -126,9 +127,9 @@ class CRUDEMailTest extends CRUDTest {
      */
     @Test
     void checkMessageInDB_00() {
-        EMail eMail = createEMailObject(0);
+        EMail eMail = createEMailObject(0,0);
         insertEmail(eMail);
-        EMail testMail = classUnderTest.checkMessageInDB(eMail.getMid(), eMail.getBetreff(), eMail.getAbsender(), eMail.getOrdner());
+        EMail testMail = classUnderTest.checkMessageInDB(eMail.getMessageID(), eMail.getBetreff(), eMail.getAbsender(), eMail.getOrdner());
 
         Assert.assertNotNull(testMail);
         checkEmail(eMail, testMail);
@@ -141,7 +142,7 @@ class CRUDEMailTest extends CRUDTest {
      */
     @Test
     void checkMessageInDB_01(){
-        EMail eMail = createEMailObject(0);
+        EMail eMail = createEMailObject(0,0);
 
         String ordnerOrg = eMail.getOrdner();
         eMail.setOrdner("TEST FALSCHER ORDNER");
@@ -158,7 +159,7 @@ class CRUDEMailTest extends CRUDTest {
      */
     @Test
     void checkMessageInDB_02(){
-        EMail eMail = createEMailObject(0);
+        EMail eMail = createEMailObject(0,0);
 
         String absenderOrg = eMail.getAbsender();
         eMail.setAbsender("TEST FALSCHER ABSENDER");
@@ -176,7 +177,7 @@ class CRUDEMailTest extends CRUDTest {
      */
     @Test
     void checkMessageInDB_03(){
-        EMail eMail = createEMailObject(0);
+        EMail eMail = createEMailObject(0,0);
 
         String betreffOrg = eMail.getBetreff();
         eMail.setBetreff("TEST FALSCHER BETREFF");
@@ -198,8 +199,8 @@ class CRUDEMailTest extends CRUDTest {
             e.printStackTrace();
         }
 
-        EMail eMail_1 = createEMailObject(0);
-        EMail eMail_2 = createEMailObject(0);
+        EMail eMail_1 = createEMailObject(0,0);
+        EMail eMail_2 = createEMailObject(0,0);
 
         insertEmail(eMail_1);
         insertEmail(eMail_2);
@@ -233,7 +234,7 @@ class CRUDEMailTest extends CRUDTest {
      */
     @Test
     void deleteEMail_00() {
-        EMail eMail = createEMailObject(0);
+        EMail eMail = createEMailObject(0,0);
         insertEmail(eMail);
 
         boolean test = classUnderTest.deleteEMail(eMail.getMid());
@@ -250,7 +251,7 @@ class CRUDEMailTest extends CRUDTest {
      */
     @Test
     void deleteEMail_01() {
-        EMail eMail = createEMailObject(0);
+        EMail eMail = createEMailObject(0,0);
         insertEmail(eMail);
         deleteEMailVonDb(eMail.getMid());
 
@@ -265,7 +266,7 @@ class CRUDEMailTest extends CRUDTest {
      */
     @Test
     void searchEMail_00() {
-        EMail eMail = createEMailObject(0);
+        EMail eMail = createEMailObject(0,0);
         insertEmail(eMail);
 
         ArrayList<EMail> testList = classUnderTest.searchEMail(eMail.getAbsender());
@@ -281,7 +282,7 @@ class CRUDEMailTest extends CRUDTest {
      */
     @Test
     void searchEMail_01() {
-        EMail eMail = createEMailObject(0);
+        EMail eMail = createEMailObject(0,0);
         insertEmail(eMail);
 
         ArrayList<EMail> testList = classUnderTest.searchEMail(eMail.getBetreff());
@@ -296,7 +297,7 @@ class CRUDEMailTest extends CRUDTest {
      */
     @Test
     void searchEMail_02() {
-        EMail eMail = createEMailObject(0);
+        EMail eMail = createEMailObject(0,0);
         insertEmail(eMail);
 
         ArrayList<EMail> testList = classUnderTest.searchEMail(eMail.getInhalt());
@@ -311,7 +312,7 @@ class CRUDEMailTest extends CRUDTest {
      */
     @Test
     void searchEMail_03() {
-        EMail eMail = createEMailObject(0);
+        EMail eMail = createEMailObject(0,0);
         insertEmail(eMail);
 
         ArrayList<EMail> testList = classUnderTest.searchEMail("NICHT VORHANDEN");
@@ -325,7 +326,9 @@ class CRUDEMailTest extends CRUDTest {
      */
     @Test
     void updateEMail_00() {
-        EMail eMail = createEMailObject(0);
+        Konto konto = createKontoObject();
+        insertKonto(konto);
+        EMail eMail = createEMailObject(0,konto.getKid());
         insertEmail(eMail);
 
         eMail.setBetreff("UPDATE BETREFF");
@@ -354,7 +357,7 @@ class CRUDEMailTest extends CRUDTest {
      */
     @Test
     void updateEMail_01() {
-        EMail eMail = createEMailObject(0);
+        EMail eMail = createEMailObject(0,0);
         insertEmail(eMail);
         deleteEMailVonDb(eMail.getMid());
 
@@ -381,12 +384,12 @@ class CRUDEMailTest extends CRUDTest {
      */
     @Test
     void deleteEMailVomOrdner_00() {
-        EMail eMail_1 = createEMailObject(0);
-        EMail eMail_2 = createEMailObject(0);
+        EMail eMail_1 = createEMailObject(0,0);
+        EMail eMail_2 = createEMailObject(0,0);
         insertEmail(eMail_1);
         insertEmail(eMail_2);
 
-        int test = classUnderTest.deleteEMailVomOrdner(eMail_1.getOrdner());
+        int test = classUnderTest.deleteEMailVomOrdner(0,eMail_1.getOrdner());
 
         EMail testMail_1 = getEMailVonDb(eMail_1.getMid());
         EMail testMail_2 = getEMailVonDb(eMail_2.getMid());
@@ -403,12 +406,12 @@ class CRUDEMailTest extends CRUDTest {
      */
     @Test
     void deleteEMailVomOrdner_01() {
-        EMail eMail_1 = createEMailObject(0);
-        EMail eMail_2 = createEMailObject(0);
+        EMail eMail_1 = createEMailObject(0,0);
+        EMail eMail_2 = createEMailObject(0,0);
         insertEmail(eMail_1);
         insertEmail(eMail_2);
 
-        int test = classUnderTest.deleteEMailVomOrdner("TEST DELETE ORDNER");
+        int test = classUnderTest.deleteEMailVomOrdner(0,"TEST DELETE ORDNER");
 
         EMail testMail_1 = getEMailVonDb(eMail_1.getMid());
         EMail testMail_2 = getEMailVonDb(eMail_2.getMid());

@@ -2,19 +2,14 @@ package sem.datenhaltung.semmodel.impl;
 
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
-import sem.datenhaltung.semmodel.entities.Konto;
-import sem.datenhaltung.semmodel.services.ICRUDKonto;
-import sem.datenhaltung.semmodel.services.ICRUDManagerSingleton;
-import sem.fachlogik.assistentsteuerung.core.Assistent2;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class CRUDKontoTest extends CRUDTest{
 
     private ICRUDKonto classUnderTest = ICRUDManagerSingleton.getIcrudKontoInstance();
+
     private void checkKonto(Konto expected, Konto actual){
         Assert.assertEquals(expected.getKid(), actual.getKid());
         Assert.assertEquals(expected.getEmailAddress(), actual.getEmailAddress());
@@ -202,7 +197,5 @@ class CRUDKontoTest extends CRUDTest{
         ArrayList<Konto> testList = classUnderTest.getAlleKonten();
 
         Assert.assertEquals(0, testList.size());
-
     }
-
 }
