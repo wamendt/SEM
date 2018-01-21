@@ -12,16 +12,17 @@ import java.io.IOException;
 import java.net.URL;
 
 /**
- * Klasse zum Erstellen von Controllern fuer die Gui
+ * Klasse zum Erstellen von Controllern fuer die Gui, es kann kein Exampler dieser Klasse selbst erstellt werden,
+ * stattdessen sollen die statischen create Methoden verwendet werden.
  */
 public class ControllerFactory {
-
-    private ControllerFactory(){}
 
     /**
      * Ein einzigartiges Hauptfenster Objekt, da das ganze Programm nur ein Hauptfenster haben darf.
      */
     private static HauptfensterController hauptfensterController;
+
+    private ControllerFactory(){}
 
     /**
      * Generische HilfsMethode die , die Controller aus mit dem {@link FXMLLoader} laedt
