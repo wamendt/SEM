@@ -142,7 +142,7 @@ public class MessageCountListenManager {
         if (folder != null) {
             Store store = folder.getStore();
             if (store != null && !store.isConnected()) {
-                store.connect(konto.getEmailAddress(), konto.getPassWort());
+                store.connect(konto.getUserName(), konto.getPassWort());
             }
         } else {
             throw new MessagingException("Unable to open a null folder");

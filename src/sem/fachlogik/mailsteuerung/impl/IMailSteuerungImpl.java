@@ -32,7 +32,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             //IMailService iMailService = IMailServiceImpl.getMailService();
             EMailGrenz eMailGrenz = new EMailGrenz();
             for (EMail eMail : eMails){
-                eMailGrenz = GrenzklassenKonvertierer.EMailZuEMailGrenz(eMail);
+                eMailGrenz = GrenzklassenKonvertierer.eMailZuEMailGrenz(eMail);
                 eMailGrenzList.add(eMailGrenz);
             }
         }
@@ -82,7 +82,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
-            Konto konto = GrenzklassenKonvertierer.KontoGrenzZuKonto(kontoGrenz);
+            Konto konto = GrenzklassenKonvertierer.kontoGrenzZuKonto(kontoGrenz);
 
             //neuen Ordner erstellen und RückgabeTyp ermitteln
             ret = iMailService.erstelleEMailOrdner(konto, name);
@@ -98,7 +98,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
-            Konto konto = GrenzklassenKonvertierer.KontoGrenzZuKonto(kontoGrenz);
+            Konto konto = GrenzklassenKonvertierer.kontoGrenzZuKonto(kontoGrenz);
 
             //neuen Ordner erstellen und RückgabeTyp ermitteln
             ret = iMailService.loescheEMailOrdner(konto, name);
@@ -114,7 +114,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
-            Konto konto = GrenzklassenKonvertierer.KontoGrenzZuKonto(kontoGrenz);
+            Konto konto = GrenzklassenKonvertierer.kontoGrenzZuKonto(kontoGrenz);
 
             //neuen Ordner erstellen und RückgabeTyp ermitteln
             try {
@@ -146,7 +146,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
-            Konto konto = GrenzklassenKonvertierer.KontoGrenzZuKonto(kontoGrenz);
+            Konto konto = GrenzklassenKonvertierer.kontoGrenzZuKonto(kontoGrenz);
 
             try{
                 //Hole alle E-Mails aus der DB
@@ -172,10 +172,10 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
-            Konto konto = GrenzklassenKonvertierer.KontoGrenzZuKonto(kontoGrenz);
+            Konto konto = GrenzklassenKonvertierer.kontoGrenzZuKonto(kontoGrenz);
 
             //Wandle EMailGrenz in E-Mail um
-            EMail eMail = GrenzklassenKonvertierer.EMailGrenzZuEMail(eMailGrenz);
+            EMail eMail = GrenzklassenKonvertierer.eMailGrenzZuEMail(eMailGrenz);
 
             try {
                 ret = iMailService.setzeTagsZurServerEMail(konto, eMail, art);
@@ -201,10 +201,10 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
-            Konto konto = GrenzklassenKonvertierer.KontoGrenzZuKonto(kontoGrenz);
+            Konto konto = GrenzklassenKonvertierer.kontoGrenzZuKonto(kontoGrenz);
 
             //Wandle EMailGrenz in E-Mail um
-            EMail eMail = GrenzklassenKonvertierer.EMailGrenzZuEMail(eMailGrenz);
+            EMail eMail = GrenzklassenKonvertierer.eMailGrenzZuEMail(eMailGrenz);
 
             //E-Mail löschen
             ret = iMailService.loeschEMailVomServer(konto, eMail);
@@ -220,10 +220,10 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
-            Konto konto = GrenzklassenKonvertierer.KontoGrenzZuKonto(kontoGrenz);
+            Konto konto = GrenzklassenKonvertierer.kontoGrenzZuKonto(kontoGrenz);
 
             //Wandle EMailGrenz in E-Mail um
-            EMail eMail = GrenzklassenKonvertierer.EMailGrenzZuEMail(eMailGrenz);
+            EMail eMail = GrenzklassenKonvertierer.eMailGrenzZuEMail(eMailGrenz);
 
             //E-Mail senden
             try{
@@ -244,10 +244,10 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
-            Konto konto = GrenzklassenKonvertierer.KontoGrenzZuKonto(kontoGrenz);
+            Konto konto = GrenzklassenKonvertierer.kontoGrenzZuKonto(kontoGrenz);
 
             //Wandle EMailGrenz in E-Mail um
-            EMail eMail = GrenzklassenKonvertierer.EMailGrenzZuEMail(eMailGrenz);
+            EMail eMail = GrenzklassenKonvertierer.eMailGrenzZuEMail(eMailGrenz);
 
             //E-Mail speichern
             try{
@@ -276,10 +276,10 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
-            Konto konto = GrenzklassenKonvertierer.KontoGrenzZuKonto(kontoGrenz);
+            Konto konto = GrenzklassenKonvertierer.kontoGrenzZuKonto(kontoGrenz);
 
             //Wandle EMailGrenz in E-Mail um
-            EMail eMail = GrenzklassenKonvertierer.EMailGrenzZuEMail(eMailGrenz);
+            EMail eMail = GrenzklassenKonvertierer.eMailGrenzZuEMail(eMailGrenz);
 
             //E-Mail verschieben
             try{
@@ -315,7 +315,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
                     //Wandle alle E-Mails in E-MailGrenz um
                     EMailGrenz eMailGrenz;
                     for(EMail eMail : eMailList){
-                        eMailGrenz = GrenzklassenKonvertierer.EMailZuEMailGrenz(eMail);
+                        eMailGrenz = GrenzklassenKonvertierer.eMailZuEMailGrenz(eMail);
                         // und in die Sammlung einfügen
                         if(eMailGrenz != null){
                             eMailGrenzList.add(eMailGrenz);
@@ -344,7 +344,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
-            Konto konto = GrenzklassenKonvertierer.KontoGrenzZuKonto(kontoGrenz);
+            Konto konto = GrenzklassenKonvertierer.kontoGrenzZuKonto(kontoGrenz);
 
             try{
                 //Alle Ordner des Kontos holen
@@ -389,7 +389,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
             IMailService iMailService = IMailServiceImpl.getMailService();
 
             //KontoGrenz in Konto konvertieren
-            Konto konto = GrenzklassenKonvertierer.KontoGrenzZuKonto(kontoGrenz);
+            Konto konto = GrenzklassenKonvertierer.kontoGrenzZuKonto(kontoGrenz);
 
             try{
                 //hole alle E-Mails ...
@@ -400,7 +400,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
                     //Wandle die Liste in E-MailGrenz - Liste um
                     EMailGrenz eMailGrenz;
                     for (EMail eMail : eMailList){
-                        eMailGrenz = GrenzklassenKonvertierer.EMailZuEMailGrenz(eMail);
+                        eMailGrenz = GrenzklassenKonvertierer.eMailZuEMailGrenz(eMail);
                         eMailGrenzList.add(eMailGrenz);
                     }
                 }
@@ -429,7 +429,7 @@ public class IMailSteuerungImpl implements IMailSteuerung{
 
                 EMailGrenz eMailGrenz;
                 for (EMail eMail : eMailList){
-                    eMailGrenz = GrenzklassenKonvertierer.EMailZuEMailGrenz(eMail);
+                    eMailGrenz = GrenzklassenKonvertierer.eMailZuEMailGrenz(eMail);
                     eMailGrenzList.add(eMailGrenz);
                 }
             }

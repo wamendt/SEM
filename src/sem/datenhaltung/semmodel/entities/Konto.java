@@ -10,7 +10,6 @@ public class Konto {
     private String passWort;
     private String iMAPhost;
     private String sMTPhost;
-    private String emailAddress;
     private String signatur;
     private int port;
 
@@ -47,9 +46,6 @@ public class Konto {
         return sMTPhost;
     }
 
-    public String getEmailAddress() {
-        return emailAddress;
-    }
 
     public int getPort() {
         return port;
@@ -74,10 +70,6 @@ public class Konto {
 
     public void setSMTPhost(String sMTPhost) {
         this.sMTPhost = sMTPhost;
-    }
-
-    public void setEmailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
     }
 
     public void setPort(int port) {

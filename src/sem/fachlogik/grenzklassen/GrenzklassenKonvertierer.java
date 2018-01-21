@@ -1,13 +1,8 @@
 package sem.fachlogik.grenzklassen;
 
 import sem.datenhaltung.semmodel.entities.*;
-import sem.datenhaltung.semmodel.services.ICRUDFile;
-import sem.datenhaltung.semmodel.services.ICRUDManagerSingleton;
-import sem.datenhaltung.semmodel.services.ICRUDTag;
-import sem.datenhaltung.semmodel.services.ICRUDWort;
+import sem.datenhaltung.semmodel.services.*;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -19,31 +14,57 @@ public class GrenzklassenKonvertierer {
 
     private GrenzklassenKonvertierer(){}
 
-    public static KontoGrenz KontoZuKontoGrenz(Konto konto) {
+    public static RegelGrenz regelZuRegelGrenz(Regel regel){
+        RegelGrenz regelGrenz = new RegelGrenz();
+        regelGrenz.setActive(regel.isActive());
+        regelGrenz.setBeschreibung(regel.getBeschreibung());
+        regelGrenz.setRid(regel.getRid());
+        regelGrenz.setVonemailaddress(regel.getVonEmailAddress());
+        regelGrenz.setZuordner(regel.getZuOrdner());
+        return regelGrenz;
+    }
+    public static Regel regelGrenzZuRegel(RegelGrenz regelGrenz){
+        Regel regel = new Regel();
+        regel.setVonEmailAddress(regelGrenz.getVonemailaddress());
+        regel.setActive(regelGrenz.isActive());
+        regel.setBeschreibung(regelGrenz.getBeschreibung());
+        regel.setZuOrdner(regelGrenz.getZuordner());
+        regel.setRid(regelGrenz.getRid());
+        return regel;
+    }
+    public static KontoGrenz kontoZuKontoGrenz(Konto konto) {
         KontoGrenz kontoGrenz = new KontoGrenz();
         kontoGrenz.setUserName(konto.getUserName());
         kontoGrenz.setPassWort(konto.getPassWort());
         kontoGrenz.setIMAPhost(konto.getIMAPhost());
         kontoGrenz.setSMTPhost(konto.getSMTPhost());
-        kontoGrenz.setEmailAddress(konto.getEmailAddress());
         kontoGrenz.setPort(konto.getPort());
+        kontoGrenz.setSignatur(konto.getSignatur());
+        ArrayList<RegelGrenz> regelGrenzs = new ArrayList<>();
+
+        ICRUDRegel icrudRegel = ICRUDManagerSingleton.getIcrudRegelInstance();
+        ArrayList<Regel> regeln = icrudRegel.getRegelMitKontoId(konto.getKid());
+        for(Regel r: regeln){
+            regelGrenzs.add(GrenzklassenKonvertierer.regelZuRegelGrenz(r));
+        }
+        kontoGrenz.setRegeln(regelGrenzs);
         return kontoGrenz;
     }
 
 
-    public static Konto KontoGrenzZuKonto(KontoGrenz kontoGrenz) {
+    public static Konto kontoGrenzZuKonto(KontoGrenz kontoGrenz) {
         Konto konto = new Konto();
         konto.setUserName(kontoGrenz.getUserName());
         konto.setPassWort(kontoGrenz.getPassWort());
         konto.setIMAPhost(kontoGrenz.getIMAPhost());
         konto.setSMTPhost(kontoGrenz.getSMTPhost());
-        konto.setEmailAddress(kontoGrenz.getEmailAddress());
         konto.setPort(kontoGrenz.getPort());
+        konto.setSignatur(kontoGrenz.getSignatur());
         return konto;
     }
 
     
-    public static EMailGrenz EMailZuEMailGrenz(EMail email){
+    public static EMailGrenz eMailZuEMailGrenz(EMail email){
         EMailGrenz eMailGrenz = null;
         Tag tag = ICRUDManagerSingleton.getIcrudTagInstance().getTagById(email.getTid());
         eMailGrenz = new EMailGrenz();
@@ -65,7 +86,7 @@ public class GrenzklassenKonvertierer {
         ArrayList<FileGrenz> fileGrenzs = new ArrayList<>();
         if(files.size() > 0){
             for(File f : files){
-                fileGrenzs.add(GrenzklassenKonvertierer.FileZuFileGrenz(f));
+                fileGrenzs.add(GrenzklassenKonvertierer.fileZuFileGrenz(f));
             }
             eMailGrenz.setFiles(fileGrenzs);
         }
@@ -81,8 +102,8 @@ public class GrenzklassenKonvertierer {
         return eMailGrenz;
     }
 
-    //TODO
-    public static EMail EMailGrenzZuEMail(EMailGrenz eMailGrenz){
+
+    public static EMail eMailGrenzZuEMail(EMailGrenz eMailGrenz){
         EMail eMail = new EMail();
         eMail.setMid(eMailGrenz.getMid());
         eMail.setBetreff(eMailGrenz.getBetreff());
@@ -111,7 +132,7 @@ public class GrenzklassenKonvertierer {
             if(eMail.getFiles() != null) {
                 ArrayList<File> fileList = new ArrayList<>();
                 for (FileGrenz fileGrenz : eMailGrenz.getFiles()) {
-                    File file = FileGrenzZuFile(fileGrenz);
+                    File file = fileGrenzZuFile(fileGrenz);
                     fileList.add(file);
                 }
                 eMail.setFiles(fileList);
@@ -123,7 +144,7 @@ public class GrenzklassenKonvertierer {
         return eMail;
     }
 
-    public static File FileGrenzZuFile(FileGrenz fileGrenz) {
+    public static File fileGrenzZuFile(FileGrenz fileGrenz) {
         File file = new File();
         file.setFid(fileGrenz.getFid());
         file.setMId(fileGrenz.getMid());
@@ -133,7 +154,7 @@ public class GrenzklassenKonvertierer {
     }
 
 
-    public static FileGrenz FileZuFileGrenz(File file) {
+    public static FileGrenz fileZuFileGrenz(File file) {
         FileGrenz fileGrenz = new FileGrenz();
         fileGrenz.setFid(file.getFid());
         fileGrenz.setMId(file.getMid());
