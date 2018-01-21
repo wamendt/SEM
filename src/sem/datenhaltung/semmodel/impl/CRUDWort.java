@@ -1,6 +1,7 @@
 package sem.datenhaltung.semmodel.impl;
 
 import sem.datenhaltung.semmodel.entities.Wort;
+import sem.datenhaltung.semmodel.services.ICRUDWort;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

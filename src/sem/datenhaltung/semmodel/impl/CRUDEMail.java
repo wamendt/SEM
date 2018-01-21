@@ -1,6 +1,7 @@
 package sem.datenhaltung.semmodel.impl;
 
 import sem.datenhaltung.semmodel.entities.EMail;
+import sem.datenhaltung.semmodel.services.ICRUDMail;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  * CRUD Klasse die die ICRUDMail Schnitstelle implementiert.
  * Bietet Methoden fuer den Zugriff auf die Emails aus der Datenbank.
  */
-public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
+public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail {
     private static final String TABLE_NAME = "email";
     private static final String COLUMN_MID = "mid";
     private static final String COLUMN_BETREFF = "betreff";

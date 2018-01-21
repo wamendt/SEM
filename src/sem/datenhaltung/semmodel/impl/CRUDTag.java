@@ -1,12 +1,13 @@
 package sem.datenhaltung.semmodel.impl;
 
 import sem.datenhaltung.semmodel.entities.Tag;
+import sem.datenhaltung.semmodel.services.ICRUDTag;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class CRUDTag extends DBCRUDTeamplate<Tag> implements ICRUDTag{
+public class CRUDTag extends DBCRUDTeamplate<Tag> implements ICRUDTag {
     private static final String TABLE_NAME = "tag";
     private static final String COLUMN_TID = "tid";
     private static final String COLUMN_NAME = "name";

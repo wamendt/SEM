@@ -1,6 +1,7 @@
 package sem.datenhaltung.semmodel.impl;
 
 import sem.datenhaltung.semmodel.entities.Regel;
+import sem.datenhaltung.semmodel.services.ICRUDRegel;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -1,12 +1,13 @@
 package sem.datenhaltung.semmodel.impl;
 
 import sem.datenhaltung.semmodel.entities.File;
+import sem.datenhaltung.semmodel.services.ICRUDFile;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class CRUDFile extends DBCRUDTeamplate<File> implements ICRUDFile{
+public class CRUDFile extends DBCRUDTeamplate<File> implements ICRUDFile {
 
 
     @Override

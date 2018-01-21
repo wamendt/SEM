@@ -1,6 +1,7 @@
 package sem.datenhaltung.semmodel.impl;
 
 import sem.datenhaltung.semmodel.entities.TagVerteilung;
+import sem.datenhaltung.semmodel.services.ICRUDTagVerteilung;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

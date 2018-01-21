@@ -1,6 +1,7 @@
 package sem.datenhaltung.semmodel.impl;
 
 import sem.datenhaltung.semmodel.entities.Konto;
+import sem.datenhaltung.semmodel.services.ICRUDKonto;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
