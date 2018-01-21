@@ -12,11 +12,29 @@ public class KontoGrenz {
     private String iMAPhost;
     private String sMTPhost;
     private int port;
-    private ArrayList<Regel> regeln;
+    private ArrayList<RegelGrenz> regeln;
+    private String signatur;
+
 
 
     public KontoGrenz(){}
 
+
+    public String getSignatur() {
+        return signatur;
+    }
+
+    public void setSignatur(String signatur) {
+        this.signatur = signatur;
+    }
+
+    public ArrayList<RegelGrenz> getRegeln() {
+        return regeln;
+    }
+
+    public void setRegeln(ArrayList<RegelGrenz> regeln) {
+        this.regeln = regeln;
+    }
 
     public int getKid() {
         return kid;
