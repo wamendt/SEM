@@ -34,7 +34,7 @@ public class ControllerFactory {
         try {
             loader.load();
         } catch (IOException e) {
-            e.printStackTrace();
+            //nicht moeglich hier zu landen
         }
         return loader.getController();
     }
