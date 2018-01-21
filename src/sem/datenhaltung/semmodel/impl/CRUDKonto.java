@@ -17,21 +17,19 @@ public class CRUDKonto extends DBCRUDTeamplate<Konto> implements ICRUDKonto {
     private static final String COLUMN_PASSWORT = "passwort";
     private static final String COLUMN_IMAPHOST = "imaphost";
     private static final String COLUMN_SMTPHOST = "smtphost";
-    private static final String COLUMN_EMAILADDRESS = "emailaddress";
     private static final String COLUMN_PORT = "port";
     private static final String COLUMN_SIGNATUR = "signatur";
 
-    private static final String SQL_INSERT_KONTO = "INSERT INTO konto (UserName, EmailAddress, " +
-            "IMAPhost, PassWort, Port, SMTPhost, signatur)" + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String SQL_INSERT_KONTO = "INSERT INTO konto (UserName, " +
+            "IMAPhost, PassWort, Port, SMTPhost, signatur)" + "VALUES (?, ?, ?, ?, ?, ?)";
     private static final String SQL_UPDATE_KONTO = "UPDATE konto SET userName = ?, passwort = ?, imaphost = ?, smtphost = ?," +
-            "emailaddress = ?, port = ?, signatur = ? WHERE kid = ?";
+            " port = ?, signatur = ? WHERE kid = ?";
 
     @Override
     protected Konto makeObject(ResultSet rs) throws SQLException{
         Konto konto = new Konto();
         konto.setKid(rs.getInt(COLUMN_KID));
         konto.setUserName(rs.getString(COLUMN_USERNAME));
-        konto.setEmailAddress(rs.getString(COLUMN_EMAILADDRESS));
         konto.setIMAPhost(rs.getString(COLUMN_IMAPHOST));
         konto.setPassWort(rs.getString(COLUMN_PASSWORT));
         konto.setPort(rs.getInt(COLUMN_PORT));
@@ -43,7 +41,7 @@ public class CRUDKonto extends DBCRUDTeamplate<Konto> implements ICRUDKonto {
     @Override
     public int createKonto(Konto konto){
         try {
-            int id = insertAndReturnKey(SQL_INSERT_KONTO, konto.getUserName(), konto.getEmailAddress(),
+            int id = insertAndReturnKey(SQL_INSERT_KONTO, konto.getUserName(),
                     konto.getIMAPhost(), konto.getPassWort(), konto.getPort(), konto.getSMTPhost(), konto.getSignatur());
             konto.setKid(id);
             return id;
@@ -69,7 +67,7 @@ public class CRUDKonto extends DBCRUDTeamplate<Konto> implements ICRUDKonto {
         int ret;
         try {
             ret = updateOrDelete(SQL_UPDATE_KONTO, konto.getUserName(), konto.getPassWort(),
-                    konto.getIMAPhost(), konto.getSMTPhost(), konto.getEmailAddress(),
+                    konto.getIMAPhost(), konto.getSMTPhost(),
                     konto.getPort(), konto.getSignatur(), konto.getKid());
             return 1 == ret;
         } catch (SQLException e) {
