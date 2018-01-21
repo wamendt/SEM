@@ -1,5 +1,9 @@
 package sem.fachlogik.grenzklassen;
 
+import sem.datenhaltung.semmodel.entities.Regel;
+
+import java.util.ArrayList;
+
 public class KontoGrenz {
     private int kid;
     private String userName;
@@ -9,7 +13,6 @@ public class KontoGrenz {
     private String sMTPhost;
     private String emailAddress;
     private int port;
-
 
     //Konstruktor
     public KontoGrenz(){}
