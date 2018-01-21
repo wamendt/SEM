@@ -71,15 +71,21 @@
                </cursor></Button>
             <Label text="Anhang Name der Datei" textFill="#616d7e" />
             <Pane prefHeight="48.0" prefWidth="302.0" />
-            <Button id="button_save" fx:id="button_save" mnemonicParsing="false" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="34.0" prefWidth="37.0" styleClass="button_save" stylesheets="@../css/buttonstylesheet.css">
+            <Button id="button_save" fx:id="button_save" mnemonicParsing="false" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_save" stylesheets="@../css/buttonstylesheet.css">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
+               <tooltip>
+                  <Tooltip text="Entwurf speichern" />
+               </tooltip>
             </Button>
             <Button id="button_sent1" fx:id="button_send" mnemonicParsing="false" onAction="#btnSendenOnAction" onMouseEntered="#btnOnMouseEntered" onMouseExited="#btnOnMouseExited" prefHeight="30.0" prefWidth="30.0" styleClass="button_sent1" stylesheets="@../css/buttonstylesheet.css">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
+               <tooltip>
+                  <Tooltip text="Email versenden" />
+               </tooltip>
             </Button>
          </children>
          <opaqueInsets>

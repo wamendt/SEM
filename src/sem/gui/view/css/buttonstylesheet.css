@@ -1,7 +1,7 @@
 
 
 .button_weiterleiten{
-    -fx-background-image: url("../../../../resources/bilder/reply-email4.png");
+    -fx-background-image: url("../../../../resources/bilder/mail9.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 25;
     -fx-background-color: transparent;
@@ -16,7 +16,7 @@
 
 }
 .button_mailantworten{
-    -fx-background-image: url("../../../../resources/bilder/antworten2.png");
+    -fx-background-image: url("../../../../resources/bilder/mail10.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 25;
     -fx-background-color: transparent;
@@ -24,7 +24,7 @@
 
 }
 .button_loeschen{
-    -fx-background-image: url("../../../../resources/bilder/loeschen.png");
+    -fx-background-image: url("../../../../resources/bilder/envelope.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 25;
     -fx-background-color: transparent;
@@ -33,7 +33,7 @@
 }
 
 .button_neue{
-    -fx-background-image: url("../../../../resources/bilder/write1.png");
+    -fx-background-image: url("../../../../resources/bilder/edit3.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 30;
     -fx-background-color: transparent;
@@ -48,7 +48,7 @@
 }
 
 .button_menu{
-    -fx-background-image: url("../../../../resources/bilder/settings4.png");
+    -fx-background-image: url("../../../../resources/bilder/settings5.png");
     -fx-background-repeat: no-repeat;
     -fx-background-size: 30;
     -fx-background-color: transparent;
