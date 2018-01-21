@@ -238,6 +238,7 @@ public class HauptfensterController implements Initializable, TagClickedListener
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.show();
+        stage.setResizable(false);
     }
 
     @FXML

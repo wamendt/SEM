@@ -6,6 +6,7 @@ import sem.gui.viewmodel.hauptfenster.HauptfensterController;
 import sem.gui.viewmodel.hauptfenster.TagsController;
 import sem.gui.viewmodel.menufenster.AllgemeineStatistikController;
 import sem.gui.viewmodel.menufenster.AssistentController;
+import sem.gui.viewmodel.menufenster.KontoController;
 import sem.gui.viewmodel.menufenster.MenuController;
 import sem.gui.viewmodel.verbindungsfenster.VerbindungsfensterController;
 import sem.gui.viewmodel.verfassungsfenster.VerfassungsfensterController;
@@ -94,6 +95,15 @@ public class ControllerFactory {
 
     public static AssistentController createAssistentController(){
         FXMLLoader loader = new FXMLLoader(VerbindungsfensterController.class.getResource("../../view/fxml/AssistentPane.fxml"));
+        try{
+            loader.load();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return loader.getController();
+    }
+    public static KontoController createKontoController(){
+        FXMLLoader loader = new FXMLLoader(KontoController.class.getResource("../../view/fxml/KontoPane.fxml"));
         try{
             loader.load();
         }catch (IOException e){
