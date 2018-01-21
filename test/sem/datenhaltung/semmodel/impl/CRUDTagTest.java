@@ -1,6 +1,9 @@
 package sem.datenhaltung.semmodel.impl;
 
 import org.junit.jupiter.api.Test;
+import sem.datenhaltung.semmodel.entities.Tag;
+import sem.datenhaltung.semmodel.services.ICRUDManagerSingleton;
+import sem.datenhaltung.semmodel.services.ICRUDTag;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

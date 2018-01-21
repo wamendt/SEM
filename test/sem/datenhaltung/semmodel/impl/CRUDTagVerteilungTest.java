@@ -1,6 +1,10 @@
 package sem.datenhaltung.semmodel.impl;
 
 import org.junit.jupiter.api.Test;
+import sem.datenhaltung.semmodel.entities.EMail;
+import sem.datenhaltung.semmodel.entities.TagVerteilung;
+import sem.datenhaltung.semmodel.services.ICRUDManagerSingleton;
+import sem.datenhaltung.semmodel.services.ICRUDTagVerteilung;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
