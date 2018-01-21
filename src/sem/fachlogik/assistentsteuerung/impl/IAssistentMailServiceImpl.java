@@ -10,11 +10,6 @@ import sem.datenhaltung.semmodel.services.ICRUDTag;
 import sem.datenhaltung.semmodel.services.ICRUDTagVerteilung;
 import sem.fachlogik.assistentsteuerung.core.Assistent2;
 import sem.fachlogik.assistentsteuerung.services.IAssistentMailService;
-import sem.fachlogik.grenzklassen.EMailGrenz;
-import sem.fachlogik.grenzklassen.GrenzklassenKonvertierer;
-import sem.fachlogik.grenzklassen.TagGrenz;
-
-import java.util.*;
 
 public class IAssistentMailServiceImpl implements IAssistentMailService{
     @Override
