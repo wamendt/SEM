@@ -15,7 +15,6 @@ class CRUDKontoTest extends CRUDTest{
 
     private void checkKonto(Konto expected, Konto actual){
         Assert.assertEquals(expected.getKid(), actual.getKid());
-        Assert.assertEquals(expected.getEmailAddress(), actual.getEmailAddress());
         Assert.assertEquals(expected.getPassWort(), actual.getPassWort());
         Assert.assertEquals(expected.getIMAPhost(), actual.getIMAPhost());
         Assert.assertEquals(expected.getSMTPhost(), actual.getSMTPhost());
@@ -93,7 +92,6 @@ class CRUDKontoTest extends CRUDTest{
         Konto konto = createKontoObject();
         insertKonto(konto);
 
-        konto.setEmailAddress("UPDATE EMAIL");
         konto.setPort(9876);
         konto.setSMTPhost("UPDATE SMTP");
         konto.setIMAPhost("UPDATE IMAP");
@@ -118,7 +116,6 @@ class CRUDKontoTest extends CRUDTest{
         insertKonto(konto);
         deleteKontoVonDb(konto.getKid());
 
-        konto.setEmailAddress("UPDATE EMAIL");
         konto.setPort(9876);
         konto.setSMTPhost("UPDATE SMTP");
         konto.setIMAPhost("UPDATE IMAP");

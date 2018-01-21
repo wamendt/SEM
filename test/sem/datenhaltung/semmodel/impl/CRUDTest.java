@@ -51,7 +51,6 @@ public class CRUDTest {
         konto.setPassWort("TEST PASSWORT");
         konto.setIMAPhost("TEST IMAPHOST");
         konto.setSMTPhost("TEST SMTPHOST");
-        konto.setEmailAddress("TEST EMAIL");
         konto.setPort(12345);
         konto.setSignatur("TEST SIG");
         return konto;
@@ -157,7 +156,6 @@ public class CRUDTest {
                 konto.setIMAPhost(rs.getString("imaphost"));
                 konto.setSMTPhost(rs.getString("smtphost"));
                 konto.setPort(rs.getInt("port"));
-                konto.setEmailAddress(rs.getString("emailaddress"));
                 konto.setKid(rs.getInt("kid"));
             }
         } catch (SQLException e) {
@@ -363,9 +361,9 @@ public class CRUDTest {
      * @param konto das Konto was engefuegt werden soll.
      */
     protected void insertKonto(Konto konto){
-        int key = insertAndReturnKey("INSERT INTO konto(username, passwort, imaphost, smtphost, emailaddress, port, signatur)" +
-                "VALUES(?,?,?,?,?,?,?)", konto.getUserName(), konto.getPassWort(), konto.getIMAPhost(), konto.getSMTPhost(),
-                konto.getEmailAddress(), konto.getPort(), konto.getSignatur());
+        int key = insertAndReturnKey("INSERT INTO konto(username, passwort, imaphost, smtphost, port, signatur)" +
+                "VALUES(?,?,?,?,?,?)", konto.getUserName(), konto.getPassWort(), konto.getIMAPhost(), konto.getSMTPhost(),
+                konto.getPort(), konto.getSignatur());
         konto.setKid(key);
     }
 
