@@ -8,14 +8,14 @@ package sem.datenhaltung.semmodel.entities;
 public class Regel {
     private int rid;
     private String beschreibung;
-    private String vonOrdner;
+    private String vonEmailAddress;
     private String zuOrdner;
     private int kid;
     private boolean isActive;
 
-    public Regel(String beschreibung, String vonOrdner, String zuOrdner, int kid, boolean isActive) {
+    public Regel(String beschreibung, String vonEmailAddress, String zuOrdner, int kid, boolean isActive) {
         this.beschreibung = beschreibung;
-        this.vonOrdner = vonOrdner;
+        this.vonEmailAddress = vonEmailAddress;
         this.zuOrdner = zuOrdner;
         this.kid = kid;
         this.isActive = isActive;
@@ -23,12 +23,13 @@ public class Regel {
 
     public Regel() { }
 
-    public String getVonOrdner() {
-        return vonOrdner;
+
+    public String getVonEmailAddress() {
+        return vonEmailAddress;
     }
 
-    public void setVonOrdner(String vonOrdner) {
-        this.vonOrdner = vonOrdner;
+    public void setVonEmailAddress(String vonEmailAddress) {
+        this.vonEmailAddress = vonEmailAddress;
     }
 
     public String getZuOrdner() {

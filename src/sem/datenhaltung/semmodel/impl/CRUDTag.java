@@ -1,33 +1,34 @@
 package sem.datenhaltung.semmodel.impl;
 
 import sem.datenhaltung.semmodel.entities.Tag;
-import sem.datenhaltung.semmodel.services.ICRUDTag;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class CRUDTag extends DBCRUDTeamplate<Tag> implements ICRUDTag{
+    private static final String TABLE_NAME = "tag";
+    private static final String COLUMN_TID = "tid";
+    private static final String COLUMN_NAME = "name";
 
+    private static final String SQL_INSERT_TAG = "INSERT INTO tag(name) VALUES(?)";
+    private static final String SQL_UPDATE_TAG = "UPDATE tag SET name = ? WHERE tid = ?";
 
     @Override
-    protected Tag makeObject(ResultSet rs) throws SQLException, IOException {
+    protected Tag makeObject(ResultSet rs) throws SQLException{
         Tag tag = new Tag();
-        tag.setTid(rs.getInt(1));
-        tag.setName(rs.getString(2));
+        tag.setTid(rs.getInt(COLUMN_TID));
+        tag.setName(rs.getString(COLUMN_NAME));
         return tag;
     }
 
     @Override
     public int createTag(Tag tag) {
-        String sql = "INSERT INTO tag (name)" +
-                "VALUES (?)";
         try {
-            int id = insertAndReturnKey(sql, tag.getName());
+            int id = insertAndReturnKey(SQL_INSERT_TAG, tag.getName());
             tag.setTid(id);
             return id;
-        } catch (IOException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return -1;
@@ -37,9 +38,9 @@ public class CRUDTag extends DBCRUDTeamplate<Tag> implements ICRUDTag{
     public Tag getTagById(int tid){
         ArrayList<Tag> tags;
         try {
-            tags = query("SELECT * FROM tag WHERE tid=?", tid);
+            tags = query(String.format(SQL_SELECT_FROM_WHERE, TABLE_NAME, COLUMN_TID), tid);
             return tags.size() > 0 ? tags.get(0) : null;
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
@@ -48,20 +49,20 @@ public class CRUDTag extends DBCRUDTeamplate<Tag> implements ICRUDTag{
     @Override
     public ArrayList<Tag> getAlleTags(){
         try {
-            return query("SELECT * FROM tag");
-        } catch (SQLException | IOException e) {
+            return query(String.format(SQL_SELECT_FROM, TABLE_NAME));
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return new ArrayList<Tag>();
+        return new ArrayList<>();
     }
 
     @Override
     public boolean deleteTag(int tid) {
         int ret = 0;
         try {
-            ret = updateOrDelete("DELETE FROM tag WHERE tid = ?;", tid);
+            ret = updateOrDelete(String.format(SQL_DELETE_FROM_WHERE, TABLE_NAME, COLUMN_TID), tid);
             return ret == 1;
-        } catch (IOException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
@@ -70,8 +71,8 @@ public class CRUDTag extends DBCRUDTeamplate<Tag> implements ICRUDTag{
     @Override
     public int deleteAlleTags() {
         try {
-            return  updateOrDelete("DELETE FROM tag");
-        } catch (IOException | SQLException e) {
+            return  updateOrDelete(String.format(SQL_DELETE_FROM, TABLE_NAME));
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return 0;
@@ -82,10 +83,9 @@ public class CRUDTag extends DBCRUDTeamplate<Tag> implements ICRUDTag{
     public boolean updateTag(Tag tag) {
         int ret;
         try {
-            ret = updateOrDelete("UPDATE tag" +
-                            " SET name = ? WHERE tid = ?", tag.getName(), tag.getTid());
+            ret = updateOrDelete(SQL_UPDATE_TAG, tag.getName(), tag.getTid());
             return 1 == ret;
-        } catch (IOException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;

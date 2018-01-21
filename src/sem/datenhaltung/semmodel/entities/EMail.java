@@ -18,6 +18,7 @@ public class EMail {
     private String zustand;
     private int messageID;
     private String ordner;
+    private int kid;
     private ArrayList<File> files;
 
     //Konstruktor
@@ -28,6 +29,14 @@ public class EMail {
 
     //Getter und Setter
 
+
+    public int getKid() {
+        return kid;
+    }
+
+    public void setKid(int kid) {
+        this.kid = kid;
+    }
 
     public void setBetreff(String betreff) {
         this.betreff = betreff;

@@ -22,13 +22,14 @@ public abstract class DBCRUDTeamplate<T> {
     protected static final String SQL_SELECT_FROM_WHERE = "SELECT * FROM %s WHERE %s = ?";
     protected static final String SQL_SELECT_FROM = "SELECT * FROM %s ";
     protected static final String SQL_DELETE_FROM_WHERE = "DELETE FROM %s WHERE %s = ? ";
+    protected static final String SQL_DELETE_FROM = "DELETE FROM %s";
 
     /**
      * Erstelt ein entspraechendes Entity Objekt
      * @param rs das Anfrage Ergebnis
      * @return
      */
-    protected abstract T makeObject(ResultSet rs) throws SQLException, IOException;
+    protected abstract T makeObject(ResultSet rs) throws SQLException;
 
 
     /**
@@ -38,7 +39,7 @@ public abstract class DBCRUDTeamplate<T> {
      * @throws SQLException
      * @throws IOException
      */
-    protected ArrayList<T> query(String sql, Object... objects) throws SQLException, IOException {
+    protected ArrayList<T> query(String sql, Object... objects) throws SQLException{
         ArrayList<T> result = new ArrayList<>();
         Connection connection = DBConnectionManager.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql);
@@ -66,7 +67,7 @@ public abstract class DBCRUDTeamplate<T> {
      * @throws IOException
      * @throws SQLException
      */
-    protected int updateOrDelete(String sql, Object... objects)throws IOException, SQLException {
+    protected int updateOrDelete(String sql, Object... objects)throws SQLException {
         Connection connection = null;
         int ret = -1;
         try {
@@ -96,7 +97,7 @@ public abstract class DBCRUDTeamplate<T> {
      * @throws IOException
      * @throws SQLException
      */
-    protected int insertAndReturnKey(String sql, Object... objects) throws IOException, SQLException {
+    protected int insertAndReturnKey(String sql, Object... objects) throws SQLException {
         int key = -1;
         Connection connection = null;
         try {
@@ -130,7 +131,7 @@ public abstract class DBCRUDTeamplate<T> {
      * @throws IOException
      * @throws SQLException
      */
-    protected T find(String sql) throws IOException, SQLException {
+    protected T find(String sql) throws SQLException {
         //TODO schauen ob diese Methode nicht besser geloest werden kann... muss doch gehen ohne eine ganze liste zu holen??
         Connection connection = DBConnectionManager.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -146,7 +147,7 @@ public abstract class DBCRUDTeamplate<T> {
     }
 
 
-    protected boolean create(String sql) throws IOException, SQLException {
+    protected boolean create(String sql) throws SQLException {
         Connection connection = DBConnectionManager.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         boolean ret = preparedStatement.execute();

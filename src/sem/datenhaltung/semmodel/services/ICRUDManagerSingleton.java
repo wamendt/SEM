@@ -3,6 +3,16 @@ package sem.datenhaltung.semmodel.services;
 
 import sem.datenhaltung.semmodel.impl.*;
 
+/**
+ * Fabrik Klasse die die aktuelle Implementation der CRUDKlassen liefert
+ *
+ * Beispiel:
+ *
+ * ICRUDMail crudmail = ICRUDManagerSingleton.getIcrudMailInstance();
+ *
+ * nun koenen mit der crudmail Instanz zugriffe auf die Datenbank stattfinden
+ */
+
 public class ICRUDManagerSingleton {
 
     private static ICRUDWort icrudWortInstance;
@@ -16,6 +26,8 @@ public class ICRUDManagerSingleton {
     private static ICRUDMail icrudMailInstance;
 
     private static ICRUDKonto icrudKontoInstance;
+
+    private static ICRUDRegel icrudRegelInstance;
 
     private ICRUDManagerSingleton(){}
 
@@ -57,5 +69,12 @@ public class ICRUDManagerSingleton {
         if(icrudMailInstance == null)
             icrudMailInstance = new CRUDEMail();
         return icrudMailInstance;
+    }
+
+    public static ICRUDRegel getIcrudRegelInstance(){
+        if(icrudRegelInstance == null){
+            icrudRegelInstance = new CRUDRegel();
+        }
+        return icrudRegelInstance;
     }
 }

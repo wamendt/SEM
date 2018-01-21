@@ -1,9 +1,7 @@
 package sem.datenhaltung.semmodel.impl;
 
 import sem.datenhaltung.semmodel.entities.EMail;
-import sem.datenhaltung.semmodel.services.ICRUDMail;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -26,14 +24,16 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
     private static final String COLUMN_ZUSTAND = "zustand";
     private static final String COLUMN_MESSAGEID = "messageid";
     private static final String COLUMN_ORDNER = "ordner";
+    private static final String COLUMN_KID = "kid";
 
     private static final String SQL_INSERT_EMAIL = "INSERT INTO email ( betreff ,inhalt , tid, absender, cc, bcc," +
-            " empfaenger, contentOriginal, zustand, messageid, ordner) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            " empfaenger, contentOriginal, zustand, messageid, ordner, kid) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String SQL_CHECK_DB = "SELECT * FROM email WHERE messageid = ? AND betreff = ? AND absender = ?";
     private static final String SQL_SEARCH_EMAIL = "SELECT * FROM email WHERE betreff LIKE ? OR inhalt LIKE ? OR absender LIKE ? ";
     private static final String SQL_UPDATE_EMAIL = "UPDATE email SET betreff = ? , inhalt = ?, tid = ?, absender = ?," +
-            " cc = ?, bcc = ?, empfaenger = ?, contentoriginal = ?, zustand = ?, ordner = ?, messageid = ? WHERE mid = ?";
-
+            " cc = ?, bcc = ?, empfaenger = ?, contentoriginal = ?, zustand = ?, ordner = ?, messageid = ?, kid = ? WHERE mid = ?";
+    private static final String SQL_SELECT_FROM_WHERE_AND = SQL_SELECT_FROM_WHERE + " AND %s = ?";
+    private static final String SQL_DELETE_FROM_WHERE_AND = SQL_DELETE_FROM_WHERE + " AND %s = ?";
 
     @Override
     protected EMail makeObject(ResultSet rs) throws SQLException{
@@ -50,6 +50,7 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
         email.setZustand(rs.getString(COLUMN_ZUSTAND));
         email.setMessageID(rs.getInt(COLUMN_MESSAGEID));
         email.setOrdner(rs.getString(COLUMN_ORDNER));
+        email.setKid(rs.getInt(COLUMN_KID));
         return email;
     }
 
@@ -58,10 +59,10 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
         try {
             int id = insertAndReturnKey(SQL_INSERT_EMAIL, email.getBetreff(), email.getInhalt(), email.getTid(), email.getAbsender(),
                     email.getCc(), email.getBcc(), email.getEmpfaenger(), email.getContentOriginal(), email.getZustand(),
-                    email.getMessageID(), email.getOrdner());
+                    email.getMessageID(), email.getOrdner(), email.getKid());
             email.setMid(id);
             return id;
-        } catch (IOException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return -1;
@@ -73,17 +74,17 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
         try {
             eMails = query(String.format(SQL_SELECT_FROM_WHERE, TABLE_NAME, COLUMN_MID), mid);
             return eMails.size() > 0 ? eMails.get(0) : null;
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
 
     @Override
-    public ArrayList<EMail> getEMailByOrdner(String name){
+    public ArrayList<EMail> getEMailByOrdner(int kid, String name){
         try {
-            return query(String.format(SQL_SELECT_FROM_WHERE, TABLE_NAME, COLUMN_ORDNER), name);
-        } catch (SQLException | IOException e) {
+            return query(String.format(SQL_SELECT_FROM_WHERE_AND, TABLE_NAME, COLUMN_KID, COLUMN_ORDNER), kid, name);
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return new ArrayList<>();
@@ -93,7 +94,7 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
     public ArrayList<EMail> getEMailByTag(int tid){
         try {
             return query(String.format(SQL_SELECT_FROM_WHERE, TABLE_NAME, COLUMN_TID), tid);
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return new ArrayList<>();
@@ -106,7 +107,7 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
         try {
             eMails = query(SQL_CHECK_DB, id, betreff, absender);
             return eMails.size() > 0 ? eMails.get(0) : null;
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
@@ -116,7 +117,7 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
     public ArrayList<EMail> getAlleEMails(){
         try {
             return query(String.format(SQL_SELECT_FROM, TABLE_NAME));
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return new ArrayList<>();
@@ -127,7 +128,7 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
         int ret = 0;
         try {
             ret = updateOrDelete(String.format(SQL_DELETE_FROM_WHERE, TABLE_NAME, COLUMN_MID), mid);
-        } catch (IOException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return ret == 1;
@@ -138,7 +139,7 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
         try {
             suchwort = "%" + suchwort + "%";
             return query(SQL_SEARCH_EMAIL, suchwort, suchwort , suchwort);
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return new ArrayList<>();
@@ -150,19 +151,20 @@ public class CRUDEMail extends DBCRUDTeamplate<EMail> implements ICRUDMail{
         try {
             ret = updateOrDelete(SQL_UPDATE_EMAIL, email.getBetreff(), email.getInhalt()
                     ,email.getTid(), email.getAbsender(), email.getCc(), email.getBcc(), email.getEmpfaenger(),
-                    email.getContentOriginal(), email.getZustand(), email.getOrdner(), email.getMessageID(), email.getMid());
-        } catch (IOException | SQLException e) {
+                    email.getContentOriginal(), email.getZustand(), email.getOrdner(), email.getMessageID(), email.getKid(),
+                    email.getMid());
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return ret == 1;
     }
 
     @Override
-    public int deleteEMailVomOrdner(String ordner) {
+    public int deleteEMailVomOrdner(int kid, String ordner) {
         int ret = 0;
         try {
-            ret = updateOrDelete(String.format(SQL_DELETE_FROM_WHERE, TABLE_NAME, COLUMN_ORDNER), ordner);
-        } catch (IOException | SQLException e) {
+            ret = updateOrDelete(String.format(SQL_DELETE_FROM_WHERE_AND, TABLE_NAME, COLUMN_KID, COLUMN_ORDNER), kid, ordner);
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return ret;

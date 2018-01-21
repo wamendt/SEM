@@ -1,9 +1,7 @@
 package sem.datenhaltung.semmodel.impl;
 
 import sem.datenhaltung.semmodel.entities.File;
-import sem.datenhaltung.semmodel.services.ICRUDFile;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,7 +27,7 @@ public class CRUDFile extends DBCRUDTeamplate<File> implements ICRUDFile{
             int id =  insertAndReturnKey(sql, file.getPfad(), file.getMid());
             file.setMId(id);
             return id;
-        } catch (IOException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return -1;
@@ -41,7 +39,7 @@ public class CRUDFile extends DBCRUDTeamplate<File> implements ICRUDFile{
         try {
             files = query("SELECT * FROM file WHERE fid=?", fid);
             return files.size() > 0 ? files.get(0) : null;
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
@@ -51,7 +49,7 @@ public class CRUDFile extends DBCRUDTeamplate<File> implements ICRUDFile{
     public ArrayList<File> getAlleWoerter() {
         try {
             return query("SELECT * FROM file");
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return new ArrayList<>();
@@ -61,7 +59,7 @@ public class CRUDFile extends DBCRUDTeamplate<File> implements ICRUDFile{
     public ArrayList<File> getAlleFilesMitEMailId(int mid) {
         try {
             return query("SELECT * FROM file WHERE mid = ?", mid);
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return new ArrayList<>();
@@ -72,7 +70,7 @@ public class CRUDFile extends DBCRUDTeamplate<File> implements ICRUDFile{
         int ret = 0;
         try {
             ret = updateOrDelete("DELETE FROM file WHERE fid = ?", fid);
-        } catch (IOException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return ret == 1;
@@ -85,7 +83,7 @@ public class CRUDFile extends DBCRUDTeamplate<File> implements ICRUDFile{
             ret = updateOrDelete("UPDATE file" +
                     " pfad = ? , mid = ? WHERE fid = ?",
                     file.getPfad(), file.getMid(), file.getFid());
-        } catch (IOException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return ret == 1;

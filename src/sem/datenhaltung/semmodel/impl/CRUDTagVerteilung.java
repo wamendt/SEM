@@ -1,14 +1,19 @@
 package sem.datenhaltung.semmodel.impl;
 
 import sem.datenhaltung.semmodel.entities.TagVerteilung;
-import sem.datenhaltung.semmodel.services.ICRUDTagVerteilung;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class CRUDTagVerteilung extends DBCRUDTeamplate<TagVerteilung> implements ICRUDTagVerteilung {
+    private static final String TABLE_NAME = "tagverteilung";
+    private static final String COLUMN_TVID = "tvid";
+    private static final String COLUMN_VERTEILUNG = "verteilung";
+    private static final String COLUMN_MID = "mid";
+
+    private static final String SQL_INSERT_TAG = "INSERT INTO tagverteilung (verteilung, mid) VALUES(?,?)";
+    private static final String SQL_UPDATE_TAG = "UPDATE tagverteilung SET verteilung = ?, mid = ? WHERE tvid = ?";
     /**
      * Erstelt ein entspraechendes Entity Objekt
      *
@@ -16,22 +21,21 @@ public class CRUDTagVerteilung extends DBCRUDTeamplate<TagVerteilung> implements
      * @return
      */
     @Override
-    protected TagVerteilung makeObject(ResultSet rs) throws SQLException, IOException {
+    protected TagVerteilung makeObject(ResultSet rs) throws SQLException {
         TagVerteilung tagVerteilung = new TagVerteilung();
-        tagVerteilung.setTvid(rs.getInt(1));
-        tagVerteilung.setVerteilung(rs.getDouble(2));
-        tagVerteilung.setMid(rs.getInt(3));
+        tagVerteilung.setTvid(rs.getInt(COLUMN_TVID));
+        tagVerteilung.setVerteilung(rs.getDouble(COLUMN_VERTEILUNG));
+        tagVerteilung.setMid(rs.getInt(COLUMN_MID));
         return tagVerteilung;
     }
 
     @Override
     public int createTagVerteilung(TagVerteilung tagVerteilung) {
-        String sql = "INSERT INTO tagverteilung (verteilung,mid) VALUES(?,?)";
         try {
-            int id = insertAndReturnKey(sql, tagVerteilung.getVerteilung(), tagVerteilung.getMid());
+            int id = insertAndReturnKey(SQL_INSERT_TAG, tagVerteilung.getVerteilung(), tagVerteilung.getMid());
             tagVerteilung.setTvid(id);
             return id;
-        } catch (IOException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return -1;
@@ -41,35 +45,32 @@ public class CRUDTagVerteilung extends DBCRUDTeamplate<TagVerteilung> implements
     public boolean deleteTagVerteilung(int tvid) {
         int ret = 0;
         try {
-            ret = updateOrDelete("DELETE FROM tagverteilung WHERE tvid = ?;", tvid);
+            ret = updateOrDelete(String.format(SQL_DELETE_FROM_WHERE, TABLE_NAME, COLUMN_TVID), tvid);
             return ret == 1;
-        } catch (IOException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
 
     @Override
-    public boolean deleteAlleTagVerteilungen() {
-        int ret = 0;
+    public int deleteAlleTagVerteilungen() {
         try {
-            ret = updateOrDelete("DELETE FROM tagverteilung");
-            return ret == 1;
-        } catch (IOException | SQLException e) {
+            return updateOrDelete(String.format(SQL_DELETE_FROM, TABLE_NAME));
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return 0;
     }
 
     @Override
     public boolean updateTagVerteilung(TagVerteilung tagVerteilung) {
         int ret;
         try {
-            ret = updateOrDelete("UPDATE tagverteilung" +
-                    " SET verteilung = ?, mid = ? WHERE tvid = ?", tagVerteilung.getVerteilung()
+            ret = updateOrDelete(SQL_UPDATE_TAG, tagVerteilung.getVerteilung()
                     , tagVerteilung.getMid(), tagVerteilung.getTvid());
             return 1 == ret;
-        } catch (IOException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
@@ -79,9 +80,9 @@ public class CRUDTagVerteilung extends DBCRUDTeamplate<TagVerteilung> implements
     public TagVerteilung getTagVerteilungById(int tvid) {
         ArrayList<TagVerteilung> tagverteilungen;
         try {
-            tagverteilungen = query("SELECT * FROM tagverteilung WHERE tvid=?", tvid);
+            tagverteilungen = query(String.format(SQL_SELECT_FROM_WHERE, TABLE_NAME, COLUMN_TVID), tvid);
             return tagverteilungen.size() > 0 ? tagverteilungen.get(0) : null;
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
@@ -91,9 +92,9 @@ public class CRUDTagVerteilung extends DBCRUDTeamplate<TagVerteilung> implements
     public ArrayList<TagVerteilung> getTagVerteilungByEmailId(int mid) {
         ArrayList<TagVerteilung> tagVerteilungen;
         try {
-            tagVerteilungen = query("SELECT * FROM tagverteilung WHERE mid=?", mid);
+            tagVerteilungen = query(String.format(SQL_SELECT_FROM_WHERE, TABLE_NAME, COLUMN_MID), mid);
             return tagVerteilungen;
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return new ArrayList<>();
@@ -103,9 +104,9 @@ public class CRUDTagVerteilung extends DBCRUDTeamplate<TagVerteilung> implements
     public ArrayList<TagVerteilung> getAlleTagVerteilungen() {
         ArrayList<TagVerteilung> tagVerteilungen;
         try {
-            tagVerteilungen = query("SELECT * FROM tagverteilung");
+            tagVerteilungen = query(String.format(SQL_SELECT_FROM, TABLE_NAME));
             return tagVerteilungen;
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return new ArrayList<>();

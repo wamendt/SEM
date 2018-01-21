@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Mit Hilfe der Factory Klasse ICRUDManagerSingleton koennen Instancen der Implementierungen dieser Klasse erzeugt werden.
  * Beispiel:
  *  ICRUDMail crudmail = ICRUDManagerSingleton.getIcrudMailInstance();
- * un
+ *
  */
 public interface ICRUDMail {
 
@@ -16,7 +16,7 @@ public interface ICRUDMail {
      * Erstellt ein Email eintrag in der Datenbank und generiert dabei den PrimaryKey
      * auf der Email wird anschliessend dieser unter dem Atribut eid gesetzt.
      * @param email Die Email, die in die Datenbank eingetragen werden soll.
-     * @return Den von der Datenbank erzeugten Schluessel.
+     * @return Den von der Datenbank erzeugten Schluessel bei erfolg, sonst -1;
      */
     int createEMail(EMail email);
 
@@ -32,7 +32,7 @@ public interface ICRUDMail {
      * @param name der Ordnername mit dem die EMails verknuepft sind.
      * @return Wenn EMails gefunden werden dann eine Liste mit den EMails, sonst eine leere Liste;
      */
-    ArrayList<EMail> getEMailByOrdner(String name);
+    ArrayList<EMail> getEMailByOrdner(int kid, String name);
 
     /**
      * Sucht nach EMails in der Datenbank die mit einem Tag verknuepft sind.
@@ -78,7 +78,7 @@ public interface ICRUDMail {
      * @param ordner der Ordner aus dem die Emails gleoescht werden sollen.
      * @return die anzahl der geloeschten Objekte
      */
-    int deleteEMailVomOrdner(String ordner) ;
+    int deleteEMailVomOrdner(int kid, String ordner) ;
 
     /**
      * Sucht nach einer Email mit dem Suchtwort suchwort, dabei wird ueberprueft ob das suchwort, im inhalt,

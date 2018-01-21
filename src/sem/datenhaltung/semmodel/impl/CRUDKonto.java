@@ -1,14 +1,14 @@
 package sem.datenhaltung.semmodel.impl;
 
 import sem.datenhaltung.semmodel.entities.Konto;
-import sem.datenhaltung.semmodel.entities.Tag;
-import sem.datenhaltung.semmodel.services.ICRUDKonto;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
+/**
+ * CRUD Klasse die die ICRUDKonto Schnitstelle implementiert.
+ * Bietet Methoden fuer den Zugriff auf die Kontos aus der Datenbank.
+ */
 public class CRUDKonto extends DBCRUDTeamplate<Konto> implements ICRUDKonto {
     private static final String TABLE_NAME = "konto";
     private static final String COLUMN_KID = "kid";
@@ -46,7 +46,7 @@ public class CRUDKonto extends DBCRUDTeamplate<Konto> implements ICRUDKonto {
                     konto.getIMAPhost(), konto.getPassWort(), konto.getPort(), konto.getSMTPhost(), konto.getSignatur());
             konto.setKid(id);
             return id;
-        } catch (IOException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return -1;
@@ -57,7 +57,7 @@ public class CRUDKonto extends DBCRUDTeamplate<Konto> implements ICRUDKonto {
         int ret = 0;
         try {
             ret = updateOrDelete(String.format(SQL_DELETE_FROM_WHERE, TABLE_NAME, COLUMN_KID),kid);
-        } catch (IOException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return ret == 1;
@@ -71,7 +71,7 @@ public class CRUDKonto extends DBCRUDTeamplate<Konto> implements ICRUDKonto {
                     konto.getIMAPhost(), konto.getSMTPhost(), konto.getEmailAddress(),
                     konto.getPort(), konto.getSignatur(), konto.getKid());
             return 1 == ret;
-        } catch (IOException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
@@ -83,7 +83,7 @@ public class CRUDKonto extends DBCRUDTeamplate<Konto> implements ICRUDKonto {
         try {
             kontos = query(String.format(SQL_SELECT_FROM_WHERE, TABLE_NAME, COLUMN_KID), kid);
             return kontos.size() > 0 ? kontos.get(0) : null;
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
@@ -93,7 +93,7 @@ public class CRUDKonto extends DBCRUDTeamplate<Konto> implements ICRUDKonto {
     public ArrayList<Konto> getAlleKonten(){
         try {
             return query(String.format(SQL_SELECT_FROM, TABLE_NAME));
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return new ArrayList();
