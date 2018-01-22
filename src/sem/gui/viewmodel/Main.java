@@ -13,19 +13,19 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-         /*VerbindungsfensterController controller = ControllerFactory.createVerbindungsfensterController();
+         VerbindungsfensterController controller = ControllerFactory.createVerbindungsfensterController();
         Parent root = controller.getRoot();
         primaryStage.setTitle("Smart Email Manager");
         primaryStage.setScene(new Scene(root));
         primaryStage.setResizable(false);
         primaryStage.show();
-       */
-        HauptfensterController hauptfensterController = ControllerFactory.createHauptfenster();
-
-        Parent root = hauptfensterController.getRoot();
-        primaryStage.setTitle("Smart Email Manager");
-        primaryStage.setScene(new Scene(root));
-        primaryStage.show();
+//
+//        HauptfensterController hauptfensterController = ControllerFactory.createHauptfenster();
+//
+//        Parent root = hauptfensterController.getRoot();
+//        primaryStage.setTitle("Smart Email Manager");
+//        primaryStage.setScene(new Scene(root));
+//        primaryStage.show();
 
 
     }

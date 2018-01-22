@@ -31,6 +31,7 @@ import sem.fachlogik.assistentsteuerung.impl.IAssistentSteuerungImpl;
 import sem.fachlogik.assistentsteuerung.services.IAssistentSteuerung;
 import sem.fachlogik.grenzklassen.EMailGrenz;
 
+import sem.fachlogik.grenzklassen.KontoGrenz;
 import sem.fachlogik.grenzklassen.TagGrenz;
 import sem.fachlogik.kontosteuerung.impl.IKontoSteuerungImpl;
 import sem.fachlogik.kontosteuerung.services.IKontoSteuerung;
@@ -123,19 +124,23 @@ public class HauptfensterController implements Initializable, TagClickedListener
     }
 
     private void initTreeViewOrdner(){
-
         TreeItem <String> root = new TreeItem<>("Root");
-        TreeItem <String> konto = new TreeItem<>("konto");
-        ArrayList<String> ordner = mailSteuerung.zeigeAlleOrdner(kontoSteuerung.getKonto(1));
-        for (String s: ordner){
-            konto.getChildren().add(new TreeItem<>(s));
+
+        ArrayList<KontoGrenz> kontoGrenzs = kontoSteuerung.getAlleKonten();
+        for(KontoGrenz k : kontoGrenzs){
+            TreeItem <String> konto = new TreeItem<>(k.getUserName());
+            ArrayList<String> ordner = mailSteuerung.zeigeAlleOrdner(k);
+            for (String s: ordner){
+                konto.getChildren().add(new TreeItem<>(s));
+            }
+            root.getChildren().add(konto);
+            konto.setExpanded(true);
         }
-        root.getChildren().add(konto);
+
         treeViewOrdner.setRoot(root);
         treeViewOrdner.setShowRoot(false);
-        konto.setExpanded(true);
 
-        treeViewOrdner.getSelectionModel().select(ordner.indexOf("INBOX") + 1);
+        //treeViewOrdner.getSelectionModel().select(ordner.indexOf("INBOX") + 1);
 
         treeViewOrdner.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<String>>() {
             @Override
@@ -151,8 +156,8 @@ public class HauptfensterController implements Initializable, TagClickedListener
 
 
     private void initEmailListView(){
-        ArrayList<EMailGrenz> emails = mailSteuerung.zeigeAlleEMailsAusOrdner(kontoSteuerung.getKonto(1),"INBOX");
-        //ArrayList<EMailGrenz> emails = mailSteuerung.importEMails(kontoSteuerung.getKonto(1));
+        ArrayList<EMailGrenz> emails = mailSteuerung.zeigeAlleEMailsAusOrdner(kontoSteuerung.getKontoById(1),"INBOX");
+        //ArrayList<EMailGrenz> emails = mailSteuerung.importEMails(kontoSteuerung.getKontoById(1));
         ObservableList<EMailGrenz> observableEmails = FXCollections.observableArrayList(emails);
 
         listViewEmails.setItems(observableEmails);
@@ -291,7 +296,7 @@ public class HauptfensterController implements Initializable, TagClickedListener
 
         if (result.get() == ButtonType.OK){
             EMailGrenz email = listViewEmails.getSelectionModel().getSelectedItem();
-            mailSteuerung.weiseEinerEMailFlagZu(kontoSteuerung.getKonto(1), "geloescht", email);
+            mailSteuerung.weiseEinerEMailFlagZu(kontoSteuerung.getKontoById(1), "geloescht", email);
             listViewEmails.getItems().remove(email);
         }
     }
@@ -356,8 +361,9 @@ public class HauptfensterController implements Initializable, TagClickedListener
     public void showEmails(){
         String ordner = treeViewOrdner.getSelectionModel().getSelectedItem().getValue();
         if(ordner != null){
+            String kontoname = treeViewOrdner.getSelectionModel().getSelectedItem().getParent().getValue();
             ArrayList<EMailGrenz> emailsMitTag = new ArrayList<>();
-            ArrayList<EMailGrenz> emailsAusOrdner = mailSteuerung.zeigeAlleEMailsAusOrdner(kontoSteuerung.getKonto(1), ordner);
+            ArrayList<EMailGrenz> emailsAusOrdner = mailSteuerung.zeigeAlleEMailsAusOrdner(kontoSteuerung.getKontoByUsername(kontoname), ordner);
             ArrayList<EMailGrenz> gefundeEmail = new ArrayList<>();
             if(clickedTags.isEmpty()){
                 listViewEmails.setItems(FXCollections.observableArrayList(emailsAusOrdner));

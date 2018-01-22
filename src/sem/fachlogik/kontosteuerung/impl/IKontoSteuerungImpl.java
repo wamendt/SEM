@@ -28,9 +28,20 @@ import java.util.Arrays;
 public class IKontoSteuerungImpl implements IKontoSteuerung{
 
     @Override
-    public KontoGrenz getKonto(int id) {
+    public KontoGrenz getKontoById(int id) {
         ICRUDKonto icrudKonto = ICRUDManagerSingleton.getIcrudKontoInstance();
         Konto konto = icrudKonto.getKontoById(id);
+        KontoGrenz kontoGrenz = null;
+        if(konto != null){
+            kontoGrenz = GrenzklassenKonvertierer.kontoZuKontoGrenz(konto);
+        }
+        return kontoGrenz;
+    }
+
+    @Override
+    public KontoGrenz getKontoByUsername(String username) {
+        ICRUDKonto icrudKonto = ICRUDManagerSingleton.getIcrudKontoInstance();
+        Konto konto = icrudKonto.getKontoByUsername(username);
         KontoGrenz kontoGrenz = null;
         if(konto != null){
             kontoGrenz = GrenzklassenKonvertierer.kontoZuKontoGrenz(konto);
@@ -84,6 +95,12 @@ public class IKontoSteuerungImpl implements IKontoSteuerung{
         r.setKid(konto.getKid());
         ICRUDRegel icrudRegel = ICRUDManagerSingleton.getIcrudRegelInstance();
         return icrudRegel.createRegel(r) > 0;
+    }
+
+    @Override
+    public boolean loescheAlleKonten() {
+        ICRUDKonto icrudKonto = ICRUDManagerSingleton.getIcrudKontoInstance();
+        return icrudKonto.loescheAlleKonten() > 0;
     }
 
 

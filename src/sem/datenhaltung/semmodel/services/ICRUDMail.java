@@ -55,6 +55,12 @@ public interface ICRUDMail {
     boolean deleteEMail(int mid);
 
     /**
+     * Loeschte alle Emails aus der Datenbank
+     * @return die anzahl geloeschter Emails
+     */
+    int deleteAlleEMails();
+
+    /**
      * Erneuert eine Vorhandene EMail aus der Datenbank. Die EMail muss einen PrimaryKey besitzen.
      * @param email die Email mit den erneuerten Attributen.
      * @return true bei erfolg, sonst false.

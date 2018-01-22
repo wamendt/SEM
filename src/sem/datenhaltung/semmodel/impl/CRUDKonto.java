@@ -78,6 +78,17 @@ public class CRUDKonto extends DBCRUDTeamplate<Konto> implements ICRUDKonto {
     }
 
     @Override
+    public int loescheAlleKonten() {
+        int ret = 0;
+        try{
+            ret = updateOrDelete(String.format(SQL_DELETE_FROM, TABLE_NAME));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
+    @Override
     public boolean updateKonto(Konto konto){
         int ret;
         try {
@@ -96,6 +107,21 @@ public class CRUDKonto extends DBCRUDTeamplate<Konto> implements ICRUDKonto {
         ArrayList<Konto> kontos;
         try {
             kontos = query(String.format(SQL_SELECT_FROM_WHERE, TABLE_NAME, COLUMN_KID), kid);
+            if(kontos.size() > 0){
+                kontos.get(0).setPassWort(decryptPassword(kontos.get(0).getPassWort()));
+                return kontos.get(0);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Konto getKontoByUsername(String username) {
+        ArrayList<Konto> kontos;
+        try {
+            kontos = query(String.format(SQL_SELECT_FROM_WHERE, TABLE_NAME, COLUMN_USERNAME), username);
             if(kontos.size() > 0){
                 kontos.get(0).setPassWort(decryptPassword(kontos.get(0).getPassWort()));
                 return kontos.get(0);

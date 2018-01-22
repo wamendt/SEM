@@ -324,7 +324,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
     }
 
 
-    private EMail checkEMailAndSetToDB(Folder folder, Message message, ICRUDMail crudeMail, int i, long beginnSeconds, int messageCounter){
+    private EMail checkEMailAndSetToDB(Konto konto, Folder folder, Message message, ICRUDMail crudeMail, int i, long beginnSeconds, int messageCounter){
         EMail eMail = new EMail();
         try {
             //Beginn Zeitmessung für die aktuelle Nachricht
@@ -381,6 +381,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                 String mailContent = getPlainTextFromMessage(message);
                 eMail.setInhalt(mailContent);
 
+                eMail.setKid(konto.getKid());
                 //E-Mail in der Datenbank hinterlegen
                 crudeMail.createEMail(eMail);
 
@@ -631,7 +632,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                     //Hole Nachricht anhand des Indexes
                     Message message = folder.getMessage(i);
                     try {
-                        checkEMailAndSetToDB(folder, message, crudeMail, i, beginnSeconds, messageCount);
+                        checkEMailAndSetToDB(konto, folder, message, crudeMail, i, beginnSeconds, messageCount);
                     }
                     catch (NullPointerException e){
                         System.out.println("NullPointerException wurde  in IMailSteuerung, importiereAllEMails() geworfen: " + e.getMessage());
@@ -687,7 +688,7 @@ public class IMailServiceImpl implements IMailService, MessageCountListener {
                 //Hole Nachricht anhand des Indexes
                 Message message = folder.getMessage(i);
                 try {
-                    eMail = checkEMailAndSetToDB(folder, message, crudeMail, i, beginnSeconds, messageCount);
+                    eMail = checkEMailAndSetToDB(konto, folder, message, crudeMail, i, beginnSeconds, messageCount);
                     if(eMail != null){
                         eMailArrayList.add(eMail);
                     }
