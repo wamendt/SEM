@@ -146,11 +146,5 @@ public class IAssistentSteuerungImpl implements IAssistentSteuerung{
         }
     }
 
-    @Override
-    public void wortVonStoplisteEntfernen(String wort) {
-        throw new UnsupportedOperationException();
-    }
-
-
 
 }
