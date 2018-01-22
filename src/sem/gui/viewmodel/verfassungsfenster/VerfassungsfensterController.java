@@ -80,7 +80,7 @@ public class VerfassungsfensterController implements Initializable{
 
         EMailGrenz email = new EMailGrenz();
         email.setBetreff(txtBetreff.getText());
-        email.setAbsender(new IKontoSteuerungImpl().getKonto(1).getEmailAddress());
+        email.setAbsender(new IKontoSteuerungImpl().getKonto(1).getUserName());
 
         String [] empfaengerArr = txtEmpfaenger.getText().split(",");
         ArrayList <String> empfaengerList = new ArrayList<>();

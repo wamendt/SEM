@@ -113,6 +113,7 @@ public class CRUDKonto extends DBCRUDTeamplate<Konto> implements ICRUDKonto {
             for(Konto k : kontos){
                 k.setPassWort(decryptPassword(k.getPassWort()));
             }
+            return kontos;
         } catch (SQLException e) {
             e.printStackTrace();
         }

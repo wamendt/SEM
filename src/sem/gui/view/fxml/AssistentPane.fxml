@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" prefHeight="405.0" prefWidth="675.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.viewmodel.menufenster.AssistentController">
+<AnchorPane fx:id="root" prefHeight="405.0" prefWidth="675.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.viewmodel.menufenster.AssistentController">
    <children>
       <SplitPane dividerPositions="0.2139673105497771, 0.43684992570579495" layoutX="8.0" prefHeight="335.0" prefWidth="510.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -36,9 +36,9 @@
                </children></AnchorPane>
           <AnchorPane maxWidth="220.0" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="180.0">
                <children>
-                  <ScrollPane prefHeight="200.0" prefWidth="117.0" style="-fx-border-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0">
+                  <ScrollPane layoutY="35.0" prefHeight="368.0" prefWidth="144.0" style="-fx-border-color: transparent; -fx-background-insets: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
                      <content>
-                        <FlowPane fx:id="flowPaneWoerter" prefHeight="395.0" prefWidth="139.0" style="-fx-border-color: transparent;">
+                        <FlowPane fx:id="flowPaneWoerter" alignment="BASELINE_LEFT" hgap="15.0" prefHeight="376.0" prefWidth="139.0" rowValignment="BASELINE" style="-fx-border-color: transparent; -fx-background-insets: transparent;" vgap="15.0">
                            <stylesheets>
                               <URL value="@../css/scrollbarstylesheet.css" />
                               <URL value="@../css/randstylesheet.css" />
@@ -48,11 +48,8 @@
                               <String fx:value="rand" />
                            </styleClass>
                            <opaqueInsets>
-                              <Insets />
-                           </opaqueInsets>
-                           <padding>
-                              <Insets left="5.0" top="5.0" />
-                           </padding></FlowPane>
+                              <Insets left="5.0" right="5.0" />
+                           </opaqueInsets></FlowPane>
                      </content>
                      <stylesheets>
                         <URL value="@../css/randstylesheet.css" />
@@ -64,7 +61,7 @@
                         <String fx:value="mylistview" />
                      </styleClass>
                   </ScrollPane>
-                  <Label fx:id="labelTagsWoerter" alignment="TOP_LEFT" layoutY="5.0" text="Mit dem Tag verbundene Wörter" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                  <Label fx:id="labelTagsWoerter" alignment="TOP_LEFT" layoutY="5.0" prefHeight="17.0" prefWidth="134.0" text="Mit dem Tag verbundene Wörter" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
