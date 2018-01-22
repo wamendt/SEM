@@ -90,6 +90,7 @@ public class CRUDKonto extends DBCRUDTeamplate<Konto> implements ICRUDKonto {
 
     @Override
     public boolean updateKonto(Konto konto){
+        konto.setPassWort(encryptPassword(konto.getPassWort()));
         int ret;
         try {
             ret = updateOrDelete(SQL_UPDATE_KONTO, konto.getUserName(), konto.getPassWort(),
