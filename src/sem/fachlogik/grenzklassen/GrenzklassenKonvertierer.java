@@ -34,6 +34,7 @@ public class GrenzklassenKonvertierer {
     }
     public static KontoGrenz kontoZuKontoGrenz(Konto konto) {
         KontoGrenz kontoGrenz = new KontoGrenz();
+        kontoGrenz.setKid(konto.getKid());
         kontoGrenz.setUserName(konto.getUserName());
         kontoGrenz.setPassWort(konto.getPassWort());
         kontoGrenz.setIMAPhost(konto.getIMAPhost());
