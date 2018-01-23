@@ -4,11 +4,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.HTMLEditor;
 import sem.fachlogik.grenzklassen.EMailGrenz;
+import sem.fachlogik.grenzklassen.KontoGrenz;
 import sem.fachlogik.kontosteuerung.impl.IKontoSteuerungImpl;
 import sem.fachlogik.mailsteuerung.impl.IMailSteuerungImpl;
 import sem.fachlogik.mailsteuerung.services.IMailSteuerung;
@@ -20,6 +22,9 @@ import java.util.ResourceBundle;
 public class VerfassungsfensterController implements Initializable{
     @FXML
     private AnchorPane root;
+
+    @FXML
+    private ComboBox<KontoGrenz> comboKonto;
 
     @FXML
     private TextField txtEmpfaenger;
@@ -78,7 +83,7 @@ public class VerfassungsfensterController implements Initializable{
     public void btnSendenOnAction(ActionEvent event){
         EMailGrenz email = new EMailGrenz();
         email.setBetreff(txtBetreff.getText());
-        email.setAbsender(new IKontoSteuerungImpl().getKontoById(1).getUserName());
+        email.setAbsender(comboKonto.getSelectionModel().getSelectedItem().getUserName());
 
         String [] empfaengerArr = txtEmpfaenger.getText().split(",");
         ArrayList <String> empfaengerList = new ArrayList<>();
@@ -102,7 +107,7 @@ public class VerfassungsfensterController implements Initializable{
         email.setInhalt(emailInhalt.getHtmlText());
         email.setFiles(new ArrayList<>());
         IMailSteuerung mailSteuerung = new IMailSteuerungImpl();
-        mailSteuerung.sendeEMail(new IKontoSteuerungImpl().getKontoById(1),email);
+        mailSteuerung.sendeEMail(comboKonto.getSelectionModel().getSelectedItem(),email);
 
     }
 }
