@@ -6,7 +6,7 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.effect.Blend?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="384.0" prefWidth="580.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.viewmodel.verbindungsfenster.VerbindungsfensterController">
+<AnchorPane fx:id="root" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="384.0" prefWidth="580.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.viewmodel.verbindungsfenster.VerbindungsfensterController">
     <children>
       <GridPane layoutX="130.0" layoutY="202.0" prefHeight="79.0" prefWidth="368.0" AnchorPane.leftAnchor="130.0" AnchorPane.rightAnchor="130.0">
         <columnConstraints>
@@ -55,12 +55,12 @@
             <ProgressIndicator fx:id="progressIndicator" prefHeight="21.0" prefWidth="9.0" progress="0.0" />
          </children>
       </HBox>
-          <Button fx:id="btnConnect" alignment="CENTER" layoutX="250.0" layoutY="316.0" mnemonicParsing="false" onAction="#btnConnectAction" prefHeight="29.0" prefWidth="109.0" style="-fx-background-color: #616d7e;" stylesheets="@../css/randstylesheet.css" text="Verbinden" textFill="WHITE" AnchorPane.bottomAnchor="36.666666666666686">
+          <Button fx:id="btnConnect" alignment="CENTER" layoutX="250.0" layoutY="316.0" mnemonicParsing="false" onAction="#btnConnectAction" prefHeight="29.0" prefWidth="109.0" text="Verbinden" AnchorPane.bottomAnchor="36.666666666666686">
          <font>
             <Font size="15.0" />
          </font>
          <effect>
-            <Glow />
+            <Blend />
          </effect>
       </Button>
           <GridPane alignment="CENTER" layoutX="96.0" layoutY="88.0" prefHeight="114.0" prefWidth="387.0">
@@ -95,8 +95,8 @@
                   <Font size="15.0" />
                </font>
             </Label>
-                  <TextField fx:id="txtImap" maxWidth="-Infinity" prefWidth="230.0" stylesheets="@../css/textfeldstylesheet.css" GridPane.rowIndex="2" />
-                  <TextField fx:id="txtSmtp" prefHeight="25.0" prefWidth="230.0" styleClass="text-field" stylesheets="@../css/textfeldstylesheet.css" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <TextField fx:id="txtImap" alignment="CENTER" maxWidth="-Infinity" prefWidth="230.0" stylesheets="@../css/textfeldstylesheet.css" GridPane.rowIndex="2" />
+                  <TextField fx:id="txtSmtp" alignment="CENTER" prefHeight="25.0" prefWidth="230.0" styleClass="text-field" stylesheets="@../css/textfeldstylesheet.css" GridPane.columnIndex="2" GridPane.rowIndex="2" />
               </children>
               <opaqueInsets>
                   <Insets />
