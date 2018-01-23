@@ -8,7 +8,7 @@
 
 <SplitPane fx:id="root" dividerPositions="0.17079889807162535" prefHeight="500.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.viewmodel.menufenster.MenuController">
   <items>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+    <AnchorPane maxWidth="160.0" minHeight="160.0" minWidth="100.0" prefHeight="160.0" prefWidth="100.0">
          <children>
             <ListView fx:id="listMenuAssistent" layoutX="7.0" prefHeight="200.0" prefWidth="200.0" styleClass="rand" stylesheets="@../css/randstylesheet.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                 <items>
