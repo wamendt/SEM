@@ -23,6 +23,7 @@ public class MenuController implements Initializable{
     @FXML
     private ListView <String> listMenuAssistent;
 
+
     @FXML
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -36,7 +37,7 @@ public class MenuController implements Initializable{
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 switch (listMenuAssistent.getSelectionModel().getSelectedIndices().get(0)){
                     case 0:
-                        paneAuswahlausMenu.getChildren().setAll(ControllerFactory.createAllgemeineStatistikController().getRoot());
+                        paneAuswahlausMenu.getChildren().setAll(ControllerFactory.getAssistentController().getRoot());
                         break;
                     case 2:
                         AssistentController assistentController = ControllerFactory.createAssistentController();

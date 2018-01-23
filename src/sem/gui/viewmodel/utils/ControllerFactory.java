@@ -22,6 +22,11 @@ public class ControllerFactory {
      */
     private static HauptfensterController hauptfensterController;
 
+    /**
+     * Ein einzigartiges AisstentMenuFenster.
+     */
+    private static AssistentController assistentController;
+
     private ControllerFactory(){}
 
     /**
@@ -89,6 +94,7 @@ public class ControllerFactory {
         return createController(AllgemeineStatistikController.class.getResource("../../view/fxml/AllgemeineStatistikPane.fxml"));
     }
 
+
     /**
      * Laedt einen VerfassungsfensterController aus der FXML-Datei
      * @return den geladenen {@link VerfassungsfensterController}
@@ -113,6 +119,15 @@ public class ControllerFactory {
         return createController(AssistentController.class.getResource("../../view/fxml/AssistentPane.fxml"));
     }
 
+    /**
+     * ZugrifsMehtode fuer den AssistentController
+     * @return
+     */
+    public static AssistentController getAssistentController(){
+        if(assistentController == null)
+            assistentController = createAssistentController();
+        return assistentController;
+    }
     /**
      * Laedt ein KontoEinstellungenController aus der FXML-Datei
      * @return den geladenen {@link KontoEinstellungenController}

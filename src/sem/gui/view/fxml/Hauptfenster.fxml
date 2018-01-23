@@ -25,7 +25,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane fx:id="root" maxHeight="800.0" maxWidth="1500.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.viewmodel.hauptfenster.HauptfensterController">
+<AnchorPane fx:id="root" maxHeight="800.0" maxWidth="1500.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sem.gui.viewmodel.hauptfenster.HauptfensterController">
    <children>
       <SplitPane dividerPositions="0.23041894353369763, 0.4663023679417122, 0.5" layoutX="55.0" layoutY="200.0" styleClass="split-pane-divider" stylesheets="@../css/deviderstylesheet.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
         <items>
@@ -136,7 +136,7 @@
                         </Label>
                         <ScrollPane prefHeight="201.0" prefWidth="379.0" style="-fx-background-insets: transparent;">
                           <content>
-                              <FlowPane fx:id="flowPaneWoerter" alignment="CENTER" hgap="20.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="194.0" prefWidth="372.0" style="-fx-background-insets: transparent; -fx-border-color: transparent;" stylesheets="@../css/randstylesheet.css" vgap="20.0">
+                              <FlowPane fx:id="flowPaneWoerter" alignment="CENTER" hgap="20.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="194.0" prefWidth="372.0" style="-fx-border-color: transparent;" stylesheets="@../css/randstylesheet.css" vgap="20.0">
                                  <styleClass>
                                     <String fx:value="mylistview" />
                                     <String fx:value="rand" />

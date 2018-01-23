@@ -76,11 +76,9 @@ public class VerfassungsfensterController implements Initializable{
 
     @FXML
     public void btnSendenOnAction(ActionEvent event){
-
-
         EMailGrenz email = new EMailGrenz();
         email.setBetreff(txtBetreff.getText());
-        email.setAbsender(new IKontoSteuerungImpl().getKonto(1).getUserName());
+        email.setAbsender(new IKontoSteuerungImpl().getKontoById(1).getUserName());
 
         String [] empfaengerArr = txtEmpfaenger.getText().split(",");
         ArrayList <String> empfaengerList = new ArrayList<>();
@@ -104,7 +102,7 @@ public class VerfassungsfensterController implements Initializable{
         email.setInhalt(emailInhalt.getHtmlText());
         email.setFiles(new ArrayList<>());
         IMailSteuerung mailSteuerung = new IMailSteuerungImpl();
-        mailSteuerung.sendeEMail(new IKontoSteuerungImpl().getKonto(1),email);
+        mailSteuerung.sendeEMail(new IKontoSteuerungImpl().getKontoById(1),email);
 
     }
 }
