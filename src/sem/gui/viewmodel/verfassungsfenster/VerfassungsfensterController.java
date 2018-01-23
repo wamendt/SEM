@@ -1,17 +1,18 @@
 package sem.gui.viewmodel.verfassungsfenster;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.HTMLEditor;
+import javafx.util.Callback;
 import sem.fachlogik.grenzklassen.EMailGrenz;
 import sem.fachlogik.grenzklassen.KontoGrenz;
 import sem.fachlogik.kontosteuerung.impl.IKontoSteuerungImpl;
+import sem.fachlogik.kontosteuerung.services.IKontoSteuerung;
 import sem.fachlogik.mailsteuerung.impl.IMailSteuerungImpl;
 import sem.fachlogik.mailsteuerung.services.IMailSteuerung;
 
@@ -67,6 +68,26 @@ public class VerfassungsfensterController implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        IKontoSteuerung kontoSteuerung = new IKontoSteuerungImpl();
+        comboKonto.getItems().addAll(FXCollections.observableArrayList(kontoSteuerung.getAlleKonten()));
+        Callback<ListView<KontoGrenz>, ListCell<KontoGrenz>> cellCall = new Callback<ListView<KontoGrenz>, ListCell<KontoGrenz>>() {
+            @Override
+            public ListCell<KontoGrenz> call(ListView<KontoGrenz> param) {
+                return new ListCell<KontoGrenz>(){
+                    @Override
+                    protected void updateItem(KontoGrenz item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if(item != null){
+                            setText(item.getUserName());
+                        }else{
+                            setGraphic(null);
+                        }
+                    }
+                };
+            }
+        };
+        comboKonto.setCellFactory(cellCall);
+        comboKonto.setButtonCell(cellCall.call(null));
 
     }
     @FXML
